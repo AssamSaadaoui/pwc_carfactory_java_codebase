@@ -1,0 +1,49 @@
+#Deleting contributor with id {3} from car with id {3}
+###Response code: 200
+DELETE http://localhost:8081/api/cars/3/delete?child=3
+Accept: application/json
+
+#Deleting contribution with id {4} from engineer with id {5}
+###Response code: 200
+DELETE http://localhost:8081/api/engineers/5/delete?child=4
+Accept: application/json
+
+
+#Response code: 200
+### By default, it would returned a content of type html since standardly mvc routes respond in HTML
+GET http://localhost:8081/cars
+Accept: application/json
+###Content-type: text/html
+
+###Response code: 200
+GET http://localhost:8081/api/cars/order?order=asc
+Accept: application/json
+###Content-type: application/json
+
+
+###Response code: 200
+GET http://localhost:8081/api/cars?lookup=a-class
+Accept: application/json
+###Content-type: application/json
+
+###Response code: 204
+GET http://localhost:8081/api/cars?lookup=potato
+Accept: application/json
+
+### It is indicated that the fetch method only accepts json
+###Response code: 406 (not acceptable) concerning the returned data type
+GET http://localhost:8081/api/cars?lookup=a-class
+Accept: text/html
+###Content-type: application/json
+
+
+GET http://localhost:8081/api/engineers?lookup=Winter Korn
+Accept: application/json
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <main class="carsPage">
+        <div class="container">
+            <div style="margin-top: 1rem" th:if="${param?.get('success')}"
+                 class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+                The car was successfully deleted!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <form class="form-horizontal" th:action="@{/cars}">
+            <div class="row">
+                <div class="col-sm-2"><select
+                        id="order" th:name="order" class="form-select form-select-sm"
+                        aria-label=".form-select-sm example" required>
+                    <option selected>Order by</option>
+                    <option th:value="asc">Price: Ascending</option>
+                    <option th:value="desc">Price: Descending</option>
+                </select></div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-success bg-dark" type="submit">Order</button>
+                </div>
+            </div>
+        </form>
+        <div class="row" id="listOfCars">
+            <div class="col-md-4 item" th:if="${not #lists.isEmpty(cars)}" th:each="car: ${cars}">
+                <div class="card cardanim" style="width: 18rem;">
+                    <img id="car" th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
+                         class="card-img-top" th:alt-title="${car.model}" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${car.model}"></h5>
+                    </div>
+                    <!--                    th:text="'Model: '+${car.model}"-->
+                    <ul class="list-group list-group-flush">
+                        <li th:utext="#{amodel(${car.model})}" class="list-group-item"></li>
+                        <li th:utext="#{aengineSize(${car.engineSize})}" class="list-group-item">A second item</li>
+                        <li th:utext="#{aprice(${car.price})}" class="list-group-item">A third item</li>
+                    </ul>
+                    <div class="card-body">
+                        <a th:utext="#{adetails}" th:href="${ '/cars/' + car.getId()}" class="card-link">Details</a>
+                        <a th:utext="#{aedit}" th:href="${'/cars/edit/' + car.getId()}">Edit</a>
+                        <a th:utext="#{adelete}" th:href="${'/cars/delete/' + car.getId()}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error - Bad request</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<main class="errorPage">
+    <div class="container">
+        <div id="container">
+            <h1>Oops!</h1>
+            <h3>400 - BAD REQUEST</h3>
+            <p th:text="${exception}"></p>
+            <a th:href="@{${url}}">
+                <button>RETURN</button>
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

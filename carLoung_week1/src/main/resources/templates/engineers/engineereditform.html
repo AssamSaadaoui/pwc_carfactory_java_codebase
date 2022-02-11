@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <h2>Engineer Details</h2>
+    <div>
+        <form th:object="${engineer}" class="form-horizontal" method="post">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                <p>There was an error within the form! </p>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" th:utext="#{name}">Name:</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. Sami"/>
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">model Error</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" th:utext="#{tenure}">Tenure</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" th:field="*{tenure}"
+                           placeholder="Period of working for that company..."/>
+                    <p th:if="${#fields.hasErrors('tenure')}" th:errors="*{tenure}">model Error</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" th:utext="#{nationality}">Nationality</label>
+                <div class="col-sm-4"><input type="text" class="form-control" th:field="*{nationality}"/>
+                    <p th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}">model Error</p>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" th:utext="#{contributions}">Contributions:</label>
+                <div class="col-sm-4"
+                     th:each="car:${allCars}">
+                    <div th:each="contribution:${engineer.cars}">
+                        <input class="form-check-input" type="checkbox" name="contributionIds" th:text="${car.model}"
+                               th:value="${contribution.id==car.id}?null:${car.getId()}"
+                               id="flexCheckDefault" th:checked="${car.model.equals(contribution.model)?true:false}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-secondary" th:utext="#{submit}">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

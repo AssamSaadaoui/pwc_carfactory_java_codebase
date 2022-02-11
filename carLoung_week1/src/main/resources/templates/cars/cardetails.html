@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:object="${car}" th:text="${car.model}"></title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <main class="car details">
+        <div class="container">
+            <div id="details" class="col-sm-12 item" th:object="${car}">
+                <div class="container">
+                    <div style="margin-top: 1rem" th:if="${param?.get('success')}"
+                         class="alert alert-success alert-dismissible fade show" role="alert">
+                        The car was successfully created!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <h2>Car Details</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="car"
+                             th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
+                             class="card-img-top" th:alt-title="${car.model}">
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td th:utext="#{model}">Model</td>
+                                <td th:text="${car.model}"></td>
+                                <input id="ownerEntityId" type="hidden" th:value="${car.id}">
+                            </tr>
+                            <tr>
+                                <td th:utext="#{engineSize}">Engine</td>
+                                <td th:text="${car.engineSize}+' litr'"></td>
+                            </tr>
+                            <tr th:if="${car?.tradeMark}">
+                                <td th:utext="#{trademark}">Trademark</td>
+                                <td th:text="${car.tradeMark.title}"></td>
+                            </tr>
+                            <tr>
+                                <td th:utext="#{release_date}">Release date</td>
+                                <td th:text="${car.releaseDate}"></td>
+                            </tr>
+                            <tr>
+                                <td th:utext="#{color}">Color</td>
+                                <td th:text="${car.color.getDisplayValue()}"></td>
+                            </tr>
+                            <tr>
+                                <td th:utext="#{price}">Price</td>
+                                <td th:text="${car.price}+'$'"></td>
+                            </tr>
+                            <tr th:if="${!car.engineers.isEmpty()}">
+                                <td th:utext="#{engineers}">Engineers</td>
+                                <td>
+                                    <div id="entities" th:each="engineer : *{engineers}">
+                                        <li style="list-style: none;text-decoration: none;">
+                                            <a th:href="${ '/engineers/' + engineer.getId()}"
+                                               th:text="'- '+${engineer.name}"></a> <a style="padding: 0px 3px;"
+                                                                                       class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
+                                            <input id="" type="hidden" th:value="${engineer.id}">
+                                            <!--                                            <button id="delete" class="btn btn-outline-success bg-dark" type="button">Delete</button>-->
+                                        </li>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-group">
+                            <br>
+                            <div class="addEngineer">
+                                <p>
+                                    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample"
+                                       role="button"
+                                       aria-expanded="false" aria-controls="collapseExample">
+                                        Add a contributor/engineer
+                                    </a>
+                                </p>
+                                <div class="collapse" id="collapseExample">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Name:</label>
+                                        <div class="col-sm-3">
+                                            <input id="name" type="text" class="form-control"
+                                                   placeholder="e.g. Sami"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Tenure</label>
+                                        <div class="col-sm-3">
+                                            <input id="tenure" type="text" class="form-control"
+                                                   placeholder="Period of working for that company..."/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"
+                                        >Nationality</label>
+                                        <div class="col-sm-3"><input id="nationality" type="text" class="form-control"
+                                        />
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" id="addrelation" class="btn btn-secondary">Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
+
+
+

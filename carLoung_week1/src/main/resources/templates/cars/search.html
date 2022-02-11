@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <script defer src="/static/js/search.js"
+            th:src="@{/js/search.js}"></script>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <main class="carsPage">
+        <div class="container mb-3">
+            <h2>Search</h2>
+
+            <form>
+                <div class="pb-3">
+                    <label for="lookup-car">Subject</label>
+                    <input autocomplete="off" type="search" name="lookup" id="lookup-car" class="form-control">
+                </div>
+                <button id="searchButton" type="button" class="btn btn-primary">Search</button>
+            </form>
+
+            <table class="table table-hover">
+                <thead>
+                <tr><th>Car</th></tr>
+                </thead>
+                <tbody id="tableBody">
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

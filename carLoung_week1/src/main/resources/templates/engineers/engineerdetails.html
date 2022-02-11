@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:object="${engineer}" th:text="*{name}"></title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <main class="engineer details">
+        <div class="container">
+            <div id="details" class="col-sm-3 item" th:object="${engineer}">
+                <div class="container">
+                    <div style="margin-top: 1rem" th:if="${param.get('success')!= null}"
+                         class="alert alert-success alert-dismissible fade show" role="alert">
+                        The engineer was successfully created!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <h2>Engineer Details</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="car" th:src="@{/imgs/avatar.png}" class="card-img-top" th:alt-title="${engineer.name}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <td>Name</td>
+                                <td th:text="${engineer.name}"></td>
+                                <input id="ownerEntityId" type="hidden" th:value="${engineer.id}">
+                            </tr>
+                            <tr>
+                                <td>Nationality</td>
+                                <td th:text="${engineer.nationality}"></td>
+                            </tr>
+                            <tr>
+                                <td>Tenure</td>
+                                <td th:text="${engineer.tenure} +' year'+(${engineer.tenure}>1?'s':'')"></td>
+                            </tr>
+                            <tr th:if="${!engineer.getCars().isEmpty()}">
+                                <td>Contributions/Work</td>
+                                <td>
+                                    <div th:each="car : *{cars}">
+                                        <li style="list-style: none;">
+                                            <a style="text-decoration: none" th:href="${ '/cars/' + car.getId()}"
+                                               th:text="'- '+${car.tradeMark.getTitle()}+' '+${car.model}"></a>
+                                            <a style="padding: 0px 3px;" class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
+                                            <input id="" type="hidden" th:value="${car.id}">
+                                        </li>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--                        <input id="" type="hidden" th:value="${engineer.id}">-->
+                        <!--                        <button id="delete" class="btn btn-outline-success bg-dark" type="button">Delete</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
+
+
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <h2>Engineer Details</h2>
+    <div class="container">
+        <div style="margin-top: 1rem" class="alert alert-success alert-dismissible fade show"
+             role="alert">
+            REMINDER: Please remember to at least add a contribution from existent cars or a new one.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <div>
+        <form th:object="${engineerDTO}" class="form-horizontal" method="post" enctype="multipart/form-data">
+            <div th:if="${#fields.hasAnyErrors()&&isMainForm}" class="alert alert-danger">
+                <p>There was an error within the form! </p>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" th:utext="#{name}">Name:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" th:field="*{name}" placeholder="e.g. Sami"/>
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">model Error</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" th:utext="#{tenure}">Tenure</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" th:field="*{tenure}"
+                           placeholder="Period of working for that company..."/>
+                    <p th:if="${#fields.hasErrors('tenure')}" th:errors="*{tenure}">model Error</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label" th:utext="#{nationality}">Nationality</label>
+                <div class="col-sm-3"><input type="text" class="form-control" th:field="*{nationality}"/>
+                    <p th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}">model Error</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" th:utext="#{cars}">Cars</label>
+                <div class="col-sm-4">
+                    <div th:each="car : ${cars}">
+                        <input name="contributionIds" type="checkbox" th:value="${car.getId()}"/>
+                        <span th:text="${car.model}">car</span><br/>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <section class="addCar" th:object="${carDTO}">
+                <div th:if="${#fields.hasAnyErrors()&&isSubForm}" class="alert alert-danger">
+                    <p>Error with adding a Car. Please click the button below for details.</p>
+                </div>
+                <p>
+                    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                       aria-expanded="false" aria-controls="collapseExample">
+                        Add a contribution/car
+                    </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" th:utext="#{model}">Car model:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" th:field="*{model}" placeholder="e.g. golf 7"/>
+                            <p th:if="${#fields.hasErrors('model')&&isSubForm}" th:errors="*{model}">model Error</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" th:utext="#{trademark_title}">Trademark:</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" th:field="*{title}"
+                                       placeholder="e.g. volkswagen"/>
+                                <p th:if="${#fields.hasErrors('title')&&isSubForm}" th:errors="*{title}">title Error</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" th:utext="#{trademark_founder}">Trademark
+                                founder:</label>
+                            <div class="col-sm-3"><input type="text" class="form-control"
+                                                         th:field="*{founder}"
+                                                         placeholder="e.g. John due"/>
+                                <p th:if="${#fields.hasErrors('founder')&&isSubForm}" th:errors="*{founder}">founder Error</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" th:utext="#{trademark_launch}">Trademark launch
+                                date:</label>
+                            <div class="col-sm-3"><input type="text" class="form-control"
+                                                         th:field="*{launchYear}"
+                                                         th:placeholder="'e.g. 2014'"/>
+                                <p th:if="${#fields.hasErrors('launchYear')&&isSubForm}" th:errors="*{launchYear}">launchYear
+                                    Error</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" th:utext="#{engineSize}">Engine:</label>
+                        <div class="col-sm-3"><input type="text" class="form-control" th:field="*{engineSize}"
+                                                     placeholder="e.g. 4.5"/>
+                            <p th:if="${#fields.hasErrors('engineSize')&&isSubForm}" th:errors="*{engineSize}">engineSize Error</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" th:utext="#{price}">Price:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" th:field="*{price}" placeholder="price... $"/>
+                            <p th:if="${#fields.hasErrors('price')&&isSubForm}" th:errors="*{price}">price Error</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Image: </label>
+                        <div class="col-sm-3">
+                            <input class="form-control" type="file" name="image"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" th:utext="#{release_date}">Release date:</label>
+                        <div class="col-sm-2">
+                            <input type="date" class="form-control" th:field="*{releaseDate}"/>
+                            <p th:if="${#fields.hasErrors('releaseDate')&&isSubForm}" th:errors="*{releaseDate}">releaseDate
+                                Error</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" th:utext="#{color}">Color:</label>
+                        <div class="col-sm-3">
+                            <label>
+                                <select th:field="*{color}"> class="form-select" aria-label="Default select example">
+                                    <!--                            <option th:text="${car.color == null?'Pick a colour': '>>'+car.color.getDisplayValue()+'<<'}"></option>-->
+                                    <option th:each="colorOpt : ${colors}"
+                                            th:value="${colorOpt}" th:text="${colorOpt.getDisplayValue()}"></option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('color')&&isSubForm}" th:errors="*{color}">Color Error</p>
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </section>
+            <br>
+            <div class="form-group">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-secondary" th:utext="#{submit}">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

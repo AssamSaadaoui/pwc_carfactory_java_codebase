@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error - Request could not be completed</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<main class="errorPage">
+    <div class="container">
+        <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+        <div id="container">
+            <h1>Oops!</h1>
+            <h3>500 - INTERNAL SERVER ERROR</h3>
+            <p>There was an error on the server and the request could not be completed.</p>
+            <a th:href="@{${url}}">
+                <button>RETURN</button>
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

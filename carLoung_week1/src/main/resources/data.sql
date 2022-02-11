@@ -1,0 +1,11 @@
+-- INSERT INTO CARS(CAR_ID, MODEL,
+--                  ENGINE_SIZE, PRICE, RELEASE_DATE, COLOR)
+-- VALUES (0, '7 Series', 4.4, 134000, '2021-10-01', 'GRAY'),
+--        (1, '8 Series', 4.0, 14000, '2022-02-04', 'BLACK');
+--
+--
+-- INSERT INTO ENGINEERS(ENGINEER_ID, NAME,
+--                       TENURE, NATIONALITY)
+-- VALUES (0, 'Frank Lamberty', 18, 'German'),
+--        (1, 'Christopher E. Bangle', 10, 'American');
+

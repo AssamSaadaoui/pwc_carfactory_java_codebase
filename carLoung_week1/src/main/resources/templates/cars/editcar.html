@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+
+</head>
+<body>
+<div class="container edit-car">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <h2>Car Details</h2>
+    <div>
+        <form th:object="${car}" class="form-horizontal" method="post" enctype="multipart/form-data">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                <p>There was an error within the form! </p>
+            </div>
+            <div class="col-sm-4">
+                <img id="car"
+                     th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
+                     class="card-img-top" th:alt-title="${car.model}">
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Car model:</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" th:field="*{model}"/>
+                </div>
+            </div>
+            <div th:object="${tradeMark}">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Trademark:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" th:field="*{title}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Trademark founder:</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" th:field="*{founder}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Trademark launch date:</label>
+                    <div class="col-sm-4"><input type="number" class="form-control" th:field="*{launchYear}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Engine:</label>
+                <div class="col-sm-4"><input type="text" class="form-control" th:field="*{engineSize}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Price:</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" th:field="*{price}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Image: </label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="file" name="image"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Release date:</label>
+                <div class="col-sm-2">
+                    <input id="date" type="date" class="form-control" th:value="*{#temporals.formatISO(releaseDate)}"
+                           th:field="*{releaseDate}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Color:</label>
+                <div class="col-sm-4">
+                    <label>
+                        <select name="color"> class="form-select" aria-label="Default select example">
+                            <option th:text="${'>>'+car.color.getDisplayValue()+'<<'}" th:value="${car.color}"></option>
+                            <option th:each="colorOpt : ${colors}"
+                                    th:value="${colorOpt}" th:text="${colorOpt.getDisplayValue()}"></option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:object="${car}" th:inline="javascript">
+    let releaseDate = [[${car.releaseDate}]];
+    let dateElement = document.getElementById('date');
+    dateElement.value = releaseDate
+</script>
+</body>
+</html>
+
+
+

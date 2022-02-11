@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Engineers</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <main class="engineersPage">
+        <div class="container">
+            <div style="margin-top: 1rem"th:if="${param.get('success')!= null}" class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+                The engineer was successfully deleted!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <form class="form-horizontal" th:action="@{/engineers/filter}">
+            <div class="row">
+                <div class="col-sm-2">
+                    <select name="lookup" class="form-select form-select-sm"
+                            aria-label=".form-select-sm example" required>
+                        <option th:value="none" selected>Filter by tenure</option>
+                        <option th:value="eqt">Equal to</option>
+                        <option th:value="grt">Greater than or equal to</option>
+                        <option th:value="lesst">Less than or equal to</option>
+                    </select></div>
+                <div class="col-sm-2" style="margin-right: -7rem"><input class="form-control col-sm" style="width: 6rem"
+                                                                         name="tenure" type="search"
+                                                                         aria-label="Search"
+                                                                         placeholder="e.g 10"
+                                                                         required></div>
+                <div class="col-sm-2">
+                    <button class="btn btn-outline-success bg-dark" type="submit">Filter</button>
+                </div>
+            </div>
+        </form>
+        <div class="row" th:if="${not #lists.isEmpty(engineers)}">
+            <div class="col-md-4 item" th:each="engineer: ${engineers}">
+                <div class="card" style="width: 18rem;">
+                    <img id="car" src="../../static/imgs/avatar.png" th:src="@{/imgs/avatar.png}" class="card-img-top"
+                         th:alt-title="${engineer.name}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${engineer.name}"></h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li th:utext="#{aname(${engineer.name})}" class="list-group-item">A first item</li>
+                        <li th:utext="#{anationality(${engineer.nationality})}"
+                            th:text="'Nationality: '+${engineer.nationality}" class="list-group-item">A second item
+                        </li>
+                        <li th:utext="#{atenure(${engineer.tenure})}"
+                            th:text="'Tenure: '+${engineer.tenure}+' year'+(${engineer.tenure}>1?'s':'')"
+                            class="list-group-item">A third item
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <a th:utext="#{adetails}" th:href="${ '/engineers/' + engineer.getId()}">View</a>
+                        <a th:utext="#{aedit}" th:href="${'/engineers/edit/' + engineer.getId()}">Edit</a>
+                        <a th:utext="#{adelete}" th:href="${'/engineers/delete/' + engineer.getId()}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
+
