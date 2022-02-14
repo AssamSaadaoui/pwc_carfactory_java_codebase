@@ -40,15 +40,13 @@
                     </div>
                     <!--                    th:text="'Model: '+${car.model}"-->
                     <ul class="list-group list-group-flush">
-                        <li id="model" th:utext="#{amodel(${car.model})}" class="list-group-item"></li>
-                        <li th:utext="#{aengineSize(${car.engineSize})}" class="list-group-item">
-                        </li>
-                        <li th:utext="#{aprice(${car.price})}" class="list-group-item"></li>
+                        <li class="list-group-item"><input type="text"></li>
+                        <li class="list-group-item"><input type="text"></li>
+                        <li class="list-group-item"><input type="text"></li>
                     </ul>
                     <div class="card-body">
                         <a th:utext="#{adetails}" th:href="${ '/cars/' + car.getId()}" class="card-link">Details</a>
-                        <!--                        <a th:utext="#{aedit}" th:href="${'/cars/edit/' + car.getId()}">Edit</a>-->
-                        <a class="editBtn">Edit</a>
+                        <a th:utext="#{aedit}" th:href="${'/cars/edit/' + car.getId()}">Edit</a>
                         <a th:utext="#{adelete}" th:href="${'/cars/delete/' + car.getId()}">Delete</a>
                     </div>
                 </div>
@@ -56,27 +54,5 @@
         </div>
     </main>
 </div>
-<script>
-    let btns = document.querySelectorAll(".editBtn")
-    btns.forEach(btn => {
-        btn.addEventListener("click", toggleUpdateCar)
-    })
-
-    function toggleUpdateCar(event) {
-        const clickedButton = event.target;
-        document.getElementById("model").contentEditable = "true"
-
-        // console.log(Array.from(clickedButton.parentElement.previousElementSibling.children));
-        // Array.from(clickedButton.parentElement.previousElementSibling.children).forEach(ele => {
-        //     console.log(ele.innerHTML)
-        // })
-        // const paragraphElement = clickedButton
-        //     .previousElementSibling
-        //     .previousElementSibling;
-        // paragraphElement.contentEditable = "true";
-    }
-
-
-</script>
 </body>
 </html>

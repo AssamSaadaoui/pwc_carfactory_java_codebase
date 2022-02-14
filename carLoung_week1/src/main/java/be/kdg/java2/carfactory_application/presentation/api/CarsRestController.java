@@ -34,7 +34,7 @@ public class CarsRestController {
         this.engineerService = engineerService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<CarDTO>> searchCars(@RequestParam String lookup) {
         logger.debug("Looking up " + lookup);
         var cars = carService.findByModel(lookup);
@@ -52,11 +52,11 @@ public class CarsRestController {
         return new ResponseEntity<>(carsDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/order")
+    @GetMapping("/sort")
     public ResponseEntity<List<CarDTO>> orderByPrice(@RequestParam("order") String order) {
         logger.debug("Ordering by price: " + order);
-        List<Car> carsByAscOrder = carService.orderByPriceAsc();
-        List<Car> carsByDescOrder = carService.orderByPriceDesc();
+        var carsByAscOrder = carService.orderByPriceAsc();
+        var carsByDescOrder = carService.orderByPriceDesc();
         var cars = (order.equals("asc")) ? carsByAscOrder : carsByDescOrder;
         var carsDTOS = cars.stream()
                 .map(car -> {
@@ -72,30 +72,39 @@ public class CarsRestController {
         return new ResponseEntity<>(carsDTOS, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{carId}/delete")
-    public ResponseEntity<Void> deleteContributor(@PathVariable int carId, @RequestParam("child") int enId) {
+    @DeleteMapping("/{carId}/engineers/{enId}")
+    public ResponseEntity<Void> deleteContributor(@PathVariable int carId, @PathVariable int enId) {
         logger.debug("Deleting relation between car and engineer");
-        ControllerHelper.deleteRelation(carId, enId, engineerService, carService);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/addcontributor")
-    @ResponseBody
-    public ResponseEntity<String> addContributor(@RequestBody EngineerDTO dto) {
-        Engineer newEngineer = new Engineer(dto.getName(), dto.getTenure(), dto.getNationality());
-        for (Integer id : dto.getContributionIds()) {
-            Car car = carService.findById(id);
-            car.addEngineer(newEngineer);
-            newEngineer.addCar(car);
-            try {
-                engineerService.addEngineer(newEngineer);
-            } catch (IOException | EntityAlreadyExistsException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-            }
+        var contributor = engineerService.findById(enId);
+        var contribution = carService.findById(carId);
+        if (contributor == null || contribution == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        //      Deleting relationship
+        contributor.removeCar(contribution);
+        contribution.removeEngineer(contributor);
+        //      Updating the repository
+        carService.update(contribution);
+//        engineerService.update(contributor); persist has cascading type
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    @PostMapping("/{carId}/engineers")
+//    @ResponseBody implicit
+    public ResponseEntity<Object> addContributor(@RequestBody EngineerDTO dto, @PathVariable int carId) {
+        var newEngineer = new Engineer(dto.getName(), dto.getTenure(), dto.getNationality());
+        var car = carService.findById(carId);
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        car.addEngineer(newEngineer);
+        newEngineer.addCar(car);
+        try {
+            engineerService.addEngineer(newEngineer);
+        } catch (IOException | EntityAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        dto.setId(newEngineer.getId());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }

@@ -1,29 +1,36 @@
 //Window variables
 const currentLocation = window.location.href;
 const language = window.navigator.language;
-const objectStr = `${currentLocation.includes('engineers') ? 'engineer' : 'car'}`;
+const currentPath = `${currentLocation.includes('engineers') ? 'engineer' : 'car'}`;
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
 const dataList = document.getElementById("carsList");
 //Order cars elements
 const toOrderCarList = document.getElementById("listOfCars")
 const orderSelectEl = document.getElementById("order");
-//Details page delete button
+//Details page
 const deleteBtns = document.querySelectorAll(".deleteBtn")
-let addRelation = document.getElementById("addrelation")
-
+const addRelationButton = document.getElementById("addRelationButton")
 
 //Event listeners
-if (objectStr === 'car' && orderSelectEl) //check location (orderSelect element only exists in cars page)
+if (currentPath === 'car' && orderSelectEl) //check location (orderSelect element only exists in cars page)
     orderSelectEl.addEventListener("change", async () => orderCars())
 //
-if ((objectStr === 'car' || objectStr === 'engineer') && searchFieldEl)
+if ((currentPath === 'car' || currentPath === 'engineer') && searchFieldEl)
     searchFieldEl.addEventListener("keyup", async () => search());
 //
-if (deleteBtns)
-    deleteBtns.forEach(btn => btn.addEventListener('click', async () => deleteObject(btn.nextElementSibling)))
+if (deleteBtns) {
+    deleteBtns.forEach(btn => btn.addEventListener('click', async () => {
+        const hiddenInputContainingChildId = btn.nextElementSibling;
+        if (currentPath === 'car')
+            await deleteContributor(hiddenInputContainingChildId)
+        else if (currentPath === 'engineer')
+            await deleteContribution(hiddenInputContainingChildId)
+    }))
+}
 //
-addRelation.addEventListener("click", async () => addContributor())
+if (addRelationButton)
+    addRelationButton.addEventListener("click", async () => addContributor())
 
 //Redirect upon selecting an option
 function redirect(route) {
@@ -32,13 +39,13 @@ function redirect(route) {
 
 //Search objects
 const search = async function () {
-    let lookupValue = searchFieldEl.value;
+    const lookupValue = searchFieldEl.value;
     if (lookupValue.length < 3) {
         dataList.innerHTML = ''
         return;
     }
     try {
-        let response = await fetch(`/api/${objectStr}s?lookup=${lookupValue}`,
+        const response = await fetch(`/api/${currentPath}s?lookup=${lookupValue}`,
             {
                 headers: {
                     Accept: "application/json"
@@ -64,13 +71,13 @@ function processSearchData(objectsArray) {
     const map = new Map();
     objectsArray.forEach(obj => {
         dataList.innerHTML += `
-           <option  value="${objectStr === 'engineer' ? obj.name : obj.model}">
+           <option  value="${currentPath === 'engineer' ? obj.name : obj.model}">
         `;
-        map.set(`${objectStr === 'engineer' ? obj.name : obj.model}`, obj.id)
+        map.set(`${currentPath === 'engineer' ? obj.name : obj.model}`, obj.id)
     })
     searchFieldEl.addEventListener("change", () => {
         map.forEach((value, key) => {
-            if (key === searchFieldEl.value) redirect(`${objectStr}s/${value}`)
+            if (key === searchFieldEl.value) redirect(`${currentPath}s/${value}`)
         })
     })
 }
@@ -78,9 +85,9 @@ function processSearchData(objectsArray) {
 
 //Order cars by price
 const orderCars = async function () {
-    let orderValue = orderSelectEl.value;
+    const orderValue = orderSelectEl.value;
     try {
-        let response = await fetch(`/api/cars/order?order=${orderValue}`,
+        const response = await fetch(`/api/cars/sort?order=${orderValue}`,
             {
                 headers: {
                     Accept: "application/json"
@@ -130,12 +137,13 @@ function processOrderData(carsArray) {
 }
 
 // alert(elsContainingId[0])
-const deleteObject = async function (ele) {
-    let ownerEntityId = parseInt(document.getElementById("ownerEntityId").value)
-    let id = parseInt(ele.value)
-    let titlesTd = ele.parentElement.parentElement.parentElement.parentElement.children[0]
+//Delete an engineer from a car
+const deleteContributor = async function (ele) {
+    const carId = parseInt(document.getElementById("ownerEntityId").value)
+    const engineerId = parseInt(ele.value)
+    const titlesTd = document.getElementById("tdTitle")
     try {
-        let response = await fetch(`/api/${objectStr}s/${ownerEntityId}/delete?child=${id}`, {
+        const response = await fetch(`/api/cars/${carId}/engineers/${engineerId}`, {
             headers: {
                 Accept: "application/json"
             },
@@ -148,7 +156,36 @@ const deleteObject = async function (ele) {
         }
         if (response.status === 200) {
             // redirect(`/${objectStr}s?success=true`)
-            ele.parentNode.parentNode.remove()
+            ele.parentNode.parentNode.parentNode.parentNode.remove()
+            if (titlesTd.nextElementSibling.children.length === 0)
+                titlesTd.parentNode.remove()
+        }
+    } catch (err) {
+        // catches errors both in fetch and response.json
+        alert(err);
+    }
+}
+
+//Delete a car from an engineer's work
+const deleteContribution = async function (ele) {
+    const engineerId = parseInt(document.getElementById("ownerEntityId").value)
+    const carId = parseInt(ele.value)
+    const titlesTd = document.getElementById("tdTitle")
+    try {
+        const response = await fetch(`/api/engineers/${engineerId}/cars/${carId}`, {
+            headers: {
+                Accept: "application/json"
+            },
+            method: 'DELETE'
+        })
+        if (!response.ok) {
+            // get error message from body or default to response status
+            const error = response.status;
+            return Promise.reject(error);
+        }
+        if (response.status === 200) {
+            // redirect(`/${objectStr}s?success=true`)
+                ele.parentNode.parentNode.parentNode.parentNode.remove()
             if (titlesTd.nextElementSibling.children.length === 0)
                 titlesTd.parentNode.remove()
         }
@@ -160,42 +197,47 @@ const deleteObject = async function (ele) {
 
 
 const addContributor = async function () {
-    let name = document.getElementById("name")
-    let nationality = document.getElementById("nationality").value
-    let tenure = parseInt(document.getElementById("tenure").value)
-    let miniFormOuterDivEl = name.parentElement.parentElement.parentElement;
-    let messageP = document.createElement("p");
-    let ownerEntityId = parseInt(document.getElementById("ownerEntityId").value)
-    let contributorsList = document.getElementById("entities")
+    const name = document.getElementById("name")
+    const nationality = document.getElementById("nationality").value
+    const tenure = parseInt(document.getElementById("tenure").value)
+    const carId = parseInt(document.getElementById("ownerEntityId").value)
+    //Data manipulation specific
+    const miniFormOuterDivEl = name.parentElement.parentElement.parentElement;
+    const responseTextElement = document.createElement("p");
+    const contributorsList = document.getElementById("contributors")
     try {
-        let response = await fetch('/api/cars/addcontributor', {
+        let response = await fetch(`/api/cars/${carId}/engineers`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                "Content-Type": 'application/json',
             },
             body: JSON.stringify({
                 "name": `${name.value}`,
                 "tenure": tenure,
                 "nationality": `${nationality}`,
-                "contributionIds": [ownerEntityId]
+                "contributionIds": [carId]
             })
         })
-        let data = response.json();
+        let data;
         if (response.status === 200) {
-            messageP.innerText = "Contributor successfully added!"
-            messageP.style.color = "green"
+            //engineerDTOObject
+            data = await response.json();
+            responseTextElement.innerText = "Contributor successfully added!"
+            responseTextElement.style.color = "green"
             contributorsList.innerHTML += `<li style="list-style: none;text-decoration: none;">
-                                            <a href="${'/engineers/'}"
-                                              >${name.value}</a> <a style="padding: 0px 3px;"
+                                            <a href="${`/engineers/${data.id}`}"
+                                              >- ${name.value}</a> <a style="padding: 0px 3px;"
                                                                                        class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
                                             <input id="" type="hidden" value="">
                                         </li>`
-            miniFormOuterDivEl.insertBefore(messageP, miniFormOuterDivEl.firstChild);
+            miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
             // window.top.location = window.top.location
         } else if (response.status === 409) {
-            messageP.innerText = "Contributor couldn't be added :'("
-            messageP.style.color = "red"
-            miniFormOuterDivEl.insertBefore(messageP, miniFormOuterDivEl.firstChild);
+            data = await response.text();
+            responseTextElement.innerText = `${data}`
+            responseTextElement.style.color = "red"
+            miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
         }
     } catch (err) {
         // catches errors both in fetch and response.json

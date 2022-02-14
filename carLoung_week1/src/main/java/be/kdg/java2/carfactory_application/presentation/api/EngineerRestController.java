@@ -27,7 +27,7 @@ public class EngineerRestController {
         this.carService = carService;
     }
 
-    @GetMapping()
+    @GetMapping
     ResponseEntity<List<EngineerDTO>> searchEngineers(@RequestParam String lookup) {
         logger.debug("Looking up " + lookup);
         var engineers = engineerService.findByNameContains(lookup);
@@ -44,9 +44,20 @@ public class EngineerRestController {
         return new ResponseEntity<>(engineerDTOS, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{enId}/delete")
-    public ResponseEntity<Void> deleteContribution(@PathVariable int enId, @RequestParam("child") int carId) {
-        ControllerHelper.deleteRelation(carId, enId, engineerService, carService);
+    @DeleteMapping("/{enId}/cars/{carId}")
+    public ResponseEntity<Void> deleteContribution(@PathVariable int enId, @PathVariable int carId) {
+        logger.debug("Deleting relation between car and engineer");
+        var contributor = engineerService.findById(enId);
+        var contribution = carService.findById(carId);
+        if (contributor == null || contribution == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //      Deleting relationship
+        contributor.removeCar(contribution);
+        contribution.removeEngineer(contributor);
+        //      Updating the repository
+        carService.update(contribution);
+//        engineerService.update(contributor); persist has cascading type
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

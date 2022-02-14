@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Invalid image format")
 public class EntityAlreadyExistsException extends Error {
 
-
     public EntityAlreadyExistsException(String msg) {
         super(msg);
     }

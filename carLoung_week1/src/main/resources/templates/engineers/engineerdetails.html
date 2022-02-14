@@ -41,14 +41,22 @@
                                 <td th:text="${engineer.tenure} +' year'+(${engineer.tenure}>1?'s':'')"></td>
                             </tr>
                             <tr th:if="${!engineer.getCars().isEmpty()}">
-                                <td>Contributions/Work</td>
+                                <td id="tdTitle">Contributions/Work</td>
                                 <td>
                                     <div th:each="car : *{cars}">
                                         <li style="list-style: none;">
-                                            <a style="text-decoration: none" th:href="${ '/cars/' + car.getId()}"
-                                               th:text="'- '+${car.tradeMark.getTitle()}+' '+${car.model}"></a>
-                                            <a style="padding: 0px 3px;" class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
-                                            <input id="" type="hidden" th:value="${car.id}">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <a style="text-decoration: none"
+                                                       th:href="${ '/cars/' + car.getId()}"
+                                                       th:text="'- '+${car.tradeMark.getTitle()}+' '+${car.model}"></a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a style="padding: 0px 3px;"
+                                                       class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
+                                                    <input id="" type="hidden" th:value="${car.id}">
+                                                </div>
+                                            </div>
                                         </li>
                                     </div>
                                 </td>

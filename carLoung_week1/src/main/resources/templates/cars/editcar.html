@@ -89,8 +89,8 @@
     </div>
 </div>
 <script th:object="${car}" th:inline="javascript">
-    let releaseDate = [[${car.releaseDate}]];
-    let dateElement = document.getElementById('date');
+    const releaseDate = [[${car.releaseDate}]];
+    const dateElement = document.getElementById('date');
     dateElement.value = releaseDate
 </script>
 </body>
