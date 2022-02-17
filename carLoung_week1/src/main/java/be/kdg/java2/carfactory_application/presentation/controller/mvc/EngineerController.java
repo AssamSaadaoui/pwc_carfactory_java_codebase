@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.presentation.controller;
+package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
 import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Color;
@@ -6,9 +6,9 @@ import be.kdg.java2.carfactory_application.domain.Engineer;
 import be.kdg.java2.carfactory_application.domain.TradeMark;
 import be.kdg.java2.carfactory_application.exceptions.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.exceptions.InvalidImageException;
+import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
+import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
 import be.kdg.java2.carfactory_application.presentation.helper.ControllerHelper;
-import be.kdg.java2.carfactory_application.presentation.dto.CarDTO;
-import be.kdg.java2.carfactory_application.presentation.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.services.CarService;
 import be.kdg.java2.carfactory_application.services.EngineerService;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public class EngineerController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateEngineer(@PathVariable int id, @Valid @ModelAttribute("dto") EngineerDTO dto, BindingResult result,
+    public String updateEngineer(@PathVariable int id, @Valid @ModelAttribute("dto") EngineerViewModel engineerViewModel, BindingResult result,
                                  Model model) {
         if (result.hasErrors()) {
             logger.error(result.toString());
@@ -100,14 +100,14 @@ public class EngineerController {
             return "/engineers/engineereditform";
         }
         Engineer changedEngineer = engineerService.findById(id);
-        dto.getContributionIds().forEach((contributionId) -> {
+        engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
                 ControllerHelper.addContribution(changedEngineer, carService.findById(contributionId));
             }
         });
-        changedEngineer.setName(dto.getName());
-        changedEngineer.setTenure(dto.getTenure());
-        changedEngineer.setNationality(dto.getNationality());
+        changedEngineer.setName(engineerViewModel.getName());
+        changedEngineer.setTenure(engineerViewModel.getTenure());
+        changedEngineer.setNationality(engineerViewModel.getNationality());
         logger.debug("editing the engineer with id: " + id);
         engineerService.update(changedEngineer);
         return "redirect:/engineers/" + id;
@@ -116,8 +116,8 @@ public class EngineerController {
     //Create
     @GetMapping("/new")
     public String newEngineerForm(Model model) {
-        model.addAttribute("engineerDTO", new EngineerDTO());
-        model.addAttribute("carDTO", new CarDTO());
+        model.addAttribute("engineerDTO", new EngineerViewModel());
+        model.addAttribute("carDTO", new CarViewModel());
 //        to get a list of existent engineers n colors
         model.addAttribute("cars", carService.getAllCars());
         model.addAttribute("colors", Color.values());
@@ -127,8 +127,8 @@ public class EngineerController {
 
     //    A lot of the checks here i wanted to make at the service layer, but i wasn't so sure.
     @PostMapping("/new")
-    public String processAddEngineer(@Valid @ModelAttribute("engineerDTO") EngineerDTO engineerDTO, BindingResult result,
-                                     @Valid @ModelAttribute("carDTO") CarDTO carDTO, BindingResult carResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String processAddEngineer(@Valid @ModelAttribute("engineerDTO") EngineerViewModel engineerViewModel, BindingResult result,
+                                     @Valid @ModelAttribute("carDTO") CarViewModel carViewModel, BindingResult carResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
         if (result.hasErrors()) {
             logger.error(result.toString());
             model.addAttribute("cars", carService.getAllCars());
@@ -139,7 +139,7 @@ public class EngineerController {
             return "/engineers/engineerform";
         }
         //The user has to at least add a contribution via form or existent cars (contributions has not to be empty)
-        if (carResult.hasErrors() && (engineerDTO.getContributionIds().isEmpty())) { //if contributions are empty
+        if (carResult.hasErrors() && (engineerViewModel.getContributionIds().isEmpty())) { //if contributions are empty
             logger.error(carResult.toString());
             logger.debug("There wasn't any contribution add to the new engineer");
             model.addAttribute("cars", carService.getAllCars());
@@ -148,9 +148,9 @@ public class EngineerController {
             model.addAttribute("isSubForm", true);
             return "/engineers/engineerform";
         }
-        Engineer engineer = new Engineer(engineerDTO.getName(), engineerDTO.getTenure(), engineerDTO.getNationality());
+        Engineer engineer = new Engineer(engineerViewModel.getName(), engineerViewModel.getTenure(), engineerViewModel.getNationality());
         //Add contributions from checkbox list
-        engineerDTO.getContributionIds().forEach((contributionId) -> {
+        engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
                 ControllerHelper.addContribution(engineer, carService.findById(contributionId));
             }
@@ -159,8 +159,8 @@ public class EngineerController {
         //Also, if Car form would be discarded if wrong data was passed in at the same time with a contribution (car) being picked from checkbox
         if (!carResult.hasErrors()) {
             //Car returned from the form (if engineer isn't persisted, it'd be cast away)
-            TradeMark tradeMark = new TradeMark(carDTO.getTitle(), carDTO.getFounder(), carDTO.getLaunchYear());
-            Car car = new Car(carDTO.getModel(), carDTO.getEngineSize(), carDTO.getPrice(), carDTO.getReleaseDate(), carDTO.getColor());
+            TradeMark tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
+            Car car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
             car.setTradeMark(tradeMark);
             tradeMark.addCar(car);
             logger.debug("processing the new engineer item creation...");

@@ -1,10 +1,7 @@
-package be.kdg.java2.carfactory_application.presentation.dto;
+package be.kdg.java2.carfactory_application.presentation.controller.api.dto;
 
 import be.kdg.java2.carfactory_application.domain.Color;
-import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.domain.TradeMark;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -33,6 +30,16 @@ public class CarDTO {
     @NotNull(message = "Release date is mandatory")
     private LocalDate releaseDate;
     private Color color;
+    private String colorText;
+
+    public String getColorText() {
+        return colorText;
+    }
+
+    public void setColorText(String colorText) {
+        this.colorText = colorText;
+    }
+
     //    link to engineers that worked on the car
     private List<Integer> engineersIds = new ArrayList<>();
 

@@ -5,12 +5,15 @@ const currentPath = `${currentLocation.includes('engineers') ? 'engineer' : 'car
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
 const dataList = document.getElementById("carsList");
-//Order cars elements
+//Cars page
 const toOrderCarList = document.getElementById("listOfCars")
 const orderSelectEl = document.getElementById("order");
 //Details page
 const deleteBtns = document.querySelectorAll(".deleteBtn")
 const addRelationButton = document.getElementById("addRelationButton")
+const editButton = document.getElementById("editBtn")
+const saveButton = document.getElementById("saveBtn")
+const table = document.querySelector(".details table")
 
 //Event listeners
 if (currentPath === 'car' && orderSelectEl) //check location (orderSelect element only exists in cars page)
@@ -28,15 +31,24 @@ if (deleteBtns) {
             await deleteContribution(hiddenInputContainingChildId)
     }))
 }
-//
+////Details page
 if (addRelationButton)
     addRelationButton.addEventListener("click", async () => addContributor())
+if (editButton)
+    editButton.addEventListener("click", toggleEditableForCar)
+if (saveButton) {
+    saveButton.disabled = true
+    saveButton.addEventListener("click", saveUpdate)
+}
 
+//Helper methods
 //Redirect upon selecting an option
 function redirect(route) {
     window.location.href = route;
 }
 
+
+// GET section
 //Search objects
 const search = async function () {
     const lookupValue = searchFieldEl.value;
@@ -136,7 +148,10 @@ function processOrderData(carsArray) {
     })
 }
 
-// alert(elsContainingId[0])
+// -----------------------------------------------------------------------------------------------------------------------
+
+
+// DELETE section
 //Delete an engineer from a car
 const deleteContributor = async function (ele) {
     const carId = parseInt(document.getElementById("ownerEntityId").value)
@@ -166,7 +181,7 @@ const deleteContributor = async function (ele) {
     }
 }
 
-//Delete a car from an engineer's work
+//delete a car from an engineer's work
 const deleteContribution = async function (ele) {
     const engineerId = parseInt(document.getElementById("ownerEntityId").value)
     const carId = parseInt(ele.value)
@@ -185,7 +200,7 @@ const deleteContribution = async function (ele) {
         }
         if (response.status === 200) {
             // redirect(`/${objectStr}s?success=true`)
-                ele.parentNode.parentNode.parentNode.parentNode.remove()
+            ele.parentNode.parentNode.parentNode.parentNode.remove()
             if (titlesTd.nextElementSibling.children.length === 0)
                 titlesTd.parentNode.remove()
         }
@@ -194,8 +209,11 @@ const deleteContribution = async function (ele) {
         alert(err);
     }
 }
+// -----------------------------------------------------------------------------------------------------------------------
 
 
+// POST section
+//Adding a contributor to a car (details page)
 const addContributor = async function () {
     const name = document.getElementById("name")
     const nationality = document.getElementById("nationality").value
@@ -244,4 +262,63 @@ const addContributor = async function () {
         alert(err);
     }
 }
+// -----------------------------------------------------------------------------------------------------------------------
 
+
+//PUT section
+function toggleEditableForCar(event) {
+    const clickedButton = event.target;
+    deleteBtns.forEach(btn => btn.disabled = true)
+    clickedButton.disabled = true
+    saveButton.disabled = false
+    const rows = Array.from(table.rows);
+    for (let i = 0; i < rows.length - 1; i++) {
+        const td = rows[i].getElementsByTagName("td")[1]
+        td.classList.add("form-control", "sample-code-frame")
+        td.contentEditable = "true"
+    }
+    rows[0].getElementsByTagName("td")[1].focus();
+}
+
+async function saveUpdate(event) {
+    const carId = parseInt(document.getElementById("ownerEntityId").value)
+    const rows = Array.from(table.rows);
+    const tds = (i) => rows[i].getElementsByTagName("td");
+    const engineSize = parseFloat(tds(1)[1].innerText.match(/([0-9]*[.])?[0-9]+/)[0]).toFixed(1)
+    const price = parseInt(tds(5)[1].innerText.match(/\d+/)[0])
+    let editedCarObj = {
+        "model": `${tds(0)[1].innerText}`,
+        "engineSize": engineSize,
+        "title": `${tds(2)[1].innerText}`,
+        "releaseDate": `${tds(3)[1].innerText}`,
+        "price": price,
+        "colorText": `${tds(4)[1].innerText}`
+    }
+    try {
+        let response = await fetch(`/api/cars/${carId}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": 'application/json',
+            },
+            body: JSON.stringify(editedCarObj)
+        })
+        let data;
+        if (response.status === 200) {
+            rows.forEach(row => {
+                let tData = row.getElementsByTagName("td")[1]
+                tData.contentEditable = "false"
+                tData.classList.remove("form-control", "sample-code-frame")
+                tData.style.transition = "0.1s linear"
+            })
+            event.target.disabled = true
+            editButton.disabled = false
+            deleteBtns.forEach(btn => btn.disabled = false)
+        } else if (response.status === 409) {
+            data = await response.text();
+
+        }
+    } catch (err) {
+        // catches errors both in fetch and response.json
+        alert(err);
+    }
+}

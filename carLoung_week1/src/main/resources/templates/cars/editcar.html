@@ -63,7 +63,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Release date:</label>
                 <div class="col-sm-2">
-                    <input id="date" type="date" class="form-control" th:value="*{#temporals.formatISO(releaseDate)}"
+                    <input id="date" type="date" class="form-control"
                            th:field="*{releaseDate}"/>
                 </div>
             </div>
@@ -91,7 +91,10 @@
 <script th:object="${car}" th:inline="javascript">
     const releaseDate = [[${car.releaseDate}]];
     const dateElement = document.getElementById('date');
-    dateElement.value = releaseDate
+    // const month = releaseDate.monthValue;
+    // dateElement.value = `${releaseDate.year}-${month < 10 ? '0' : ''}${month}-${releaseDate.dayOfMonth}`
+    // console.log(releaseDate);
+    dateElement.value = releaseDate;
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.presentation.controller;
+package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

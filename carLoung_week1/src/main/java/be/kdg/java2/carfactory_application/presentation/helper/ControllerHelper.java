@@ -2,18 +2,13 @@ package be.kdg.java2.carfactory_application.presentation.helper;
 
 import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.presentation.controller.EngineerController;
+import be.kdg.java2.carfactory_application.presentation.controller.mvc.EngineerController;
 import be.kdg.java2.carfactory_application.services.CarService;
 import be.kdg.java2.carfactory_application.services.EngineerService;
-import be.kdg.java2.carfactory_application.util.FileUploadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 public class ControllerHelper {
     private static final Logger logger = LoggerFactory.getLogger(EngineerController.class);

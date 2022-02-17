@@ -1,8 +1,7 @@
-package be.kdg.java2.carfactory_application.presentation.api;
+package be.kdg.java2.carfactory_application.presentation.controller.api;
 
-import be.kdg.java2.carfactory_application.presentation.controller.CarController;
-import be.kdg.java2.carfactory_application.presentation.dto.EngineerDTO;
-import be.kdg.java2.carfactory_application.presentation.helper.ControllerHelper;
+import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
+import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.services.CarService;
 import be.kdg.java2.carfactory_application.services.EngineerService;
 import org.slf4j.Logger;

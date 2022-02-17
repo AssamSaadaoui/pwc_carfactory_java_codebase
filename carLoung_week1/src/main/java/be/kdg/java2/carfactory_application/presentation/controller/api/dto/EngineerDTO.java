@@ -1,11 +1,8 @@
-package be.kdg.java2.carfactory_application.presentation.dto;
-
-import be.kdg.java2.carfactory_application.domain.Car;
+package be.kdg.java2.carfactory_application.presentation.controller.api.dto;
 
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;

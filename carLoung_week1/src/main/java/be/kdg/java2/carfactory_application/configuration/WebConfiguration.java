@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.configuration;
 
-import be.kdg.java2.carfactory_application.presentation.converter.StringToLocalDateConverter;
+import be.kdg.java2.carfactory_application.presentation.controller.converter.StringToLocalDateConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

@@ -1,32 +1,97 @@
-#Deleting contributor with id {3} from car with id {3}
+###PUT SECTION
+###Updating a car
 ###Response code: 200
-DELETE http://localhost:8081/api/cars/3/delete?child=3
+PUT http://localhost:8081/api/cars/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "model": 111,
+  "engineSize": 1.5,
+  "title": "potato",
+  "releaseDate": "1998-03-05",
+  "price": 10000,
+  "colorText": "Black"
+}
+
+
+
+####POST SECTION
+###Adding a contributor to a car
+###Response code: 200
+POST http://localhost:8081/api/cars/1/engineers
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Issam",
+  "tenure": 10,
+  "nationality": "Algerian"
+}
+
+###Adding a contributor with the same name to a car
+###Response code: 409 (Conflict)
+### Content-Type is a String in json format containing the expection message ( {Entity} already exists)
+POST http://localhost:8081/api/cars/1/engineers
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Issam",
+  "tenure": 10,
+  "nationality": "Algerian"
+}
+
+
+###Adding a contributor to a car breaking constraints
+###Response code: 400
+POST http://localhost:8081/api/cars/1/engineers
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "I",
+  "tenure": 1000,
+  "nationality": "Algerian"
+}
+
+
+
+###DELETE SECTION
+###Deleting contributor with id {3} from car with id {3}
+###Response code: 200
+DELETE http://localhost:8081/api/cars/3/engineers/3
 Accept: application/json
 
 #Deleting contribution with id {4} from engineer with id {5}
 ###Response code: 200
-DELETE http://localhost:8081/api/engineers/5/delete?child=4
+DELETE http://localhost:8081/api/engineers/5/cars/4
 Accept: application/json
 
 
+
+#GET SECTION
 #Response code: 200
 ### By default, it would returned a content of type html since standardly mvc routes respond in HTML
 GET http://localhost:8081/cars
 Accept: application/json
+
 ###Content-type: text/html
 
 ###Response code: 200
-GET http://localhost:8081/api/cars/order?order=asc
+GET http://localhost:8081/api/cars/sort?order=asc
 Accept: application/json
-###Content-type: application/json
 
+###Content-type: application/json
 
 ###Response code: 200
 GET http://localhost:8081/api/cars?lookup=a-class
 Accept: application/json
+
 ###Content-type: application/json
 
 ###Response code: 204
+###Empty response body (no match with "potato")
 GET http://localhost:8081/api/cars?lookup=potato
 Accept: application/json
 
@@ -37,10 +102,14 @@ Accept: text/html
 ###Content-type: application/json
 
 
+
+###Response code: 200
 GET http://localhost:8081/api/engineers?lookup=Winter Korn
 Accept: application/json
 
-
+######Response code: 200
+GET http://localhost:8081/api/engineers?lookup=Winter Korn
+Accept: application/xml
 
 
 

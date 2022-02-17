@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.presentation.converter;
+package be.kdg.java2.carfactory_application.presentation.controller.converter;
 
 import org.springframework.core.convert.converter.Converter;
 

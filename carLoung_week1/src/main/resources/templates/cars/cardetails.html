@@ -23,6 +23,8 @@
                         <img id="car"
                              th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
                              class="card-img-top" th:alt-title="${car.model}">
+                        <button class="btn btn-outline-success bg-dark editBtn" id="editBtn">Edit</button>
+                        <button class="btn btn-outline-success bg-dark saveBtn" id="saveBtn">Save</button>
                     </div>
                     <div class="col-md-6">
                         <table class="table table-striped">
@@ -60,8 +62,8 @@
                                             <div class="row">
                                                 <div class="col-md-6"><a th:href="${ '/engineers/' + engineer.getId()}"
                                                                          th:text="'- '+${engineer.name}"></a></div>
-                                                <div class="col-md-6"><a style="padding: 0px 3px;"
-                                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
+                                                <div class="col-md-6"><button style="padding: 0px 3px;"
+                                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete</button>
                                                     <input id="" type="hidden" th:value="${engineer.id}"></div>
                                             </div>
                                         </li>
