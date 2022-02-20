@@ -173,7 +173,7 @@ body {
 .sample-code-frame {
     border: 1px solid #0072b3;
     border-left: 6px solid #265672;
-    transition: border 0.2s;
+    transition: border 0.1s;
 }
 
 .details .form-control {

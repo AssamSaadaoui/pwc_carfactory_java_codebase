@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface EngineerService {
 
-    void addEngineer(Engineer engineer) throws IOException;
+    void addEngineer(Engineer engineer);
+
     void addEngineerWithNewCar(Engineer engineer, Car car, MultipartFile multipartFile) throws IOException;
 
     void deleteEngineer(Engineer engineer);
@@ -28,6 +29,8 @@ public interface EngineerService {
     List<Engineer> findByTenure(int tenure);
 
     void update(Engineer changedEngineer);
+
+    void addContributionToEngineer(Car car, Engineer newEngineer);
 
 //    List<Engineer> getEngineerOnTradeMark(String trademark);
 }

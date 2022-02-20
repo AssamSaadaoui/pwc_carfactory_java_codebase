@@ -28,6 +28,8 @@ public interface CarService {
 
     void update(Car contribution);
 
+    void addContributorToCar(Engineer newEngineer, int carId);
+
 
 //    List<Car> getCarsOnModelOrTradeMark(String model, String tradeMark);
 }

@@ -1,7 +1,8 @@
 //Window variables
 const currentLocation = window.location.href;
 const language = window.navigator.language;
-const currentPath = `${currentLocation.includes('engineers') ? 'engineer' : 'car'}`;
+//Checking for current url
+const currentPath = `${currentLocation.includes('engineers') ? 'engineers' : 'cars'}`;
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
 const dataList = document.getElementById("carsList");
@@ -9,36 +10,39 @@ const dataList = document.getElementById("carsList");
 const toOrderCarList = document.getElementById("listOfCars")
 const orderSelectEl = document.getElementById("order");
 //Details page
-const deleteBtns = document.querySelectorAll(".deleteBtn")
+const deleteButtons = document.querySelectorAll(".deleteBtn")
 const addRelationButton = document.getElementById("addRelationButton")
 const editButton = document.getElementById("editBtn")
 const saveButton = document.getElementById("saveBtn")
 const table = document.querySelector(".details table")
 
+
+
 //Event listeners
-if (currentPath === 'car' && orderSelectEl) //check location (orderSelect element only exists in cars page)
+if (orderSelectEl) //check location (orderSelect element only exists in cars page)
     orderSelectEl.addEventListener("change", async () => orderCars())
 //
-if ((currentPath === 'car' || currentPath === 'engineer') && searchFieldEl)
+if (searchFieldEl)
     searchFieldEl.addEventListener("keyup", async () => search());
 //
-if (deleteBtns) {
-    deleteBtns.forEach(btn => btn.addEventListener('click', async () => {
+if (deleteButtons) {
+    deleteButtons.forEach(btn => btn.addEventListener('click', async () => {
+        //if current path is of cars detail page, hiddenInput would contain id of the engineer (contributor) and vice versa
         const hiddenInputContainingChildId = btn.nextElementSibling;
-        if (currentPath === 'car')
+        if (currentPath === 'cars')
             await deleteContributor(hiddenInputContainingChildId)
-        else if (currentPath === 'engineer')
+        else if (currentPath === 'engineers')
             await deleteContribution(hiddenInputContainingChildId)
     }))
 }
-////Details page
+//Details page
 if (addRelationButton)
     addRelationButton.addEventListener("click", async () => addContributor())
 if (editButton)
-    editButton.addEventListener("click", toggleEditableForCar)
+    editButton.addEventListener("click", makeCarUpdatable)
 if (saveButton) {
     saveButton.disabled = true
-    saveButton.addEventListener("click", saveUpdate)
+    saveButton.addEventListener("click", saveCarUpdate)
 }
 
 //Helper methods
@@ -57,7 +61,7 @@ const search = async function () {
         return;
     }
     try {
-        const response = await fetch(`/api/${currentPath}s?lookup=${lookupValue}`,
+        const response = await fetch(`/api/${currentPath}?lookup=${lookupValue}`,
             {
                 headers: {
                     Accept: "application/json"
@@ -83,13 +87,13 @@ function processSearchData(objectsArray) {
     const map = new Map();
     objectsArray.forEach(obj => {
         dataList.innerHTML += `
-           <option  value="${currentPath === 'engineer' ? obj.name : obj.model}">
+           <option  value="${currentPath === 'engineers' ? obj.name : obj.model}">
         `;
-        map.set(`${currentPath === 'engineer' ? obj.name : obj.model}`, obj.id)
+        map.set(`${currentPath === 'engineers' ? obj.name : obj.model}`, obj.id)
     })
     searchFieldEl.addEventListener("change", () => {
         map.forEach((value, key) => {
-            if (key === searchFieldEl.value) redirect(`${currentPath}s/${value}`)
+            if (key === searchFieldEl.value) redirect(`/${currentPath}/${value}`)
         })
     })
 }
@@ -113,7 +117,7 @@ const orderCars = async function () {
         } else {
             alert(`Received status code ${response.status}`);
         }
-        processOrderData(data)
+        processOrderedCarsData(data)
     } catch (err) {
         // catches errors both in fetch and response.json
         alert(err);
@@ -121,14 +125,14 @@ const orderCars = async function () {
 }
 
 //Process ordered data
-function processOrderData(carsArray) {
+function processOrderedCarsData(carsArray) {
     toOrderCarList.innerHTML = ''
     carsArray.forEach(car => {
         toOrderCarList.innerHTML += `
         <div class="col-md-4 item">
           <div class="card cardanim animated goUp" style="width: 18rem;">
-                    <img id="car" src="${car.imagePath}""
-                         class="card-img-top" th:alt-title="${car.model}" alt="">
+                    <img id="car" src="${car.imagePath}"
+                         class="card-img-top" alt-title="${car.model}" alt="">
                     <div class="card-body">
                         <h5 class="card-title">${car.model}</h5>
                     </div>
@@ -215,12 +219,12 @@ const deleteContribution = async function (ele) {
 // POST section
 //Adding a contributor to a car (details page)
 const addContributor = async function () {
-    const name = document.getElementById("name")
+    const name = document.getElementById("name").value
     const nationality = document.getElementById("nationality").value
     const tenure = parseInt(document.getElementById("tenure").value)
     const carId = parseInt(document.getElementById("ownerEntityId").value)
     //Data manipulation specific
-    const miniFormOuterDivEl = name.parentElement.parentElement.parentElement;
+    const miniFormOuterDivEl = document.querySelector(".addEngineer > p ~ div");
     const responseTextElement = document.createElement("p");
     const contributorsList = document.getElementById("contributors")
     try {
@@ -231,9 +235,9 @@ const addContributor = async function () {
                 "Content-Type": 'application/json',
             },
             body: JSON.stringify({
-                "name": `${name.value}`,
+                "name": name,
                 "tenure": tenure,
-                "nationality": `${nationality}`,
+                "nationality": nationality,
                 "contributionIds": [carId]
             })
         })
@@ -244,10 +248,13 @@ const addContributor = async function () {
             responseTextElement.innerText = "Contributor successfully added!"
             responseTextElement.style.color = "green"
             contributorsList.innerHTML += `<li style="list-style: none;text-decoration: none;">
-                                            <a href="${`/engineers/${data.id}`}"
-                                              >- ${name.value}</a> <a style="padding: 0px 3px;"
-                                                                                       class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
-                                            <input id="" type="hidden" value="">
+                                            <div class="row">
+                                                <div class="col-md-6"><a href="${'/engineers/' + data.id}"
+                                                    >- ${name}</a></div>
+                                                <div class="col-md-6"><button style="padding: 0px 3px;"
+                                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete</button>
+                                                    <input id="" type="hidden" value="${data.id}"></div>
+                                            </div>
                                         </li>`
             miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
             // window.top.location = window.top.location
@@ -266,9 +273,9 @@ const addContributor = async function () {
 
 
 //PUT section
-function toggleEditableForCar(event) {
+function makeCarUpdatable(event) {
     const clickedButton = event.target;
-    deleteBtns.forEach(btn => btn.disabled = true)
+    deleteButtons.forEach(btn => btn.disabled = true)
     clickedButton.disabled = true
     saveButton.disabled = false
     const rows = Array.from(table.rows);
@@ -280,10 +287,11 @@ function toggleEditableForCar(event) {
     rows[0].getElementsByTagName("td")[1].focus();
 }
 
-async function saveUpdate(event) {
+async function saveCarUpdate(event) {
     const carId = parseInt(document.getElementById("ownerEntityId").value)
     const rows = Array.from(table.rows);
     const tds = (i) => rows[i].getElementsByTagName("td");
+    //Parsing
     const engineSize = parseFloat(tds(1)[1].innerText.match(/([0-9]*[.])?[0-9]+/)[0]).toFixed(1)
     const price = parseInt(tds(5)[1].innerText.match(/\d+/)[0])
     let editedCarObj = {
@@ -312,7 +320,7 @@ async function saveUpdate(event) {
             })
             event.target.disabled = true
             editButton.disabled = false
-            deleteBtns.forEach(btn => btn.disabled = false)
+            deleteButtons.forEach(btn => btn.disabled = false)
         } else if (response.status === 409) {
             data = await response.text();
 

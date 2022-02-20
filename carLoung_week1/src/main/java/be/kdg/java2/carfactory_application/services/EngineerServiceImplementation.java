@@ -80,6 +80,12 @@ public class EngineerServiceImplementation implements EngineerService {
     }
 
     @Override
+    public void addContributionToEngineer(Car car, Engineer newEngineer) {
+        newEngineer.addCar(car);
+        engineerRepository.save(newEngineer);
+    }
+
+    @Override
     public List<Engineer> findByNameContains(String name) {
         return engineerRepository.findByNameContainsIgnoreCase(name);
     }

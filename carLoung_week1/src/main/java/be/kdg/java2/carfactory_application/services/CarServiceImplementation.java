@@ -2,6 +2,7 @@ package be.kdg.java2.carfactory_application.services;
 
 
 import be.kdg.java2.carfactory_application.domain.Car;
+import be.kdg.java2.carfactory_application.domain.Engineer;
 import be.kdg.java2.carfactory_application.exceptions.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
@@ -81,6 +82,11 @@ public class CarServiceImplementation implements CarService {
     @Override
     public void update(Car contribution) {
         carRepository.save(contribution);
+    }
+
+    @Override
+    public void addContributorToCar(Engineer newEngineer, int carId) {
+        carRepository.findById(carId).orElseThrow().addEngineer(newEngineer);
     }
 
 }

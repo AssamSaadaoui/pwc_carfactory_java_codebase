@@ -68,6 +68,11 @@ Accept: application/json
 DELETE http://localhost:8081/api/engineers/5/cars/4
 Accept: application/json
 
+#Deleting contribution with id {4} from engineer with id {5}
+###Response code: 500
+DELETE http://localhost:8081/api/engineers/5/cars/30
+Accept: application/json
+
 
 
 #GET SECTION
@@ -75,13 +80,12 @@ Accept: application/json
 ### By default, it would returned a content of type html since standardly mvc routes respond in HTML
 GET http://localhost:8081/cars
 Accept: application/json
-
 ###Content-type: text/html
+
 
 ###Response code: 200
 GET http://localhost:8081/api/cars/sort?order=asc
 Accept: application/json
-
 ###Content-type: application/json
 
 ###Response code: 200

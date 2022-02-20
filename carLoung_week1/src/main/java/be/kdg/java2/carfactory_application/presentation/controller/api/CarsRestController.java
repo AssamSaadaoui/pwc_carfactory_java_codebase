@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -82,24 +83,24 @@ public class CarsRestController {
         contributor.removeCar(contribution);
         contribution.removeEngineer(contributor);
         //      Updating the repository
-        carService.update(contribution);
-//        engineerService.update(contributor); persist has cascading type
+        carService.update(contribution); //persist has cascading type (will cascade to engineer)
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{carId}/engineers")
-//    @ResponseBody implicit
     public ResponseEntity<Object> addContributor(@Valid @RequestBody EngineerDTO dto, @PathVariable int carId) {
         var newEngineer = new Engineer(dto.getName(), dto.getTenure(), dto.getNationality());
         var car = carService.findById(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+//        carService.addContributorToCar(newEngineer, carId);
         car.addEngineer(newEngineer);
         newEngineer.addCar(car);
         try {
             engineerService.addEngineer(newEngineer);
-        } catch (IOException | EntityAlreadyExistsException e) {
+//            engineerService.addContributionToEngineer(car, newEngineer);
+        } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
         dto.getContributionIds().add(carId);
@@ -119,7 +120,6 @@ public class CarsRestController {
         car.setColor(Color.valueOf(carDTO.getColorText().toUpperCase()));
         car.setPrice(carDTO.getPrice());
         car.setEngineSize(carDTO.getEngineSize());
-        System.out.println(carDTO.getReleaseDate());
         car.setReleaseDate(carDTO.getReleaseDate());
         carService.update(car);
         return new ResponseEntity<>(HttpStatus.OK);

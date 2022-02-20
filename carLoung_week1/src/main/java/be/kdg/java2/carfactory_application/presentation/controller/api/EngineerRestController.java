@@ -55,8 +55,7 @@ public class EngineerRestController {
         contributor.removeCar(contribution);
         contribution.removeEngineer(contributor);
         //      Updating the repository
-        carService.update(contribution);
-//        engineerService.update(contributor); persist has cascading type
+        engineerService.update(contributor); //persist has cascading type (will cascade to car)
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
