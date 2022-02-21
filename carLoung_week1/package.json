@@ -1,0 +1,24 @@
+{
+  "name": "carlounge",
+  "version": "0.1.0",
+  "description": "Carlounge Spring Boot application",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap-icons": "^1.8.1",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "css-loader": "^6.4.0",
+    "mini-css-extract-plugin": "^2.4.2",
+    "source-map-loader": "^3.0.0",
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.0",
+    "sass": "^1.49.8",
+    "sass-loader": "^12.6.0"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "Assam Saadaoui",
+  "license": "MIT"
+}
