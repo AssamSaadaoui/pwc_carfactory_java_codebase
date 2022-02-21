@@ -80,10 +80,7 @@ public class CarsRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        contributor.removeCar(contribution);
-        contribution.removeEngineer(contributor);
-        //      Updating the repository
-        carService.update(contribution); //persist has cascading type (will cascade to engineer)
+        carService.removeContributorFromCar(contribution, contributor);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -94,12 +91,10 @@ public class CarsRestController {
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        carService.addContributorToCar(newEngineer, carId);
-        car.addEngineer(newEngineer);
-        newEngineer.addCar(car);
+        carService.addContributorToCar(newEngineer, carId);
         try {
+            engineerService.addContributionToEngineer(car, newEngineer);
             engineerService.addEngineer(newEngineer);
-//            engineerService.addContributionToEngineer(car, newEngineer);
         } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

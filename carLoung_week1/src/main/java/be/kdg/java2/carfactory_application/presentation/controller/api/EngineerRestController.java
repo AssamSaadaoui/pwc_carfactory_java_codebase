@@ -52,10 +52,7 @@ public class EngineerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        contributor.removeCar(contribution);
-        contribution.removeEngineer(contributor);
-        //      Updating the repository
-        engineerService.update(contributor); //persist has cascading type (will cascade to car)
+        carService.removeContributorFromCar(contribution, contributor);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

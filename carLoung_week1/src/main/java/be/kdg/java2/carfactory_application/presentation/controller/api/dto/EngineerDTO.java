@@ -3,6 +3,7 @@ package be.kdg.java2.carfactory_application.presentation.controller.api.dto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class EngineerDTO {
     @Max(value = 30, message = "You can enter a maximum of 30 years")
     private int tenure;
     @NotBlank(message = "Nationality is mandatory")
+    @Pattern(regexp = "[a-zA-Z]+")
     private String nationality;
     //    link to cars that worked on
     private List<Integer> contributionIds = new ArrayList<>();

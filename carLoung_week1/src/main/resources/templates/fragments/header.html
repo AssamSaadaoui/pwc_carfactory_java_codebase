@@ -53,17 +53,21 @@
                                                                 placeholder="Search"
                                                                 aria-label="Search"
                                                                 th:placeholder="${(#httpServletRequest.getRequestURI().contains('/engineers')) ? 'Search engineers...':'Search cars...'}"
-                                                                     autocomplete="off">
+                                                                autocomplete="off">
                         </label>
                         <datalist id="carsList">
                         </datalist>
-                        <button class="btn btn-outline-success" type="submit" id="searchButton">Search</button>
+                        <button class="btn btn-outline-success" type="submit" id="searchButton">Search <i
+                                class="bi bi-search"></i>
+                        </button>
                     </form>
                 </div>
             </div>
         </nav>
     </div>
 </div>
-
+<div class="preloader">
+    <div class="animation animation-rotating-square"></div>
+</div>
 </body>
 </html>

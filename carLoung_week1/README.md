@@ -72,6 +72,7 @@ GET http://localhost:8081/api/cars/sort?order=asc
 Accept: application/json
 Content-type: application/json
 ```
+
 #### Fetching a car by an existent model name:  [ OK - *code: 200* ]
 ```
 GET http://localhost:8081/api/cars?lookup=a-class
@@ -85,12 +86,21 @@ GET http://localhost:8081/api/cars?lookup=potato
 Accept: application/json
 Content-type: application/json
 ```
+
 #### Fetching a car by an existent model name: [ Not Acceptable - *code: 406* ]
 ```
 GET http://localhost:8081/api/cars?lookup=a-class
 Accept: text/html
 Content-type: application/json
 ```
+
+#### Fetching an existent engineer by name: [ OK - *code: 200*  ]
+```
+GET http://localhost:8081/api/engineers?lookup=Winter Korn
+Accept: application/xml
+```
+
+
 
 ---
 ###DELETE section
@@ -111,3 +121,9 @@ Accept: application/json
 DELETE http://localhost:8081/api/engineers/5/cars/30
 Accept: application/json
 ```
+
+
+
+
+
+

@@ -1,14 +1,5 @@
-//Window variables
-const currentLocation = window.location.href;
-const language = window.navigator.language;
-//Checking for current url
-const currentPath = `${currentLocation.includes('engineers') ? 'engineers' : 'cars'}`;
-//Search cars elements
-const searchFieldEl = document.getElementById("lookup");
-const dataList = document.getElementById("carsList");
-//Cars page
-const toOrderCarList = document.getElementById("listOfCars")
-const orderSelectEl = document.getElementById("order");
+import {htmlToElement, redirect, language, currentPath} from "./util";
+import validator from 'validator';
 //Details page
 const deleteButtons = document.querySelectorAll(".deleteBtn")
 const addRelationButton = document.getElementById("addRelationButton")
@@ -17,14 +8,6 @@ const saveButton = document.getElementById("saveBtn")
 const table = document.querySelector(".details table")
 
 
-
-//Event listeners
-if (orderSelectEl) //check location (orderSelect element only exists in cars page)
-    orderSelectEl.addEventListener("change", async () => orderCars())
-//
-if (searchFieldEl)
-    searchFieldEl.addEventListener("keyup", async () => search());
-//
 if (deleteButtons) {
     deleteButtons.forEach(btn => btn.addEventListener('click', async () => {
         //if current path is of cars detail page, hiddenInput would contain id of the engineer (contributor) and vice versa
@@ -44,115 +27,6 @@ if (saveButton) {
     saveButton.disabled = true
     saveButton.addEventListener("click", saveCarUpdate)
 }
-
-//Helper methods
-//Redirect upon selecting an option
-function redirect(route) {
-    window.location.href = route;
-}
-
-
-// GET section
-//Search objects
-const search = async function () {
-    const lookupValue = searchFieldEl.value;
-    if (lookupValue.length < 3) {
-        dataList.innerHTML = ''
-        return;
-    }
-    try {
-        const response = await fetch(`/api/${currentPath}?lookup=${lookupValue}`,
-            {
-                headers: {
-                    Accept: "application/json"
-                }
-            })
-        let data;
-        if (response.status === 200) {
-            data = await response.json();
-        } else if (response.status === 204) {
-            data = []
-        } else {
-            alert(`Received status code ${response.status}`);
-        }
-        processSearchData(data)
-    } catch (err) {
-        // catches errors both in fetch and response.json
-        alert(err);
-    }
-}
-
-function processSearchData(objectsArray) {
-    dataList.innerHTML = '';
-    const map = new Map();
-    objectsArray.forEach(obj => {
-        dataList.innerHTML += `
-           <option  value="${currentPath === 'engineers' ? obj.name : obj.model}">
-        `;
-        map.set(`${currentPath === 'engineers' ? obj.name : obj.model}`, obj.id)
-    })
-    searchFieldEl.addEventListener("change", () => {
-        map.forEach((value, key) => {
-            if (key === searchFieldEl.value) redirect(`/${currentPath}/${value}`)
-        })
-    })
-}
-
-
-//Order cars by price
-const orderCars = async function () {
-    const orderValue = orderSelectEl.value;
-    try {
-        const response = await fetch(`/api/cars/sort?order=${orderValue}`,
-            {
-                headers: {
-                    Accept: "application/json"
-                }
-            })
-        let data;
-        if (response.status === 200) {
-            data = await response.json();
-        } else if (response.status === 204) {
-            data = []
-        } else {
-            alert(`Received status code ${response.status}`);
-        }
-        processOrderedCarsData(data)
-    } catch (err) {
-        // catches errors both in fetch and response.json
-        alert(err);
-    }
-}
-
-//Process ordered data
-function processOrderedCarsData(carsArray) {
-    toOrderCarList.innerHTML = ''
-    carsArray.forEach(car => {
-        toOrderCarList.innerHTML += `
-        <div class="col-md-4 item">
-          <div class="card cardanim animated goUp" style="width: 18rem;">
-                    <img id="car" src="${car.imagePath}"
-                         class="card-img-top" alt-title="${car.model}" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title">${car.model}</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">${language === 'fr' ? 'Mod\u00E8le' : 'Model'}: ${car.model}</li>
-                        <li class="list-group-item">${language === 'fr' ? 'Moteur' : 'Engine'}: ${car.engineSize} litr</li>
-                        <li class="list-group-item">${language === 'fr' ? 'Prix' : 'Price'}: ${car.price}$</li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="/cars/${car.id}" class="card-link">${language === 'fr' ? 'D\u00E9tails' : 'Details'}</a>
-                        <a href="/cars/edit/${car.id}">${language === 'fr' ? 'Modifier' : 'Edit'}</a>
-                        <a href="/cars/delete/${car.id}">${language === 'fr' ? 'Supprimer' : 'Delete'}</a>
-                    </div>
-          </div>
-        </div>
-        `
-    })
-}
-
-// -----------------------------------------------------------------------------------------------------------------------
 
 
 // DELETE section
@@ -213,20 +87,38 @@ const deleteContribution = async function (ele) {
         alert(err);
     }
 }
-// -----------------------------------------------------------------------------------------------------------------------
+const createHtml = (information, type) => `<div style="margin-top: 1rem" class="alert alert-${type} alert-dismissible fade show"
+                 role="alert">
+                ${information}
+                <button style="padding: 0 5px;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`
 
-
+const createMessageElement = (responseMessage, type) => htmlToElement(createHtml(responseMessage, type))
 // POST section
 //Adding a contributor to a car (details page)
 const addContributor = async function () {
     const name = document.getElementById("name").value
     const nationality = document.getElementById("nationality").value
-    const tenure = parseInt(document.getElementById("tenure").value)
+    const tenureStr = document.getElementById("tenure").value
     const carId = parseInt(document.getElementById("ownerEntityId").value)
     //Data manipulation specific
     const miniFormOuterDivEl = document.querySelector(".addEngineer > p ~ div");
-    const responseTextElement = document.createElement("p");
     const contributorsList = document.getElementById("contributors")
+    //Response message
+
+   // if(!validator.isNumeric(tenureStr))
+   // {
+   //     alert("Not a number")
+   //     return
+   // }else if(validator.isNumeric(nationality)){
+   //     alert("Must be a string")
+   //     return
+   // }else if(validator.isNumeric(name)){
+   //     alert()
+   //     return
+   // }
+
+    const tenure = parseInt(tenureStr)
     try {
         let response = await fetch(`/api/cars/${carId}/engineers`, {
             method: 'POST',
@@ -245,8 +137,6 @@ const addContributor = async function () {
         if (response.status === 200) {
             //engineerDTOObject
             data = await response.json();
-            responseTextElement.innerText = "Contributor successfully added!"
-            responseTextElement.style.color = "green"
             contributorsList.innerHTML += `<li style="list-style: none;text-decoration: none;">
                                             <div class="row">
                                                 <div class="col-md-6"><a href="${'/engineers/' + data.id}"
@@ -256,13 +146,14 @@ const addContributor = async function () {
                                                     <input id="" type="hidden" value="${data.id}"></div>
                                             </div>
                                         </li>`
-            miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
+            miniFormOuterDivEl.parentElement.insertBefore(createMessageElement("Contributor successfully added.", "success"), miniFormOuterDivEl)
+            // miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
             // window.top.location = window.top.location
         } else if (response.status === 409) {
             data = await response.text();
-            responseTextElement.innerText = `${data}`
-            responseTextElement.style.color = "red"
-            miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
+            // responseTextElement.innerText = `${data}`
+            miniFormOuterDivEl.parentElement.insertBefore(createMessageElement(data, "danger"), miniFormOuterDivEl)
+            // miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
         }
     } catch (err) {
         // catches errors both in fetch and response.json

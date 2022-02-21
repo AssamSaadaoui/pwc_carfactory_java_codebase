@@ -89,4 +89,10 @@ public class CarServiceImplementation implements CarService {
         carRepository.findById(carId).orElseThrow().addEngineer(newEngineer);
     }
 
+    @Override
+    public void removeContributorFromCar(Car contribution, Engineer contributor) {
+        contribution.removeEngineer(contributor);
+        carRepository.save(contribution);// Update will cascade
+    }
+
 }
