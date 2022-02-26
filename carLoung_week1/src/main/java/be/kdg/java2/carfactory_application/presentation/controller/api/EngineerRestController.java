@@ -2,8 +2,8 @@ package be.kdg.java2.carfactory_application.presentation.controller.api;
 
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
-import be.kdg.java2.carfactory_application.services.CarService;
-import be.kdg.java2.carfactory_application.services.EngineerService;
+import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.EngineerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

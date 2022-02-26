@@ -1,19 +1,21 @@
 //Imports
-import {htmlToElement, redirect,language,currentPath} from "./util";
-import validator from 'validator';
+import {redirect, language, currentPath} from "./util";
+import anime from "animejs";
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
 const dataList = document.getElementById("carsList");
-//Cars page
+//Cars page (to order)
 const toOrderCarList = document.getElementById("listOfCars")
 const orderSelectEl = document.getElementById("order");
-
 
 
 //Event listeners
 //Cars page (ordering functionality related)
 if (orderSelectEl) //check location (orderSelect element only exists in cars page)
-    orderSelectEl.addEventListener("change", async () => orderCars())
+    orderSelectEl.addEventListener("change", async () => {
+        await orderCars()
+
+    })
 //Search bar related
 if (searchFieldEl)
     searchFieldEl.addEventListener("keyup", async () => search());
@@ -51,6 +53,7 @@ const search = async function () {
 
 function processSearchData(objectsArray) {
     dataList.innerHTML = '';
+    //A map used to store the model or name of engineer, as well as the id to be used for redirection upon clicking
     const map = new Map();
     objectsArray.forEach(obj => {
         dataList.innerHTML += `
@@ -60,6 +63,7 @@ function processSearchData(objectsArray) {
     })
     searchFieldEl.addEventListener("change", () => {
         map.forEach((value, key) => {
+            // (e.g. a-class with id 1)
             if (key === searchFieldEl.value) redirect(`/${currentPath}/${value}`)
         })
     })
@@ -91,8 +95,17 @@ const orderCars = async function () {
     }
 }
 
+const animate = anime({
+    targets: toOrderCarList,
+    translateY: 30,
+    easing: 'easeInOutSine',
+    duration: 400,
+    autoplay: false,
+})
+
 //Process ordered data
 function processOrderedCarsData(carsArray) {
+    animate.play()
     toOrderCarList.innerHTML = ''
     carsArray.forEach(car => {
         toOrderCarList.innerHTML += `

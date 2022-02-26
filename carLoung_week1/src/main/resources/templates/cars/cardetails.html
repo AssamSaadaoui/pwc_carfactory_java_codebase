@@ -62,8 +62,10 @@
                                             <div class="row">
                                                 <div class="col-md-6"><a th:href="${ '/engineers/' + engineer.getId()}"
                                                                          th:text="'- '+${engineer.name}"></a></div>
-                                                <div class="col-md-6"><button style="padding: 0px 3px;"
-                                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete</button>
+                                                <div class="col-md-6">
+                                                    <button style="padding: 0px 3px;"
+                                                            class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                                    </button>
                                                     <input id="" type="hidden" th:value="${engineer.id}"></div>
                                             </div>
                                         </li>

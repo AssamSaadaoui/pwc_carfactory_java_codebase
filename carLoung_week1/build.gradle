@@ -23,6 +23,7 @@ ext {
     jacksonVersion = '2.13.1'
     fileuploadVersion = '1.4'
     gsonVersion = '2.8.8'
+    modelMapperVersion = '3.0.0'
 }
 
 dependencies {
@@ -39,6 +40,8 @@ dependencies {
     implementation 'org.hsqldb:hsqldb'
     implementation "commons-fileupload:commons-fileupload:${fileuploadVersion}"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${springBootVersion}"
+    implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+
 
 //    runtimeOnly 'org.hsqldb:hsqldb'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

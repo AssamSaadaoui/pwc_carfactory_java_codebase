@@ -1,12 +1,12 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
 import be.kdg.java2.carfactory_application.domain.*;
-import be.kdg.java2.carfactory_application.exceptions.EntityAlreadyExistsException;
-import be.kdg.java2.carfactory_application.exceptions.InvalidImageException;
+import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
+import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
-import be.kdg.java2.carfactory_application.services.CarService;
-import be.kdg.java2.carfactory_application.services.EngineerService;
+import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.EngineerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

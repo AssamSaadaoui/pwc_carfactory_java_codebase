@@ -1,5 +1,5 @@
-import {htmlToElement, redirect, language, currentPath} from "./util";
-import validator from 'validator';
+import {htmlToElement, currentPath} from "./util";
+import Engineer from "./Engineer"
 //Details page
 const deleteButtons = document.querySelectorAll(".deleteBtn")
 const addRelationButton = document.getElementById("addRelationButton")
@@ -20,7 +20,7 @@ if (deleteButtons) {
 }
 //Details page
 if (addRelationButton)
-    addRelationButton.addEventListener("click", async () => addContributor())
+    addRelationButton.addEventListener("click", async () => addEngineerToCar())
 if (editButton)
     editButton.addEventListener("click", makeCarUpdatable)
 if (saveButton) {
@@ -96,41 +96,25 @@ const createHtml = (information, type) => `<div style="margin-top: 1rem" class="
 const createMessageElement = (responseMessage, type) => htmlToElement(createHtml(responseMessage, type))
 // POST section
 //Adding a contributor to a car (details page)
-const addContributor = async function () {
+const addEngineerToCar = async function () {
     const name = document.getElementById("name").value
     const nationality = document.getElementById("nationality").value
-    const tenureStr = document.getElementById("tenure").value
+    const tenure = document.getElementById("tenure").value
     const carId = parseInt(document.getElementById("ownerEntityId").value)
     //Data manipulation specific
     const miniFormOuterDivEl = document.querySelector(".addEngineer > p ~ div");
-    const contributorsList = document.getElementById("contributors")
-    //Response message
-
-   // if(!validator.isNumeric(tenureStr))
-   // {
-   //     alert("Not a number")
-   //     return
-   // }else if(validator.isNumeric(nationality)){
-   //     alert("Must be a string")
-   //     return
-   // }else if(validator.isNumeric(name)){
-   //     alert()
-   //     return
-   // }
-
-    const tenure = parseInt(tenureStr)
+    const contributorsList = document.getElementById("contributors");
+    // const tenure = parseInt(tenureStr)
     try {
-        let response = await fetch(`/api/cars/${carId}/engineers`, {
+        const engineer = new Engineer(name, tenure, nationality);
+        const response = await fetch(`/api/cars/${carId}/engineers`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 "Content-Type": 'application/json',
             },
             body: JSON.stringify({
-                "name": name,
-                "tenure": tenure,
-                "nationality": nationality,
-                "contributionIds": [carId]
+                ...engineer
             })
         })
         let data;
@@ -156,8 +140,7 @@ const addContributor = async function () {
             // miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
         }
     } catch (err) {
-        // catches errors both in fetch and response.json
-        alert(err);
+        miniFormOuterDivEl.parentElement.insertBefore(createMessageElement(err.message, "danger"), miniFormOuterDivEl)
     }
 }
 // -----------------------------------------------------------------------------------------------------------------------
@@ -221,3 +204,4 @@ async function saveCarUpdate(event) {
         alert(err);
     }
 }
+

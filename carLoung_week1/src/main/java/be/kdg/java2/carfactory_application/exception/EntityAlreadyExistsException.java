@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.exceptions;
+package be.kdg.java2.carfactory_application.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

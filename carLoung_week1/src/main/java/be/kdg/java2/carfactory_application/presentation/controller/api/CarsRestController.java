@@ -2,21 +2,19 @@ package be.kdg.java2.carfactory_application.presentation.controller.api;
 
 import be.kdg.java2.carfactory_application.domain.Color;
 import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.exceptions.EntityAlreadyExistsException;
+import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
-import be.kdg.java2.carfactory_application.services.CarService;
-import be.kdg.java2.carfactory_application.services.EngineerService;
+import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.EngineerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,18 +96,19 @@ public class CarsRestController {
         } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
+        logger.debug("Adding engineer " + dto.getName() + " as a contributor to " + car.getModel());
         dto.getContributionIds().add(carId);
         dto.setId(newEngineer.getId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/{carId}")
-//    @ResponseBody implicit
     public ResponseEntity<Void> editCar(@RequestBody CarDTO carDTO, @PathVariable int carId) {
         var car = carService.findById(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        logger.debug("Editing car " + car.getModel());
         car.getTradeMark().setTitle(carDTO.getTitle());
         car.setModel(carDTO.getModel());
         car.setColor(Color.valueOf(carDTO.getColorText().toUpperCase()));

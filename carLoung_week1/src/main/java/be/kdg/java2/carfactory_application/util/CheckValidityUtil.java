@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.util;
 
-import be.kdg.java2.carfactory_application.exceptions.InvalidImageException;
+import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.EngineerController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

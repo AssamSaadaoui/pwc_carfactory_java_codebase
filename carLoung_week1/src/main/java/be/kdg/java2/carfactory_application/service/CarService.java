@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.services;
+package be.kdg.java2.carfactory_application.service;
 
 import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Engineer;

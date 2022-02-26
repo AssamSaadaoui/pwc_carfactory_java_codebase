@@ -1,9 +1,9 @@
-package be.kdg.java2.carfactory_application.services;
+package be.kdg.java2.carfactory_application.service;
 
 
 import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.exceptions.EntityAlreadyExistsException;
+import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;

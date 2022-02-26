@@ -1,5 +1,5 @@
 ###PUT SECTION
-###Updating a car
+###Updating a car with an invalid input an integer instead of a String
 ###Response code: 200
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
@@ -7,6 +7,23 @@ Content-Type: application/json
 
 {
   "model": 111,
+  "engineSize": 1.5,
+  "title": "potato",
+  "releaseDate": "1998-03-05",
+  "price": 10000,
+  "colorText": "Black"
+}
+
+
+
+###Updating a car
+###Response code: 200
+PUT http://localhost:8081/api/cars/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "model": "Honda",
   "engineSize": 1.5,
   "title": "potato",
   "releaseDate": "1998-03-05",
