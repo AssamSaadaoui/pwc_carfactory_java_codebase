@@ -95,7 +95,7 @@ JavaScript source file `js/detailspage.js`
 
 #### *Fetching sorted cars by price in ascending order:*  [ OK - *code: 200* ]
 
-#### Request
+***Request***
 
 ```
 GET http://localhost:8081/api/cars/sort?order=asc
@@ -103,7 +103,7 @@ Accept: application/json
 Content-type: application/json
 ```
 
-#### Response:
+***Response***
 
 ```
 [
@@ -139,7 +139,7 @@ Content-type: application/json
 
 #### *Fetching a car by an existent model name:*  [ OK - *code: 200* ]
 
-#### Request
+***Request***
 
 ```
 GET http://localhost:8081/api/cars?lookup=a-class
@@ -147,7 +147,7 @@ Accept: application/json
 Content-type: application/json
 ```
 
-#### Response
+***Response***
 
 ```
 HTTP/1.1 200 
@@ -180,7 +180,7 @@ Response code: 200; Time: 152ms; Content length: 182 bytes
 
 #### *Fetching a car by a non-existent model name:*  [ NO_CONTENT - *code: 204* ]
 
-#### Request
+***Request***
 
 ```
 GET http://localhost:8081/api/cars?lookup=potato
@@ -188,7 +188,7 @@ Accept: application/json
 Content-type: application/json
 ```
 
-#### Response
+***Response***
 
 ```
 HTTP/1.1 204 
@@ -201,7 +201,7 @@ Connection: keep-alive
 
 #### *Fetching a car by model accepting a non valid format:* [ Not Acceptable - *code: 406* ]
 
-#### Request
+***Request***
 
 ```
 GET http://localhost:8081/api/cars?lookup=a-class
@@ -209,7 +209,7 @@ Accept: text/html
 Content-type: application/json
 ```
 
-#### Response
+***Response***
 
 ```
 HTTP/1.1 406 
@@ -233,14 +233,14 @@ Response code: 406; Time: 148ms; Content length: 280 bytes
 
 #### *Fetching an existent engineer with XML format*: [ OK - *code: 200*  ]
 
-#### Request
+***Request***
 
 ```
 GET http://localhost:8081/api/engineers?lookup=Winter Korn
 Accept: application/xml
 ```
 
-#### Response
+***Response***
 
 ```
 HTTP/1.1 200
