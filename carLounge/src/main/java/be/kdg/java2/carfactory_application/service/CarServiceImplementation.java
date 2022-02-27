@@ -69,6 +69,19 @@ public class CarServiceImplementation implements CarService {
         return carRepository.findByModelContainsIgnoreCase(model);
     }
 
+    //    @Override
+//    public void update(Car contribution) {
+//        carRepository.save(contribution);
+//    }
+    @Override
+    public void update(Car car) {
+        boolean isMatch = carRepository.findAll().stream().anyMatch(car1 -> car1.getId() != car.getId() && car.getModel().equalsIgnoreCase(car1.getModel()));
+        if (isMatch) {
+            throw new EntityAlreadyExistsException(car.getModel() + " already exists.");
+        }
+        carRepository.save(car);
+    }
+
     @Override
     public List<Car> orderByPriceAsc() {
         return carRepository.findByOrderByPriceAsc();
@@ -77,11 +90,6 @@ public class CarServiceImplementation implements CarService {
     @Override
     public List<Car> orderByPriceDesc() {
         return carRepository.findByOrderByPriceDesc();
-    }
-
-    @Override
-    public void update(Car contribution) {
-        carRepository.save(contribution);
     }
 
     @Override

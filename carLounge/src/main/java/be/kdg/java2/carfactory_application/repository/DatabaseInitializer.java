@@ -16,8 +16,7 @@ import java.util.List;
 @Repository
 public class DatabaseInitializer implements CommandLineRunner {
 
-
-    private TradeMarkRepositorySDR tradeMarkRepository;
+    private final TradeMarkRepositorySDR tradeMarkRepository;
 
     public DatabaseInitializer(TradeMarkRepositorySDR tradeMarkRepository) {
         this.tradeMarkRepository = tradeMarkRepository;
@@ -49,7 +48,6 @@ public class DatabaseInitializer implements CommandLineRunner {
         frank.addCar(classA);
         christian.addCar(classA);
         classA.setTradeMark(mercedes);
-
 
         Car classC = new Car("C-Class", 2.0, 41400, java.time.LocalDate.of(2019, 12, 14), Color.CHROME);
         classC.setImage("cClass.jpg");
@@ -94,7 +92,6 @@ public class DatabaseInitializer implements CommandLineRunner {
         fordSE.addEngineer(korn);
         korn.addCar(fordSE);
         fordSE.setTradeMark(ford);
-
 
         mercedes.getCars().addAll(Arrays.asList(classA, classC));
         bmw.addCar(bmw7);

@@ -58,7 +58,7 @@ Location url `/cars/1` or any id
 
 HTML source file `resources/templates/cars/cardetails.html`
 
-JavaScript source file `js/Engineer.js` called from `js/detailspage.js` line `109`
+JavaScript source file `js/engineer.js` called from `js/detailspage.js` line `109`
 ```
 **2) animejs** used for when ordering cars by price. 
 ```
@@ -68,8 +68,26 @@ HTML source file `resources/templates/cars/cars`
 
 JavaScript source file `js/search.js` line `98`
 ```
+### Assignment REST specific implementations:
+```
+GET requests : 
+          1) searching for a car or engineer from seach bar
 
+Location url `/cars` or `/engineers`
+JavaScript source file `js/search.js`
 
+          2) ordering cars by price 
+          
+Location url `/cars`
+JavaScript source file `js/search.js`
+```
+```
+DELETE, POST and PUT requests
+
+Location url `/cars`
+HTML source file `resources/templates/cars/cardetails.html`
+JavaScript source file `js/detailspage.js`
+```
 ## Summary of the implemented HTTP requests
 ### GET section
 

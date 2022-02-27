@@ -8,13 +8,16 @@ import be.kdg.java2.carfactory_application.presentation.controller.api.dto.Engin
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.BindException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +28,12 @@ public class CarsRestController {
 
     private final CarService carService;
     private final EngineerService engineerService;
+    private final ModelMapper modelMapper;
 
-    public CarsRestController(CarService carService, EngineerService engineerService) {
+    public CarsRestController(CarService carService, EngineerService engineerService, ModelMapper modelMapper) {
         this.carService = carService;
         this.engineerService = engineerService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -39,12 +44,7 @@ public class CarsRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         var carsDTOS = cars.stream()
-                .map(car -> {
-                    var dto = new CarDTO();
-                    dto.setId(car.getId());
-                    dto.setModel(car.getModel());
-                    return dto;
-                })
+                .map(car -> modelMapper.map(car, CarDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(carsDTOS, HttpStatus.OK);
     }
@@ -55,6 +55,9 @@ public class CarsRestController {
         var carsByAscOrder = carService.orderByPriceAsc();
         var carsByDescOrder = carService.orderByPriceDesc();
         var cars = (order.equals("asc")) ? carsByAscOrder : carsByDescOrder;
+        if (cars.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         var carsDTOS = cars.stream()
                 .map(car -> {
                     var dto = new CarDTO();
@@ -103,7 +106,7 @@ public class CarsRestController {
     }
 
     @PutMapping("/{carId}")
-    public ResponseEntity<Void> editCar(@RequestBody CarDTO carDTO, @PathVariable int carId) {
+    public ResponseEntity<String> editCar(@RequestBody CarDTO carDTO, @PathVariable int carId) {
         var car = carService.findById(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -115,7 +118,11 @@ public class CarsRestController {
         car.setPrice(carDTO.getPrice());
         car.setEngineSize(carDTO.getEngineSize());
         car.setReleaseDate(carDTO.getReleaseDate());
-        carService.update(car);
+        try {
+            carService.update(car);
+        } catch (EntityAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

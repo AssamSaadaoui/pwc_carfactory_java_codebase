@@ -1,37 +1,39 @@
 import {htmlToElement, currentPath} from "./util";
-import Engineer from "./Engineer"
+import Engineer from "./engineer"
 //Details page
-const deleteButtons = document.querySelectorAll(".deleteBtn")
-const addRelationButton = document.getElementById("addRelationButton")
+const submitAdditionButton = document.getElementById("addRelationButton")
+const addButton = document.getElementById("addEngineerBtn")
 const editButton = document.getElementById("editBtn")
 const saveButton = document.getElementById("saveBtn")
 const table = document.querySelector(".details table")
+let deleteButtons = document.querySelectorAll(".deleteBtn")
 
 
-if (deleteButtons) {
+//When adding a new engineer, the listeners aren't added to the delete button. This function is used to fix that problem
+function addListenersToDeleteButtons(deleteButtons) {
     deleteButtons.forEach(btn => btn.addEventListener('click', async () => {
-        //if current path is of cars detail page, hiddenInput would contain id of the engineer (contributor) and vice versa
+        //if current path is of car's detail page, hiddenInput would contain id of the engineer (contributor) and vice versa
         const hiddenInputContainingChildId = btn.nextElementSibling;
         if (currentPath === 'cars')
-            await deleteContributor(hiddenInputContainingChildId)
+            await deleteEngineerFromCar(hiddenInputContainingChildId)
         else if (currentPath === 'engineers')
-            await deleteContribution(hiddenInputContainingChildId)
+            await deleteCarFromEngineer(hiddenInputContainingChildId)
     }))
 }
+
+addListenersToDeleteButtons(deleteButtons);
+
 //Details page
-if (addRelationButton)
-    addRelationButton.addEventListener("click", async () => addEngineerToCar())
-if (editButton)
+if (submitAdditionButton) {
+    submitAdditionButton.addEventListener("click", async () => addEngineerToCar())
     editButton.addEventListener("click", makeCarUpdatable)
-if (saveButton) {
-    saveButton.disabled = true
+    saveButton.disabled = true // disabled by default
     saveButton.addEventListener("click", saveCarUpdate)
 }
 
-
 // DELETE section
 //Delete an engineer from a car
-const deleteContributor = async function (ele) {
+const deleteEngineerFromCar = async function (ele) {
     const carId = parseInt(document.getElementById("ownerEntityId").value)
     const engineerId = parseInt(ele.value)
     const titlesTd = document.getElementById("tdTitle")
@@ -49,9 +51,7 @@ const deleteContributor = async function (ele) {
         }
         if (response.status === 200) {
             // redirect(`/${objectStr}s?success=true`)
-            ele.parentNode.parentNode.parentNode.parentNode.remove()
-            if (titlesTd.nextElementSibling.children.length === 0)
-                titlesTd.parentNode.remove()
+            ele.parentNode.parentNode.parentNode.remove()
         }
     } catch (err) {
         // catches errors both in fetch and response.json
@@ -60,7 +60,7 @@ const deleteContributor = async function (ele) {
 }
 
 //delete a car from an engineer's work
-const deleteContribution = async function (ele) {
+const deleteCarFromEngineer = async function (ele) {
     const engineerId = parseInt(document.getElementById("ownerEntityId").value)
     const carId = parseInt(ele.value)
     const titlesTd = document.getElementById("tdTitle")
@@ -79,8 +79,6 @@ const deleteContribution = async function (ele) {
         if (response.status === 200) {
             // redirect(`/${objectStr}s?success=true`)
             ele.parentNode.parentNode.parentNode.parentNode.remove()
-            if (titlesTd.nextElementSibling.children.length === 0)
-                titlesTd.parentNode.remove()
         }
     } catch (err) {
         // catches errors both in fetch and response.json
@@ -131,26 +129,37 @@ const addEngineerToCar = async function () {
                                             </div>
                                         </li>`
             miniFormOuterDivEl.parentElement.insertBefore(createMessageElement("Contributor successfully added.", "success"), miniFormOuterDivEl)
-            // miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
-            // window.top.location = window.top.location
+            //re-initialize deleteButtons var after inserting a new element
+            deleteButtons = document.querySelectorAll(".deleteBtn")
+            //re-set listeners (new elements inclusive)
+            addListenersToDeleteButtons(deleteButtons);
         } else if (response.status === 409) {
             data = await response.text();
-            // responseTextElement.innerText = `${data}`
             miniFormOuterDivEl.parentElement.insertBefore(createMessageElement(data, "danger"), miniFormOuterDivEl)
-            // miniFormOuterDivEl.insertBefore(responseTextElement, miniFormOuterDivEl.firstChild);
         }
     } catch (err) {
         miniFormOuterDivEl.parentElement.insertBefore(createMessageElement(err.message, "danger"), miniFormOuterDivEl)
     }
 }
+
 // -----------------------------------------------------------------------------------------------------------------------
 
+function disableAnchorTag(a) {
+    a.href = "javascript:void(0)"
+    a.style.cursor = "not-allowed"
+}
+
+function enableAnchorTag(a) {
+    a.href = "#collapseExample"
+    a.style.cursor = "pointer"
+}
 
 //PUT section
 function makeCarUpdatable(event) {
     const clickedButton = event.target;
     deleteButtons.forEach(btn => btn.disabled = true)
     clickedButton.disabled = true
+    disableAnchorTag(addButton)
     saveButton.disabled = false
     const rows = Array.from(table.rows);
     for (let i = 0; i < rows.length - 1; i++) {
@@ -193,11 +202,12 @@ async function saveCarUpdate(event) {
                 tData.style.transition = "0.1s linear"
             })
             event.target.disabled = true
+            enableAnchorTag(addButton)
             editButton.disabled = false
             deleteButtons.forEach(btn => btn.disabled = false)
         } else if (response.status === 409) {
             data = await response.text();
-
+            table.parentElement.insertBefore(createMessageElement(data, "danger"), table)
         }
     } catch (err) {
         // catches errors both in fetch and response.json

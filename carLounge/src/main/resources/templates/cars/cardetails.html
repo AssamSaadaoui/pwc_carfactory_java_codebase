@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:object="${car}" th:text="${car.model}"></title>
+    <script defer th:src="@{/js/bundle-detailspage.js}"></script>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -54,22 +55,21 @@
                                 <td th:utext="#{price}">Price</td>
                                 <td th:text="${car.price}+'$'"></td>
                             </tr>
-                            <tr th:if="${!car.engineers.isEmpty()}">
+                            <tr>
                                 <td id="tdTitle" th:utext="#{engineers}">Engineers</td>
-                                <td>
-                                    <div id="contributors" th:each="engineer : *{engineers}">
-                                        <li style="list-style: none;text-decoration: none;">
-                                            <div class="row">
-                                                <div class="col-md-6"><a th:href="${ '/engineers/' + engineer.getId()}"
-                                                                         th:text="'- '+${engineer.name}"></a></div>
-                                                <div class="col-md-6">
-                                                    <button style="padding: 0px 3px;"
-                                                            class="btn btn-outline-success bg-dark deleteBtn">Delete
-                                                    </button>
-                                                    <input id="" type="hidden" th:value="${engineer.id}"></div>
-                                            </div>
-                                        </li>
-                                    </div>
+                                <td id="contributors">
+                                    <li style="list-style: none;text-decoration: none;"
+                                        th:each="engineer : *{engineers}">
+                                        <div class="row">
+                                            <div class="col-md-6"><a th:href="${ '/engineers/' + engineer.getId()}"
+                                                                     th:text="'- '+${engineer.name}"></a></div>
+                                            <div class="col-md-6">
+                                                <button style="padding: 0px 3px;"
+                                                        class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                                </button>
+                                                <input id="" type="hidden" th:value="${engineer.id}"></div>
+                                        </div>
+                                    </li>
                                 </td>
                             </tr>
                             </tbody>
@@ -78,7 +78,8 @@
                             <br>
                             <div class="addEngineer">
                                 <p>
-                                    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample"
+                                    <a id="addEngineerBtn" class="btn btn-secondary" data-bs-toggle="collapse"
+                                       href="#collapseExample"
                                        role="button"
                                        aria-expanded="false" aria-controls="collapseExample">
                                         Add a contributor/engineer

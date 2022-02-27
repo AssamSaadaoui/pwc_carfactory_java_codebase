@@ -4,6 +4,7 @@ import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarContro
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,12 @@ public class EngineerRestController {
 
     private final EngineerService engineerService;
     private final CarService carService;
+    private final ModelMapper modelMapper;
 
-    public EngineerRestController(EngineerService engineerService, CarService carService) {
+    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper) {
         this.engineerService = engineerService;
         this.carService = carService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -33,12 +36,7 @@ public class EngineerRestController {
         if (engineers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        var engineerDTOS = engineers.stream().map(engineer -> {
-                    var dto = new EngineerDTO();
-                    dto.setId(engineer.getId());
-                    dto.setName(engineer.getName());
-                    return dto;
-                })
+        var engineerDTOS = engineers.stream().map(engineer -> modelMapper.map(engineer, EngineerDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(engineerDTOS, HttpStatus.OK);
     }

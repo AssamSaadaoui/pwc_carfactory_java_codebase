@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:object="${engineer}" th:text="*{name}"></title>
+    <script defer th:src="@{/js/bundle-detailspage.js}"></script>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -40,7 +41,7 @@
                                 <td>Tenure</td>
                                 <td th:text="${engineer.tenure} +' year'+(${engineer.tenure}>1?'s':'')"></td>
                             </tr>
-                            <tr th:if="${!engineer.getCars().isEmpty()}">
+                            <tr>
                                 <td id="tdTitle">Contributions/Work</td>
                                 <td>
                                     <div th:each="car : *{cars}">
