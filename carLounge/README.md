@@ -262,33 +262,46 @@ Content-Type: application/xml;charset=UTF-8
 ### DELETE section
 
 #### *Deleting contribution with id {4} from engineer with id {5}:* [ OK - *code: 200* ]
-
+***Request***
 ```
 DELETE http://localhost:8081/api/engineers/5/cars/4
 Accept: application/json
 ```
 
 #### *Deleting contributor with id {3} from car with id {3}:* [ OK - *code: 200* ]
-
+***Request***
 ```
 DELETE http://localhost:8081/api/cars/3/engineers/3
 Accept: application/json
 ```
 
-#### *Deleting a non-existent contribution with id {30} from engineer with id {5}* [ Internal Server Error - *code:
-
-500* ]
-
+#### *Deleting a non-existent contribution with id {30} from engineer with id {5}* [ Internal Server Error - *code: 500* ]
+***Request***
 ```
 DELETE http://localhost:8081/api/engineers/5/cars/30
 Accept: application/json
 ```
+***Response***
+```
+DELETE http://localhost:8081/api/engineers/5/cars/30
 
+HTTP/1.1 500 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 27 Feb 2022 18:38:52 GMT
+Connection: close
+
+{
+  "timestamp": "2022-02-27T18:38:52.382+00:00",
+  "status": 500,
+  "error": "Internal Server Error",
+  "path": "/api/engineers/5/cars/30"
+}
+```
 ### POST section
 
 #### *Adding an engineer to a car (a contributor) * [ OK - *code: 200* ]
-
-#### Request
+***Request***
 
 ```
 POST http://localhost:8081/api/cars/1/engineers
@@ -302,7 +315,7 @@ Content-Type: application/json
 }
 ```
 
-#### Response
+***Response***
 
 ```
 POST http://localhost:8081/api/cars/1/engineers
@@ -330,7 +343,7 @@ Connection: keep-alive
 ***Note**: This was supposed to be handled in the middleware (if engineer already exists, just fetch it and add it to
 the car. For the sake of a different error status, it goes this way*
 
-#### Request
+***Request***
 
 ```
 POST http://localhost:8081/api/cars/1/engineers
@@ -344,7 +357,7 @@ Content-Type: application/json
 }
 ```
 
-#### Response
+***Response***
 
 ```
 POST http://localhost:8081/api/cars/1/engineers
@@ -362,7 +375,7 @@ Issam already exists.
 ### PUT section
 
 #### *Updating car with id {1} * [ OK - *code: 200* ]
-
+***Request***
 ```
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
@@ -377,7 +390,7 @@ Content-Type: application/json
   "colorText": "Black"
 }
 ```
-
+***Response***
 ```
 PUT http://localhost:8081/api/cars/1
 
@@ -391,7 +404,7 @@ Connection: keep-alive
 ```
 
 #### *Updating car while inserting wrong input, integer instead of int * [ Bad Request - *code: 400* ]
-
+***Request***
 ```
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
@@ -406,7 +419,7 @@ Content-Type: application/json
   "colorText": "Black"
 }
 ```
-
+***Response***
 ```
 HTTP/1.1 400 
 Content-Type: application/json

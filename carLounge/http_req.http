@@ -85,7 +85,7 @@ Accept: application/json
 DELETE http://localhost:8081/api/engineers/5/cars/4
 Accept: application/json
 
-#Deleting contribution with id {4} from engineer with id {5}
+#Deleting contribution with id {30} from engineer with id {5}
 ###Response code: 500
 DELETE http://localhost:8081/api/engineers/5/cars/30
 Accept: application/json
