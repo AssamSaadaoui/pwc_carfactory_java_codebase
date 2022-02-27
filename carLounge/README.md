@@ -300,7 +300,7 @@ Connection: close
 ```
 ### POST section
 
-#### *Adding an engineer to a car (a contributor) * [ OK - *code: 200* ]
+#### _Adding an engineer to a car (a contributor)_  [ OK - *code: 200* ]
 ***Request***
 
 ```
@@ -338,7 +338,7 @@ Connection: keep-alive
 }
 ```
 
-#### *Adding the same engineer (same name) to a car (a contributor) * [ CONFLICT - *code: 409* ]
+#### _Adding the same engineer (same name) to a car (a contributor)_ [ CONFLICT - *code: 409* ]
 
 ***Note**: This was supposed to be handled in the middleware (if engineer already exists, just fetch it and add it to
 the car. For the sake of a different error status, it goes this way*
@@ -374,7 +374,7 @@ Issam already exists.
 
 ### PUT section
 
-#### *Updating car with id {1} * [ OK - *code: 200* ]
+#### _Updating car with id {1}_ [ OK - *code: 200* ]
 ***Request***
 ```
 PUT http://localhost:8081/api/cars/1
@@ -403,7 +403,7 @@ Connection: keep-alive
 <Response body is empty>
 ```
 
-#### *Updating car while inserting wrong input, integer instead of int * [ Bad Request - *code: 400* ]
+#### _Updating car while inserting wrong input, integer instead of int_ [ Bad Request - *code: 400* ]
 ***Request***
 ```
 PUT http://localhost:8081/api/cars/1
