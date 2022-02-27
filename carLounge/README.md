@@ -32,11 +32,11 @@
 
 ## Project concept recap
 
-**Trademark**, **Car**, Mechanical **Engineer**
-
-**Car-Engineer** (a car can be worked on by multiple engineers, an **Engineer** can work on multiple cars)
-
-A **TradeMark** can have multiple cars, but a **Car** belongs to a single **TradeMark**
+> **Trademark**, **Car**, Mechanical **Engineer**
+>
+> **Car-Engineer** (a car can be worked on by multiple engineers, an **Engineer** can work on multiple cars)
+>
+> A **TradeMark** can have multiple cars, but a **Car** belongs to a single **TradeMark**
 
 ---
 
