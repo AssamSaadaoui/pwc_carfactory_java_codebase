@@ -8,11 +8,17 @@
 <body>
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <div style="margin-top: 1rem" th:if="${param.get('success')!= null}"
+         class="alert alert-success alert-dismissible fade show" role="alert"
+         th:text="'Welcome to our website '+${param.get('user')}">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div id="jumbo" class="bg-light p-5 rounded-lg m-3">
         <div class="indexcontent">
-        <h1 class="display-4" th:utext="#{title}">Luxury, Safety</h1>
+            <h1 class="display-4" th:utext="#{title}">Luxury, Safety</h1>
             <p class="lead" th:utext="#{home.intro}">We get the best, we serve the best, eventually to the best...</p>
-            <a class="indexbtn btn btn-primary btn-lg" th:href="@{/cars}" role="button" th:utext="#{learn}">Learn more</a>
+            <a class="indexbtn btn btn-primary btn-lg" th:href="@{/cars}" role="button" th:utext="#{learn}">Learn
+                more</a>
         </div>
     </div>
 </div>

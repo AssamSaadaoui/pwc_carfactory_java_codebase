@@ -3,10 +3,12 @@ package be.kdg.java2.carfactory_application.service;
 
 import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Engineer;
+import be.kdg.java2.carfactory_application.domain.User;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;
+import be.kdg.java2.carfactory_application.repository.UserRepository;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
 import be.kdg.java2.carfactory_application.util.ServiceChecksUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,23 @@ public class CarServiceImplementation implements CarService {
     private final CarRepositorySDR carRepository;
     private final EngineerRepositorySDR engineerRepository;
     private final TradeMarkRepositorySDR tradeMarkRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CarServiceImplementation(CarRepositorySDR carRepository, EngineerRepositorySDR engineerRepository, TradeMarkRepositorySDR tradeMarkRepository) {
+    public CarServiceImplementation(CarRepositorySDR carRepository,
+                                    EngineerRepositorySDR engineerRepository,
+                                    TradeMarkRepositorySDR tradeMarkRepository,
+                                    UserRepository userRepository) {
         this.carRepository = carRepository;
         this.engineerRepository = engineerRepository;
         this.tradeMarkRepository = tradeMarkRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void addCar(Car car, MultipartFile file) throws IOException {
-        boolean isMatch = carRepository.findAll().stream().anyMatch(car1 -> car.getModel().equalsIgnoreCase(car1.getModel()));
+        boolean isMatch = carRepository.findAll().stream().anyMatch(
+                car1 -> car.getModel().equalsIgnoreCase(car1.getModel()));
         if (isMatch) {
             throw new EntityAlreadyExistsException("Model: " + car.getModel() + " already exists.");
         }
@@ -75,7 +83,9 @@ public class CarServiceImplementation implements CarService {
 //    }
     @Override
     public void update(Car car) {
-        boolean isMatch = carRepository.findAll().stream().anyMatch(car1 -> car1.getId() != car.getId() && car.getModel().equalsIgnoreCase(car1.getModel()));
+        boolean isMatch = carRepository.findAll().stream().anyMatch(car1 ->
+                car1.getId() != car.getId() &&
+                        car.getModel().equalsIgnoreCase(car1.getModel()));
         if (isMatch) {
             throw new EntityAlreadyExistsException(car.getModel() + " already exists.");
         }
@@ -94,12 +104,12 @@ public class CarServiceImplementation implements CarService {
 
     @Override
     public void addContributorToCar(Engineer newEngineer, int carId) {
-        carRepository.findById(carId).orElseThrow().addEngineer(newEngineer);
+//        carRepository.findById(carId).orElseThrow().addEngineer(newEngineer);
     }
 
     @Override
     public void removeContributorFromCar(Car contribution, Engineer contributor) {
-        contribution.removeEngineer(contributor);
+//        contribution.removeEngineer(contributor);
         carRepository.save(contribution);// Update will cascade
     }
 

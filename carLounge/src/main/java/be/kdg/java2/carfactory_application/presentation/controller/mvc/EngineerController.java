@@ -1,18 +1,19 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Color;
-import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.domain.TradeMark;
+import be.kdg.java2.carfactory_application.domain.*;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
 import be.kdg.java2.carfactory_application.presentation.helper.ControllerHelper;
+import be.kdg.java2.carfactory_application.repository.ContributionRepository;
+import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
+import be.kdg.java2.carfactory_application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,11 +34,15 @@ public class EngineerController {
 
     private final CarService carService;
     private final EngineerService engineerService;
+    private final UserService userService;
+    private final ContributionRepository contributionRepository;
 
 
-    public EngineerController(CarService carService, EngineerService engineerService) {
+    public EngineerController(CarService carService, EngineerService engineerService, UserService userService, ContributionRepository contributionRepository) {
         this.carService = carService;
         this.engineerService = engineerService;
+        this.userService = userService;
+        this.contributionRepository = contributionRepository;
     }
 
     //Read
@@ -127,8 +132,14 @@ public class EngineerController {
 
     //    A lot of the checks here i wanted to make at the service layer, but i wasn't so sure.
     @PostMapping("/new")
-    public String processAddEngineer(@Valid @ModelAttribute("engineerDTO") EngineerViewModel engineerViewModel, BindingResult result,
-                                     @Valid @ModelAttribute("carDTO") CarViewModel carViewModel, BindingResult carResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String processAddEngineer(@Valid @ModelAttribute("engineerDTO") EngineerViewModel engineerViewModel,
+                                     BindingResult result,
+                                     @Valid @ModelAttribute("carDTO") CarViewModel carViewModel,
+                                     BindingResult carResult,
+                                     Model model,
+                                     @RequestParam("image") MultipartFile multipartFile,
+                                     @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        User user = userService.findUser(userDetails.getId());
         if (result.hasErrors()) {
             logger.error(result.toString());
             model.addAttribute("cars", carService.getAllCars());
@@ -152,9 +163,11 @@ public class EngineerController {
         //Add contributions from checkbox list
         engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
-                ControllerHelper.addContribution(engineer, carService.findById(contributionId));
+                contributionRepository.save(new Contribution(carService.findById(contributionId), engineer));
+//                ControllerHelper.addContribution(engineer, carService.findById(contributionId));
             }
         });
+
         //Add car to engineer if all attributes from form exist (because of image upload that i had to check)
         //Also, if Car form would be discarded if wrong data was passed in at the same time with a contribution (car) being picked from checkbox
         if (!carResult.hasErrors()) {
@@ -163,16 +176,21 @@ public class EngineerController {
             Car car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
             car.setTradeMark(tradeMark);
             tradeMark.addCar(car);
+            car.setAuthor(user);
             logger.debug("processing the new engineer item creation...");
 //            When new car is added with image
-            engineerService.addEngineerWithNewCar(engineer, car, multipartFile);
+            carService.addCar(car, multipartFile);
+//            Then contribution is persisted (link between new car and existent engineer
+            contributionRepository.save(new Contribution(car,engineer));
+//            engineerService.addEngineerWithNewCar(engineer, car, multipartFile);
         }
+        engineer.setAuthor(user);
         engineerService.addEngineer(engineer);
         return "redirect:/engineers/" + engineer.getId() + "?success=true";
     }
 
     //Delete
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteEngineer(@PathVariable int id) {
         engineerService.deleteEngineer(engineerService.findById(id));
         logger.debug("deleting engineer with id: " + id);
@@ -198,6 +216,4 @@ public class EngineerController {
         modelAndView.setViewName("/errors/entityalreadyexists");
         return modelAndView;
     }
-
-
 }

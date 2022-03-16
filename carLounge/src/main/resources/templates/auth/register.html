@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars Expo</title>
+    <script defer th:src="@{/js/bundle-signup.js}"></script>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+
+</head>
+<body>
+<div class="container register">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <div class="container mb-3">
+        <h2>Sign up</h2>
+        <p class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${message!=null}"
+           th:text="${message}"></p>
+        <p></p>
+        <form th:action="@{/register}" th:object="${user}" method="POST" enctype="utf8">
+            <div class="mb-3">
+                <label for="r-username">Username</label>
+                <input id="r-username" type="text" th:field="*{username}" class="form-control"/>
+                <p class="mt-5 alert-danger alert" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                    model Error</p>
+                <p id="username-check"></p>
+            </div>
+            <div class="mb-3">
+                <label for="r-password">Password</label>
+                <input id="r-password" type="password" th:field="*{password}" class="form-control"/>
+                <p class="mt-5 alert-danger alert" th:if="${error!=null}" th:text="${error}"></p>
+                <p id="password-check"></p>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword">Confirm password</label>
+                <input id="confirmPassword" type="password" th:field="*{matchingPassword}" class="form-control"/>
+                <p id="pw-confirm-check"></p>
+            </div>
+            <button type="submit" class="btn bg-dark btn-outline-success">Submit</button>
+        </form>
+    </div>
+</div>
+<!--    <a th:href="@{/cars/add}"></a>-->
+</body>
+</html>

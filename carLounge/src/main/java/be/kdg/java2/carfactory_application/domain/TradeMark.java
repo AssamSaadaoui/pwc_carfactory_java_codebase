@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "trademarks")
 public class TradeMark {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "trademark_id", nullable = false)
     private int id;
     private String title;

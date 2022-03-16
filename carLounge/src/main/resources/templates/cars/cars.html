@@ -46,11 +46,33 @@
                         <li th:utext="#{aprice(${car.price})}" class="list-group-item"></li>
                     </ul>
                     <div class="card-body">
-                        <a th:utext="#{adetails}" th:href="${ '/cars/' + car.getId()}" class="card-link">Details</a>
-                        <a th:utext="#{aedit}" th:href="${'/cars/edit/' + car.getId()}">Edit</a>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <button style="padding: 0 3px" th:utext="#{adetails}"
+                                        th:href="${ '/cars/' + car.getId()}"
+                                        class="btn btn-outline-success bg-dark">
+                                    Details
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button style="padding: 0 3px" th:utext="#{aedit}"
+                                        th:href="${'/cars/edit/' + car.getId()}"
+                                        class="btn btn-outline-success bg-dark">Edit
+                                </button>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <form th:action="@{'/cars/delete/{id}'(id=${car.id})}" th:method="delete"
+                                      style="margin: unset">
+                                    <button th:utext="#{adelete}" style="padding: 0px 3px;"
+                                            class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                         <!--                        <a>Edit</a>-->
-                        <a th:utext="#{adelete}" th:href="${'/cars/delete/' + car.getId()}" style="padding: 0px 3px;"
-                           class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
+
+                        <p th:text="'Created by: '+${car.author.username}+' on '+ ${car.createdOn}"></p>
                     </div>
                 </div>
             </div>

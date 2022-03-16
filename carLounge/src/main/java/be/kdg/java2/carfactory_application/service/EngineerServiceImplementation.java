@@ -5,6 +5,7 @@ import be.kdg.java2.carfactory_application.domain.Car;
 import be.kdg.java2.carfactory_application.domain.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
+import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
@@ -23,12 +24,13 @@ public class EngineerServiceImplementation implements EngineerService {
     private final EngineerRepositorySDR engineerRepository;
     private final CarRepositorySDR carRepository;
     private final TradeMarkRepositorySDR tradeMarkRepository;
-
+    private final ContributionRepository contributionRepository;
     @Autowired
-    public EngineerServiceImplementation(EngineerRepositorySDR engineerRepository, CarRepositorySDR carRepository, TradeMarkRepositorySDR tradeMarkRepository) {
+    public EngineerServiceImplementation(EngineerRepositorySDR engineerRepository, CarRepositorySDR carRepository, TradeMarkRepositorySDR tradeMarkRepository, ContributionRepository contributionRepository) {
         this.engineerRepository = engineerRepository;
         this.carRepository = carRepository;
         this.tradeMarkRepository = tradeMarkRepository;
+        this.contributionRepository = contributionRepository;
     }
 
     /**
@@ -53,14 +55,13 @@ public class EngineerServiceImplementation implements EngineerService {
         ServiceChecksUtil.checkIfAnyExists(engineer, car, isMatchEngineer, isMatchCar); //checks if any of the two entities already exist (based on model and name)
         ServiceChecksUtil.checkForTradeMark(car, carRepository, tradeMarkRepository);
         FileUploadUtil.addImageToCar(car, file);
-        engineer.addCar(car);
-        car.addEngineer(engineer);
+//        engineer.addCar(car);
+//        car.addEngineer(engineer);
         engineerRepository.save(engineer);
     }
 
     @Override
     public void deleteEngineer(Engineer engineer) {
-        engineer.getCars().forEach(car -> car.getEngineers().remove(engineer));
         engineerRepository.delete(engineer);
     }
 
@@ -81,7 +82,7 @@ public class EngineerServiceImplementation implements EngineerService {
 
     @Override
     public void addContributionToEngineer(Car car, Engineer newEngineer) {
-        newEngineer.addCar(car);
+//        newEngineer.addCar(car);
     }
 
     @Override

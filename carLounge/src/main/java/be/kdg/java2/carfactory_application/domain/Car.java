@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "cars", uniqueConstraints = @UniqueConstraint(columnNames = "model"))
-public class Car {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "car_id", nullable = false)
-    private int id;
+public class Car extends FactoryEntity {
 
     private String model;
     private double engineSize;
@@ -32,13 +29,16 @@ public class Car {
     @JoinColumn(name = "trademark_id")//fk
     private TradeMark tradeMark;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "cars_engineers",
-            joinColumns = @JoinColumn(name = "car_id"),//owner table
-            inverseJoinColumns = @JoinColumn(name = "engineer_id")
-    )//target table
-    //   link to engineers that worked on the car
-    private List<Engineer> engineers = new ArrayList<>();
+    @OneToMany(mappedBy = "car", cascade = CascadeType.REMOVE)
+        private List<Contribution> contributors = new ArrayList<>();
+
+    public List<Contribution> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(List<Contribution> contributors) {
+        this.contributors = contributors;
+    }
 
     public Car() {
     }
@@ -51,13 +51,6 @@ public class Car {
         this.price = price;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getModel() {
         return model;
@@ -95,9 +88,9 @@ public class Car {
         this.color = color;
     }
 
-    public List<Engineer> getEngineers() {
-        return engineers;
-    }
+//    public List<Engineer> getEngineers() {
+//        return engineers;
+//    }
 
     public TradeMark getTradeMark() {
         return this.tradeMark;
@@ -111,14 +104,17 @@ public class Car {
         return color;
     }
 
-    public void addEngineer(Engineer engineer) {
-        engineers.add(engineer);
-    }
-    public void removeEngineer(Engineer engineer){engineers.remove(engineer);}
-
-    public void setEngineers(List<Engineer> engineers) {
-        this.engineers = engineers;
-    }
+//    public void addEngineer(Engineer engineer) {
+//        engineers.add(engineer);
+//    }
+//
+//    public void removeEngineer(Engineer engineer) {
+//        engineers.remove(engineer);
+//    }
+//
+//    public void setEngineers(List<Engineer> engineers) {
+//        this.engineers = engineers;
+//    }
 
     public String getImage() {
         return image;
@@ -130,26 +126,26 @@ public class Car {
 
     @Transient
     public String getImagePath() {
-        if (image == null || Integer.valueOf(id) == null) return null;
+        if (image == null || Integer.valueOf(this.getId()) == null) return null;
         return "/car-images/" + image;
     }
 
-    public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-        String formattedDate = releaseDate.format(formatter);
-        StringBuilder engineerNames = new StringBuilder();
-        for (Engineer engineer : engineers) {
-            engineerNames.append(engineer.getName()).append(", ");
-        }
-        engineerNames.delete(engineerNames.length() - 2, engineerNames.length());
-        return String.format("Trademark: %s%n" +
-                "Model: %s%n" +
-                "Engine: %.1fL%n" +
-                "Release date: %s%n" +
-                "Color: %s%n" +
-                "Price: %s$%n" +
-                "Engineers: %s%n" +
-                "------------------------------", tradeMark.getTitle(), model, engineSize, formattedDate, this.color.toString(), price, engineerNames);
-    }
+//    public String toString() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+//        String formattedDate = releaseDate.format(formatter);
+//        StringBuilder engineerNames = new StringBuilder();
+////        for (Engineer engineer : contributors) {
+////            engineerNames.append(engineer.getName()).append(", ");
+////        }
+//        engineerNames.delete(engineerNames.length() - 2, engineerNames.length());
+//        return String.format("Trademark: %s%n" +
+//                "Model: %s%n" +
+//                "Engine: %.1fL%n" +
+//                "Release date: %s%n" +
+//                "Color: %s%n" +
+//                "Price: %s$%n" +
+//                "Engineers: %s%n" +
+//                "------------------------------", tradeMark.getTitle(), model, engineSize, formattedDate, this.color.toString(), price, engineerNames);
+//    }
 
 }

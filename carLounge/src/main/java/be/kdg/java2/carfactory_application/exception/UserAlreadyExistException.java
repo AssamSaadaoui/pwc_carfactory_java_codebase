@@ -3,17 +3,13 @@ package be.kdg.java2.carfactory_application.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-//400 client error
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Entity already exists")
-public class EntityAlreadyExistsException extends Error {
-
-    public EntityAlreadyExistsException(String msg) {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "User already exists")
+public class UserAlreadyExistException extends Error {
+    public UserAlreadyExistException(String msg) {
         super(msg);
     }
-
     @Override
     public String toString() {
         return super.getMessage();
     }
-
 }

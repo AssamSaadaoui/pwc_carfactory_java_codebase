@@ -5,11 +5,15 @@ import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsExceptio
 import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
+import be.kdg.java2.carfactory_application.repository.ContributionRepository;
+import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
+import be.kdg.java2.carfactory_application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,12 +34,15 @@ public class CarController {
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
     private final EngineerService engineerService;
     private final CarService carService;
-
+    private final UserService userService;
+    private final ContributionRepository contributionRepository;
 
     @Autowired
-    public CarController(EngineerService engineerService, CarService carService) {
+    public CarController(EngineerService engineerService, CarService carService, UserService userService, ContributionRepository contributionRepository) {
         this.engineerService = engineerService;
         this.carService = carService;
+        this.userService = userService;
+        this.contributionRepository = contributionRepository;
     }
 
     //Read
@@ -123,7 +130,10 @@ public class CarController {
     //    A lot of the checks here i wanted to make at the service layer, but i wasn't so sure.
     @PostMapping("/new")
     public String processAddCar(@Valid @ModelAttribute("carDTO") CarViewModel carViewModel, BindingResult result,
-                                @Valid @ModelAttribute("engineerDTO") EngineerViewModel engineerViewModel, BindingResult enResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+                                @Valid @ModelAttribute("engineerDTO") EngineerViewModel engineerViewModel,
+                                BindingResult enResult, Model model, @RequestParam("image") MultipartFile multipartFile,
+                                @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
+        var user = userService.findUser(userDetails.getId());
         if (result.hasErrors()) {
             logger.error(result.toString());
             model.addAttribute("colors", Color.values());
@@ -144,28 +154,29 @@ public class CarController {
             return "/cars/carform";
         }
 
-        TradeMark tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
-        Car car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
+        var tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
+        var car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
         //Add engineers from checkbox (contributors)
-        carViewModel.getEngineersIds().forEach(id -> {
-            car.addEngineer(engineerService.findById(id));
+        carViewModel.getEngineersIds().forEach(engineerId -> {
+            contributionRepository.save(new Contribution(car, engineerService.findById(engineerId)));
             logger.debug("add the engineer to the car from checkbox");
         });
         //Engineer form would be discarded if wrong data was passed in at the same time with a contributor (engineer) being picked from checkbox
         if (!enResult.hasErrors()) {
             Engineer engineer = new Engineer(engineerViewModel.getName(), engineerViewModel.getTenure(), engineerViewModel.getNationality());
-            car.addEngineer(engineer);
-            engineer.addCar(car);
+            contributionRepository.save(new Contribution(car, engineer));
+            engineer.setAuthor(user);
             logger.debug("Adding new car from form to the engineer");
         }
         car.setTradeMark(tradeMark);
         tradeMark.addCar(car);
         logger.debug("processing the new car item creation...");
+        car.setAuthor(user);
         carService.addCar(car, multipartFile);
         return "redirect:/cars/" + car.getId() + "?success=true";
     }
 
-    @RequestMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteCar(@PathVariable int id) {
         carService.deleteCar(carService.findById(id));
         logger.debug("deleting car with id: " + id);

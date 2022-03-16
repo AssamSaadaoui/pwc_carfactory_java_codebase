@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cars Expo</title>
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+
+</head>
+<body>
+<div class="container login">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <div class="container mb-3">
+        <!--error section-->
+        <form class="mt-5" th:action="@{/login}" th:method="post" th:object="${loginInfo}">
+            <div class="mb-3">
+                <label for="username">Username</label>
+                <input id="username" type="text" th:field="*{username}" class="form-control"/>
+            </div>
+            <div class="mb-3">
+                <label for="password">Password</label>
+                <input id="password" type="password" th:field="*{password}" class="form-control"/>
+            </div>
+            <button type="submit" class="btn bg-dark btn-outline-success">Sign in</button>
+            <p>Don't have an account yet? <a th:href="@{/register}">Sign Up Now!</a></p>
+        </form>
+    </div>
+</div>
+<!--    <a th:href="@{/cars/add}"></a>-->
+</body>
+</html>

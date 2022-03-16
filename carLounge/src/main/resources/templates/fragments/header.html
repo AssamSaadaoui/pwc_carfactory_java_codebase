@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
@@ -23,7 +24,6 @@
                             <a th:classappend="${#httpServletRequest.getRequestURI() == '/engineers' ? 'active':''}"
                                class="nav-link" th:href="@{/engineers}"><span
                                     th:utext="#{engineers}">Engineers</span></a></li>
-                        >
                         <li class="nav-item dropdown">
                             <a th:classappend="${#httpServletRequest.getRequestURI() == '/cars/new' || #httpServletRequest.getRequestURI() == '/engineers/new' ? 'active':''}"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -31,7 +31,6 @@
                                 Add
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-
                                 <li>
                                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/cars/new' ? 'active':''}"
                                        class="dropdown-item" th:href="@{/cars/new}"><span
@@ -44,7 +43,28 @@
                         </li>
                     </ul>
                 </div>
-                <div th:if="${#httpServletRequest.getRequestURI() =='/engineers' || #httpServletRequest.getRequestURI() =='/cars' || #httpServletRequest.getRequestURI().contains('search') || #httpServletRequest.getRequestURI().contains('order')|| #httpServletRequest.getRequestURI().contains('filter')}">
+                <div class="auth">
+                    <div sec:authorize="!isAuthenticated()">
+                        <li class="d-flex nav-item">
+                            <a th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
+                               class="nav-link" th:href="@{/login}">Sign in</a>
+                            <a th:classappend="${#httpServletRequest.getRequestURI() == '/register' ? 'active':''}"
+                               class="nav-link" th:href="@{/register}">Sign up</a></li>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <li class="d-flex nav-item">
+                            <p>logged in as <span sec:authentication="name"></span></p>
+                            <form th:action="@{/logout}" th:method="post">
+                                <button class="nav-link">Sign out</button>
+                            </form>
+                        </li>
+                    </div>
+                </div>
+                <div th:if="${#httpServletRequest.getRequestURI() =='/engineers'
+                           || #httpServletRequest.getRequestURI() =='/cars'
+                           || #httpServletRequest.getRequestURI().contains('search')
+                           || #httpServletRequest.getRequestURI().contains('order')
+                           || #httpServletRequest.getRequestURI().contains('filter')}">
                     <form class="d-flex"
                           th:action="${(#httpServletRequest.getRequestURI().contains('/engineers')) ? '/engineers/search':'/cars/search'}">
                         <label list="cars" for="lookup"> <input list="carsList"
@@ -62,12 +82,13 @@
                         </button>
                     </form>
                 </div>
+                <li style="display:none;" class="nav-item">
+                    <button id="myBtn" class="bn">Sign in</button>
+                </li>
             </div>
         </nav>
+        <!--/*/ <th:block th:include="fragments/login :: login"></th:block> /*/-->
     </div>
-</div>
-<div class="preloader">
-    <div class="animation animation-rotating-square"></div>
 </div>
 </body>
 </html>

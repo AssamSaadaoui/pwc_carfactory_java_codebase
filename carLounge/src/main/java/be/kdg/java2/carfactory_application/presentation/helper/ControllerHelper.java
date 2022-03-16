@@ -14,9 +14,10 @@ public class ControllerHelper {
     private static final Logger logger = LoggerFactory.getLogger(EngineerController.class);
 
     public static void addContribution(Engineer changedEngineer, Car contribution) {
-        changedEngineer.addCar(contribution);
-        logger.debug("Adding " + contribution.getModel() + " as a contribution to the engineer");
-        contribution.addEngineer(changedEngineer);
+//        changedEngineer.addCar(contribution);
+//        logger.debug("Adding " + contribution.getModel() + " as a contribution to the engineer");
+//        contribution.addEngineer(changedEngineer);
+
         logger.debug("Adding engineer " + changedEngineer.getName() + " to " + contribution.getModel());
     }
 
@@ -29,8 +30,8 @@ public class ControllerHelper {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        contributor.removeCar(contribution);
-        contribution.removeEngineer(contributor);
+//        contributor.removeCar(contribution);
+//        contribution.removeEngineer(contributor);
         //      Updating the repository
         carService.update(contribution);
 //        engineerService.update(contributor); persist has cascading type

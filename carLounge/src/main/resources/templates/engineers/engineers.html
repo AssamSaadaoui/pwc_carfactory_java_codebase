@@ -9,7 +9,8 @@
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <main class="engineersPage">
         <div class="container">
-            <div style="margin-top: 1rem"th:if="${param.get('success')!= null}" class="alert alert-success alert-dismissible fade show"
+            <div style="margin-top: 1rem" th:if="${param.get('success')!= null}"
+                 class="alert alert-success alert-dismissible fade show"
                  role="alert">
                 The engineer was successfully deleted!
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -54,13 +55,34 @@
                         </li>
                     </ul>
                     <div class="card-body">
-                        <a th:utext="#{adetails}" th:href="${ '/engineers/' + engineer.getId()}">View</a>
-                        <a th:utext="#{aedit}" th:href="${'/engineers/edit/' + engineer.getId()}">Edit</a>
-                        <a th:utext="#{adelete}" th:href="${'/engineers/delete/' + engineer.getId()}">Delete</a>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <button style="padding: 0 3px" th:utext="#{adetails}"
+                                        th:href="${ '/engineers/' + engineer.getId()}"
+                                        class="btn btn-outline-success bg-dark">
+                                    Details
+                                </button>
+                            </div>
+                            <div class="col-sm-4">
+                                <button style="padding: 0 3px" th:utext="#{aedit}"
+                                        th:href="${'/engineers/edit/' + engineer.getId()}"
+                                        class="btn btn-outline-success bg-dark">Edit
+                                </button>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <form th:action="@{'/engineers/delete/{id}'(id=${engineer.id})}" th:method="delete"
+                                      style="margin: unset">
+                                    <button th:utext="#{adelete}" style="padding: 0px 3px;"
+                                            class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <p th:text="'Created by: '+${engineer.author.username}+' on '+ ${engineer.createdOn}"></p>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 </div>
 </body>

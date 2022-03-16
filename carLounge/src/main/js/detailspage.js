@@ -71,6 +71,7 @@ const deleteCarFromEngineer = async function (ele) {
             },
             method: 'DELETE'
         })
+        let data;
         if (!response.ok) {
             // get error message from body or default to response status
             const error = response.status;
@@ -80,6 +81,7 @@ const deleteCarFromEngineer = async function (ele) {
             // redirect(`/${objectStr}s?success=true`)
             ele.parentNode.parentNode.parentNode.parentNode.remove()
         }
+
     } catch (err) {
         // catches errors both in fetch and response.json
         alert(err);

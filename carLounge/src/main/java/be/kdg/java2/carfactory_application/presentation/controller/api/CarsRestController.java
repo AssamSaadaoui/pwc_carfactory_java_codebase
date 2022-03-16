@@ -1,23 +1,26 @@
 package be.kdg.java2.carfactory_application.presentation.controller.api;
 
 import be.kdg.java2.carfactory_application.domain.Color;
+import be.kdg.java2.carfactory_application.domain.Contribution;
 import be.kdg.java2.carfactory_application.domain.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
+import be.kdg.java2.carfactory_application.repository.ContributionRepository;
+import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
+import be.kdg.java2.carfactory_application.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.BindException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,15 +28,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/cars")
 public class CarsRestController {
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
+    private final ModelMapper modelMapper;
 
     private final CarService carService;
     private final EngineerService engineerService;
-    private final ModelMapper modelMapper;
+    private final UserService userService;
+    private final ContributionRepository contributionRepository;
 
-    public CarsRestController(CarService carService, EngineerService engineerService, ModelMapper modelMapper) {
+    public CarsRestController(CarService carService, EngineerService engineerService, UserService userService, ModelMapper modelMapper, ContributionRepository contributionRepository) {
         this.carService = carService;
         this.engineerService = engineerService;
+        this.userService = userService;
         this.modelMapper = modelMapper;
+        this.contributionRepository = contributionRepository;
     }
 
     @GetMapping
@@ -81,21 +88,25 @@ public class CarsRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        carService.removeContributorFromCar(contribution, contributor);
+        contributionRepository.deleteByCarIdAndEngineerId(contribution.getId(), contributor.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{carId}/engineers")
-    public ResponseEntity<Object> addContributor(@Valid @RequestBody EngineerDTO dto, @PathVariable int carId) {
+    public ResponseEntity<Object> addContributor(@Valid @RequestBody EngineerDTO dto, @PathVariable int carId,
+                                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
+        var user = userService.findUser(userDetails.getId());
         var newEngineer = new Engineer(dto.getName(), dto.getTenure(), dto.getNationality());
+        newEngineer.setAuthor(user);
         var car = carService.findById(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        carService.addContributorToCar(newEngineer, carId);
+//        carService.addContributorToCar(newEngineer, carId);
         try {
-            engineerService.addContributionToEngineer(car, newEngineer);
+//            engineerService.addContributionToEngineer(car, newEngineer);
             engineerService.addEngineer(newEngineer);
+            contributionRepository.save(new Contribution(car, newEngineer));
         } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

@@ -2,6 +2,7 @@ package be.kdg.java2.carfactory_application.presentation.controller.api;
 
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
+import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
 import org.modelmapper.ModelMapper;
@@ -19,14 +20,17 @@ import java.util.stream.Collectors;
 public class EngineerRestController {
     private static final Logger logger = LoggerFactory.getLogger(CarController.class);
 
-    private final EngineerService engineerService;
-    private final CarService carService;
     private final ModelMapper modelMapper;
 
-    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper) {
+    private final EngineerService engineerService;
+    private final CarService carService;
+    private final ContributionRepository contributionRepository;
+
+    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper, ContributionRepository contributionRepository) {
         this.engineerService = engineerService;
         this.carService = carService;
         this.modelMapper = modelMapper;
+        this.contributionRepository = contributionRepository;
     }
 
     @GetMapping
@@ -50,7 +54,8 @@ public class EngineerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        carService.removeContributorFromCar(contribution, contributor);
+        contributionRepository.deleteByCarIdAndEngineerId(carId,enId);
+//        carService.removeContributorFromCar(contribution, contributor);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
