@@ -4,6 +4,7 @@ import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarContro
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.ContributionService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -24,13 +25,13 @@ public class EngineerRestController {
 
     private final EngineerService engineerService;
     private final CarService carService;
-    private final ContributionRepository contributionRepository;
+    private final ContributionService contributionService;
 
-    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper, ContributionRepository contributionRepository) {
+    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper, ContributionService contributionService) {
         this.engineerService = engineerService;
         this.carService = carService;
         this.modelMapper = modelMapper;
-        this.contributionRepository = contributionRepository;
+        this.contributionService = contributionService;
     }
 
     @GetMapping
@@ -54,7 +55,7 @@ public class EngineerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        contributionRepository.deleteByCarIdAndEngineerId(carId,enId);
+        contributionService.deleteContributionByCarId(carId);
 //        carService.removeContributorFromCar(contribution, contributor);
         return new ResponseEntity<>(HttpStatus.OK);
     }

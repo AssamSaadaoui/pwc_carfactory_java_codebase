@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.domain;
+package be.kdg.java2.carfactory_application.domain.factory;
 
 import javax.persistence.*;
 import java.time.LocalDate;

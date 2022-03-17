@@ -1,7 +1,7 @@
 package be.kdg.java2.carfactory_application.service;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Engineer;
+import be.kdg.java2.carfactory_application.domain.factory.Car;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

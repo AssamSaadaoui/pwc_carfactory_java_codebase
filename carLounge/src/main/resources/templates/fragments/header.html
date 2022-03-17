@@ -24,6 +24,9 @@
                             <a th:classappend="${#httpServletRequest.getRequestURI() == '/engineers' ? 'active':''}"
                                class="nav-link" th:href="@{/engineers}"><span
                                     th:utext="#{engineers}">Engineers</span></a></li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item">
+                            <a th:classappend="${#httpServletRequest.getRequestURI() == '/users' ? 'active':''}"
+                               class="nav-link" th:href="@{/users}"><span>Users</span></a></li>
                         <li class="nav-item dropdown">
                             <a th:classappend="${#httpServletRequest.getRequestURI() == '/cars/new' || #httpServletRequest.getRequestURI() == '/engineers/new' ? 'active':''}"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -51,14 +54,15 @@
                             <a th:classappend="${#httpServletRequest.getRequestURI() == '/register' ? 'active':''}"
                                class="nav-link" th:href="@{/register}">Sign up</a></li>
                     </div>
-                    <div sec:authorize="isAuthenticated()">
+                    <section sec:authorize="isAuthenticated()">
                         <li class="d-flex nav-item">
-                            <p>logged in as <span sec:authentication="name"></span></p>
+                            <a style="color: #02fbfc" class="nav-link">logged in as <span
+                                    sec:authentication="name"></span></a>
                             <form th:action="@{/logout}" th:method="post">
-                                <button class="nav-link">Sign out</button>
+                                <button class="nav-link sign-out-Btn">Sign out</button>
                             </form>
                         </li>
-                    </div>
+                    </section>
                 </div>
                 <div th:if="${#httpServletRequest.getRequestURI() =='/engineers'
                            || #httpServletRequest.getRequestURI() =='/cars'

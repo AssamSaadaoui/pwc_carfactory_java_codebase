@@ -23,6 +23,45 @@
                 <p id="username-check"></p>
             </div>
             <div class="mb-3">
+                <label>Gender</label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="m" name="gender" class="custom-control-input" value="MALE"
+                           th:field="*{gender}">
+                    <label class="custom-control-label" for="m">Male</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="f" name="gender" class="custom-control-input" value="FEMALE"
+                           th:field="*{gender}">
+                    <label class="custom-control-label" for="f">Female</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="r-username">Nationality</label>
+                <select th:field="*{nationality}">
+                    <option value="">select country</option>
+                    <option value="AF">Afghanistan</option>
+                    <option value="AX">Aland Islands</option>
+                    <option value="AL">Albania</option>
+                    <option value="DZ">Algeria</option>
+                    <option value="AT">Austria</option>
+                    <option value="BY">Belarus</option>
+                    <option value="BE">Belgium</option>
+                    <option value="BA">Bosnia and Herzegovina</option>
+                    <option value="BG">Bulgaria</option>
+                    <option value="HR">Croatia (Hrvatska)</option>
+                    <option value="CY">Cyprus</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="FR">France</option>
+                    <option value="GI">Gibraltar</option>
+                    <option value="DE">Germany</option>
+                    <option value="GR">Greece</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="r-age">Age:</label>
+                <input id="r-age" type="number" th:field="*{age}" class="form-control"/>
+            </div>
+            <div class="mb-3">
                 <label for="r-password">Password</label>
                 <input id="r-password" type="password" th:field="*{password}" class="form-control"/>
                 <p class="mt-5 alert-danger alert" th:if="${error!=null}" th:text="${error}"></p>

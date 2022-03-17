@@ -1,12 +1,9 @@
 package be.kdg.java2.carfactory_application.configuration;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Color;
-import be.kdg.java2.carfactory_application.domain.Engineer;
+import be.kdg.java2.carfactory_application.domain.factory.Car;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
-import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
-import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;

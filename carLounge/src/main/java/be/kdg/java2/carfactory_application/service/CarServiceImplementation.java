@@ -1,9 +1,8 @@
 package be.kdg.java2.carfactory_application.service;
 
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Engineer;
-import be.kdg.java2.carfactory_application.domain.User;
+import be.kdg.java2.carfactory_application.domain.factory.Car;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
@@ -45,7 +44,7 @@ public class CarServiceImplementation implements CarService {
         if (isMatch) {
             throw new EntityAlreadyExistsException("Model: " + car.getModel() + " already exists.");
         }
-        ServiceChecksUtil.checkForTradeMark(car, carRepository, tradeMarkRepository);
+//        ServiceChecksUtil.checkForTradeMark(car, carRepository, tradeMarkRepository);
         FileUploadUtil.addImageToCar(car, file);
         carRepository.save(car);
     }

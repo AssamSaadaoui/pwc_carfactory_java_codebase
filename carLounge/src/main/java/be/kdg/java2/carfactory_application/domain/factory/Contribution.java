@@ -1,4 +1,4 @@
-package be.kdg.java2.carfactory_application.domain;
+package be.kdg.java2.carfactory_application.domain.factory;
 
 import javax.persistence.*;
 
@@ -11,6 +11,10 @@ public class Contribution {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private int id;
+
+    @Enumerated(EnumType.STRING)
+    private CarPart carPart;
+
 
     public Contribution(Car car, Engineer engineer) {
         this.car = car;
@@ -51,5 +55,13 @@ public class Contribution {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public CarPart getCarPart() {
+        return carPart;
+    }
+
+    public void setCarPart(CarPart carPart) {
+        this.carPart = carPart;
     }
 }

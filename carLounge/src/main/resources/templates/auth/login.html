@@ -10,7 +10,12 @@
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <div class="container mb-3">
         <!--error section-->
-        <form class="mt-5" th:action="@{/login}" th:method="post" th:object="${loginInfo}">
+        <!--        <p th:if="${error}" th:text="${error}" style="color: firebrick"></p>-->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible mt-2" th:text="${error}">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>Error:</strong>
+        </div>
+        <form class="mt-1" th:action="@{/login}" th:method="post" th:object="${loginInfo}">
             <div class="mb-3">
                 <label for="username">Username</label>
                 <input id="username" type="text" th:field="*{username}" class="form-control"/>

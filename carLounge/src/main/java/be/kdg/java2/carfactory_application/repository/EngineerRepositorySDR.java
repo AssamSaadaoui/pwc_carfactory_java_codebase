@@ -1,10 +1,7 @@
 package be.kdg.java2.carfactory_application.repository;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Engineer;
-import org.springframework.context.annotation.Profile;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

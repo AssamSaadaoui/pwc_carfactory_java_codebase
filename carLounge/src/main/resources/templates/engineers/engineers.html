@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Engineers</title>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
@@ -55,34 +56,41 @@
                         </li>
                     </ul>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row" style="flex-wrap: nowrap ">
                             <div class="col-sm-4">
-                                <button style="padding: 0 3px" th:utext="#{adetails}"
-                                        th:href="${ '/engineers/' + engineer.getId()}"
-                                        class="btn btn-outline-success bg-dark">
+                                <a style="padding: 0 3px" th:utext="#{adetails}"
+                                   th:href="${ '/engineers/' + engineer.getId()}"
+                                   class="btn btn-outline-success bg-dark">
                                     Details
-                                </button>
+                                </a>
                             </div>
-                            <div class="col-sm-4">
-                                <button style="padding: 0 3px" th:utext="#{aedit}"
-                                        th:href="${'/engineers/edit/' + engineer.getId()}"
-                                        class="btn btn-outline-success bg-dark">Edit
-                                </button>
+                            <section style="display: inline-flex;"
+                                     th:if="${ (#authentication.name== engineer.author.username)
+                                                 || #authorization.expression('hasRole(''ROLE_MANAGER'')')
+                                                 || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                                <div class="col-sm-4">
+                                    <a style="padding: 0 3px" th:utext="#{aedit}"
+                                       th:href="${'/engineers/edit/' + engineer.getId()}"
+                                       class="btn btn-outline-success bg-dark">Edit
+                                    </a>
 
-                            </div>
-                            <div class="col-sm-4">
-                                <form th:action="@{'/engineers/delete/{id}'(id=${engineer.id})}" th:method="delete"
-                                      style="margin: unset">
-                                    <button th:utext="#{adelete}" style="padding: 0px 3px;"
-                                            class="btn btn-outline-success bg-dark deleteBtn">Delete
-                                    </button>
-                                </form>
-                            </div>
+                                </div>
+                                <div class="col-sm-4" >
+                                    <form th:action="@{'/engineers/delete/{id}'(id=${engineer.id})}" th:method="delete"
+                                          style="margin: unset">
+                                        <button th:utext="#{adelete}" style="padding: 0px 3px;"
+                                                class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </section>
                         </div>
                         <p th:text="'Created by: '+${engineer.author.username}+' on '+ ${engineer.createdOn}"></p>
+
                     </div>
                 </div>
             </div>
+        </div>
     </main>
 </div>
 </body>

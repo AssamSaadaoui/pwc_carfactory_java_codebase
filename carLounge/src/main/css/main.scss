@@ -29,6 +29,10 @@ body {
   }
 }
 
+.nav-link.active {
+  color: $brandColor !important;
+}
+
 .dropdown-item {
   &:active {
     background-color: #353a3f !important;
@@ -500,6 +504,17 @@ form {
     }
   }
 }
+
+.sign-out-Btn {
+  border: unset;
+  background: unset;
+  color: gray;
+
+  &:hover {
+    color: $brandColor !important;
+  }
+}
+
 
 /*!*After order css*!*/
 /*@keyframes goUp {*/

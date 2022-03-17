@@ -1,15 +1,15 @@
 package be.kdg.java2.carfactory_application.presentation.controller.api;
 
-import be.kdg.java2.carfactory_application.domain.Color;
-import be.kdg.java2.carfactory_application.domain.Contribution;
-import be.kdg.java2.carfactory_application.domain.Engineer;
+import be.kdg.java2.carfactory_application.domain.factory.Color;
+import be.kdg.java2.carfactory_application.domain.factory.Contribution;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
-import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.ContributionService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
 import be.kdg.java2.carfactory_application.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -33,14 +33,14 @@ public class CarsRestController {
     private final CarService carService;
     private final EngineerService engineerService;
     private final UserService userService;
-    private final ContributionRepository contributionRepository;
+    private final ContributionService contributionService;
 
-    public CarsRestController(CarService carService, EngineerService engineerService, UserService userService, ModelMapper modelMapper, ContributionRepository contributionRepository) {
+    public CarsRestController(CarService carService, EngineerService engineerService, UserService userService, ModelMapper modelMapper, ContributionService contributionService) {
         this.carService = carService;
         this.engineerService = engineerService;
         this.userService = userService;
         this.modelMapper = modelMapper;
-        this.contributionRepository = contributionRepository;
+        this.contributionService = contributionService;
     }
 
     @GetMapping
@@ -88,7 +88,7 @@ public class CarsRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         //      Deleting relationship
-        contributionRepository.deleteByCarIdAndEngineerId(contribution.getId(), contributor.getId());
+        contributionService.deleteContributionByEngineerId(enId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -106,7 +106,7 @@ public class CarsRestController {
         try {
 //            engineerService.addContributionToEngineer(car, newEngineer);
             engineerService.addEngineer(newEngineer);
-            contributionRepository.save(new Contribution(car, newEngineer));
+            contributionService.addContribution(new Contribution(car, newEngineer));
         } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

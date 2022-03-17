@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.util;
 
-import be.kdg.java2.carfactory_application.domain.Car;
+import be.kdg.java2.carfactory_application.domain.factory.Car;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.EngineerController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

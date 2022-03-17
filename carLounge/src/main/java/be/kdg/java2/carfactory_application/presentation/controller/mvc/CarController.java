@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
-import be.kdg.java2.carfactory_application.domain.*;
+import be.kdg.java2.carfactory_application.domain.factory.*;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.EngineerViewModel;
@@ -156,6 +156,10 @@ public class CarController {
 
         var tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
         var car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
+
+        car.setAuthor(user);
+        carService.addCar(car, multipartFile);
+
         //Add engineers from checkbox (contributors)
         carViewModel.getEngineersIds().forEach(engineerId -> {
             contributionRepository.save(new Contribution(car, engineerService.findById(engineerId)));
@@ -171,8 +175,6 @@ public class CarController {
         car.setTradeMark(tradeMark);
         tradeMark.addCar(car);
         logger.debug("processing the new car item creation...");
-        car.setAuthor(user);
-        carService.addCar(car, multipartFile);
         return "redirect:/cars/" + car.getId() + "?success=true";
     }
 

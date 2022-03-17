@@ -1,18 +1,13 @@
-package be.kdg.java2.carfactory_application.domain;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+package be.kdg.java2.carfactory_application.domain.factory;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "cars", uniqueConstraints = @UniqueConstraint(columnNames = "model"))
+@Table(name = "cars")
 public class Car extends FactoryEntity {
-
     private String model;
     private double engineSize;
     private int price;
@@ -30,14 +25,14 @@ public class Car extends FactoryEntity {
     private TradeMark tradeMark;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.REMOVE)
-        private List<Contribution> contributors = new ArrayList<>();
+        private List<Contribution> contributions = new ArrayList<>();
 
-    public List<Contribution> getContributors() {
-        return contributors;
+    public List<Contribution> getContributions() {
+        return contributions;
     }
 
-    public void setContributors(List<Contribution> contributors) {
-        this.contributors = contributors;
+    public void setContributions(List<Contribution> contributors) {
+        this.contributions = contributors;
     }
 
     public Car() {

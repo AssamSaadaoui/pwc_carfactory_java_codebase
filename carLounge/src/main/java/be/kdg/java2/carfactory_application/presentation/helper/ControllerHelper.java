@@ -1,7 +1,7 @@
 package be.kdg.java2.carfactory_application.presentation.helper;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Engineer;
+import be.kdg.java2.carfactory_application.domain.factory.Car;
+import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.EngineerController;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;

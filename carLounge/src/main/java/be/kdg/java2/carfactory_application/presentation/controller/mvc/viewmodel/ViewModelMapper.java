@@ -1,11 +1,6 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel;
 
-import be.kdg.java2.carfactory_application.domain.Car;
-import be.kdg.java2.carfactory_application.domain.Engineer;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ViewModelMapper {

@@ -1,11 +1,14 @@
-package be.kdg.java2.carfactory_application.domain;
+package be.kdg.java2.carfactory_application.domain.factory;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "engineers", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "engineers")
 public class Engineer extends FactoryEntity {
 
     private String name;

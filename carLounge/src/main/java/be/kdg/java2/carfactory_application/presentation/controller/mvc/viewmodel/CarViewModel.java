@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel;
 
-import be.kdg.java2.carfactory_application.domain.Color;
+import be.kdg.java2.carfactory_application.domain.factory.Color;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;

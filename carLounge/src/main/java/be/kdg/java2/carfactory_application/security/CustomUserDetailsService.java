@@ -1,6 +1,6 @@
 package be.kdg.java2.carfactory_application.security;
 
-import be.kdg.java2.carfactory_application.domain.User;
+import be.kdg.java2.carfactory_application.domain.user.User;
 import be.kdg.java2.carfactory_application.service.UserServiceImplementation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User '" + username + "' not found.");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return new CustomUserDetails(
                 user.getId(),
                 user.getUsername(),

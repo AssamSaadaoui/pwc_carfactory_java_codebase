@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:object="${engineer}" th:text="*{name}"></title>
     <script defer th:src="@{/js/bundle-detailspage.js}"></script>
@@ -44,15 +45,18 @@
                             <tr>
                                 <td id="tdTitle">Contributions/Work</td>
                                 <td>
-                                    <div th:each="car : *{cars}">
+                                    <div th:each="contribution : *{contributions}"
+                                         th:with="car=${contribution.getCar()}">
                                         <li style="list-style: none;">
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-9">
                                                     <a style="text-decoration: none"
                                                        th:href="${ '/cars/' + car.getId()}"
                                                        th:text="'- '+${car.tradeMark.getTitle()}+' '+${car.model}"></a>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-3" th:if="${(#authentication.name== car.author.username) ||
+                                                #authorization.expression('hasRole(''ROLE_MANAGER'')')
+                                                 || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                                     <a style="padding: 0px 3px;"
                                                        class="btn btn-outline-success bg-dark deleteBtn">Delete</a>
                                                     <input id="" type="hidden" th:value="${car.id}">

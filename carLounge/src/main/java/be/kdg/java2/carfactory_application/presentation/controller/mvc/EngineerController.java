@@ -1,6 +1,7 @@
 package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
-import be.kdg.java2.carfactory_application.domain.*;
+import be.kdg.java2.carfactory_application.domain.factory.*;
+import be.kdg.java2.carfactory_application.domain.user.User;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.exception.InvalidImageException;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;

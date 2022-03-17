@@ -1,4 +1,4 @@
-import {htmlToElement, currentPath} from "./util";
+import {htmlToElement, currentPath, headers} from "./util";
 import Engineer from "./engineer"
 //Details page
 const submitAdditionButton = document.getElementById("addRelationButton")
@@ -39,9 +39,7 @@ const deleteEngineerFromCar = async function (ele) {
     const titlesTd = document.getElementById("tdTitle")
     try {
         const response = await fetch(`/api/cars/${carId}/engineers/${engineerId}`, {
-            headers: {
-                Accept: "application/json"
-            },
+           headers,
             method: 'DELETE'
         })
         if (!response.ok) {
@@ -66,9 +64,7 @@ const deleteCarFromEngineer = async function (ele) {
     const titlesTd = document.getElementById("tdTitle")
     try {
         const response = await fetch(`/api/engineers/${engineerId}/cars/${carId}`, {
-            headers: {
-                Accept: "application/json"
-            },
+            headers,
             method: 'DELETE'
         })
         let data;
@@ -109,10 +105,7 @@ const addEngineerToCar = async function () {
         const engineer = new Engineer(name, tenure, nationality);
         const response = await fetch(`/api/cars/${carId}/engineers`, {
             method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                "Content-Type": 'application/json',
-            },
+            headers,
             body: JSON.stringify({
                 ...engineer
             })
@@ -190,9 +183,7 @@ async function saveCarUpdate(event) {
     try {
         let response = await fetch(`/api/cars/${carId}`, {
             method: 'PUT',
-            headers: {
-                "Content-Type": 'application/json',
-            },
+            headers,
             body: JSON.stringify(editedCarObj)
         })
         let data;

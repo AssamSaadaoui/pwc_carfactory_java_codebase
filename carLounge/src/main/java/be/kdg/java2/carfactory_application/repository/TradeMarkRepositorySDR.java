@@ -1,7 +1,6 @@
 package be.kdg.java2.carfactory_application.repository;
 
-import be.kdg.java2.carfactory_application.domain.TradeMark;
-import org.springframework.context.annotation.Profile;
+import be.kdg.java2.carfactory_application.domain.factory.TradeMark;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 //@Profile("SDR")

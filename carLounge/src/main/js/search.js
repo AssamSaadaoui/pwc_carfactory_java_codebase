@@ -1,5 +1,5 @@
 //Imports
-import {redirect, language, currentPath} from "./util";
+import {redirect, language, currentPath, headers} from "./util";
 import anime from "animejs";
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
@@ -32,9 +32,7 @@ const search = async function () {
     try {
         const response = await fetch(`/api/${currentPath}?lookup=${lookupValue}`,
             {
-                headers: {
-                    Accept: "application/json"
-                }
+                headers
             })
         let data;
         if (response.status === 200) {
@@ -76,9 +74,7 @@ const orderCars = async function () {
     try {
         const response = await fetch(`/api/cars/sort?order=${orderValue}`,
             {
-                headers: {
-                    Accept: "application/json"
-                }
+                headers
             })
         let data;
         if (response.status === 200) {

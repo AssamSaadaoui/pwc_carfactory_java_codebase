@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:object="${car}" th:text="${car.model}"></title>
     <script defer th:src="@{/js/bundle-detailspage.js}"></script>
@@ -24,8 +25,11 @@
                         <img id="car"
                              th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
                              class="card-img-top" th:alt-title="${car.model}">
-                        <button class="btn btn-outline-success bg-dark editBtn" id="editBtn">Edit</button>
-                        <button class="btn btn-outline-success bg-dark saveBtn" id="saveBtn">Save</button>
+                        <div th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')
+                                                 || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                            <button class="btn btn-outline-success bg-dark editBtn" id="editBtn">Edit</button>
+                            <button class="btn btn-outline-success bg-dark saveBtn" id="saveBtn">Save</button>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <table class="table table-striped">
@@ -59,12 +63,17 @@
                                 <td id="tdTitle" th:utext="#{engineers}">Engineers</td>
                                 <td id="contributors">
                                     <li style="list-style: none;text-decoration: none;"
-                                        th:each="engineer : *{engineers}">
+                                        th:each="contribution : *{contributions}"
+                                        th:with="engineer=${contribution.getEngineer()}">
                                         <div class="row">
-                                            <div class="col-md-6"><a th:href="${ '/engineers/' + engineer.getId()}"
-                                                                     th:text="'- '+${engineer.name}"></a></div>
-                                            <div class="col-md-6">
-                                                <button style="padding: 0px 3px;"
+                                            <div class="col-md-9"><a
+                                                    th:href="${ '/engineers/' + engineer.id}"
+                                                    th:text="'- '+${engineer.name}"></a></div>
+                                            <div class="col-md-3"
+                                                 th:if="${ (#authorization.authentication.name == car.author.username)
+                                                 || #authorization.expression('hasRole(''ROLE_MANAGER'')')
+                                                 || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                                                <button style="padding: 0 3px;"
                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete
                                                 </button>
                                                 <input id="" type="hidden" th:value="${engineer.id}"></div>
@@ -76,7 +85,8 @@
                         </table>
                         <div class="form-group">
                             <br>
-                            <div class="addEngineer">
+                            <div class="addEngineer" th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')
+                                                 || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                 <p>
                                     <a id="addEngineerBtn" class="btn btn-secondary" data-bs-toggle="collapse"
                                        href="#collapseExample"

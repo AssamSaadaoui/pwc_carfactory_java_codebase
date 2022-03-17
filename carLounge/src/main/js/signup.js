@@ -14,27 +14,31 @@ const namePattern = /^[A-z]+[A-z0-9]{3,}$/
 // at least one number
 const secretPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/
 
-//Util
-function checkInput(username, found, element) {
-    if (username === "") {
-        element.innerText = ""
-    } else if (!found) {
-        element.innerText = "Username should be at least 4 characters long."
-        element.style.color = "red"
-    } else {
-        element.innerText = ""
-    }
-}
-
 const processUserName = () => {
     const username = usernameInput.value
     const found = namePattern.test(username)
-    checkInput(username, found,userNameCheckMessageElement);
+    if (username === "") {
+        userNameCheckMessageElement.innerText = ""
+    } else if (!found) {
+        userNameCheckMessageElement.innerText = "Username should be at least 4 characters long."
+        userNameCheckMessageElement.style.color = "red"
+    } else {
+        userNameCheckMessageElement.innerText = ""
+    }
 }
+
 const processSecret = () => {
-    const secret = secretInput.value
-    const found = secretPattern.test(secret)
-    checkInput(secret, found,secretCheckMessageElement);
+
+    const secret = secretInput.value;
+    const found = secretPattern.test(secret);
+    if (secret === "") {
+        secretCheckMessageElement.innerText = ""
+    } else if (!found) {
+        secretCheckMessageElement.innerText = "Password should be at least 5 characters with one number and a capital letter"
+        secretCheckMessageElement.style.color = "red"
+    } else {
+        secretCheckMessageElement.innerText = ""
+    }
 }
 
 const processConfirmation = () => {
@@ -50,17 +54,6 @@ const processConfirmation = () => {
     }
 }
 
-// const saveData = (eve) => {
-//     const namePass = namePattern.test(usernameInput.value)
-//     const secretPass = secretPattern.test(secretInput.value)
-//     const confirmationPass = secretConfirmation.value === ""
-//     if((!namePass || !secretPass || !confirmationPass)){
-//         eve.preventDefault()
-//         submissionCheckMessageElement.innerText = "Please check your form before submission"
-//         submissionCheckMessageElement.style.color="red"
-//     }
-// }
-// submitBtn.addEventListener('click', saveData)
 
 secretConfirmation.addEventListener('keyup', processConfirmation)
 secretInput.addEventListener('keyup', processSecret)
