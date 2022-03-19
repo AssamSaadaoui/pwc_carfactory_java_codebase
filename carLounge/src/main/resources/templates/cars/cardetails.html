@@ -67,8 +67,8 @@
                                         th:with="engineer=${contribution.getEngineer()}">
                                         <div class="row">
                                             <div class="col-md-9"><a
-                                                    th:href="${ '/engineers/' + engineer.id}"
-                                                    th:text="'- '+${engineer.name}"></a></div>
+                                                    th:href="${ '/engineers/' + engineer.getId()}"
+                                                    th:text="'- '+${engineer.getName()}"></a></div>
                                             <div class="col-md-3"
                                                  th:if="${ (#authorization.authentication.name == car.author.username)
                                                  || #authorization.expression('hasRole(''ROLE_MANAGER'')')
@@ -76,7 +76,7 @@
                                                 <button style="padding: 0 3px;"
                                                         class="btn btn-outline-success bg-dark deleteBtn">Delete
                                                 </button>
-                                                <input id="" type="hidden" th:value="${engineer.id}"></div>
+                                                <input id="" type="hidden" th:value="${engineer.getId()}"></div>
                                         </div>
                                     </li>
                                 </td>

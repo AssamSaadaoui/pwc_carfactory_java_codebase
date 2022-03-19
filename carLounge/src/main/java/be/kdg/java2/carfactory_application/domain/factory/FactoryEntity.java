@@ -17,7 +17,7 @@ public abstract class FactoryEntity {
 
     private LocalDateTime createdOn;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User author;
 

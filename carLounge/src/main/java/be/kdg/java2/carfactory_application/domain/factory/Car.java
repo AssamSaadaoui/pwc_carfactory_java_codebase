@@ -19,13 +19,13 @@ public class Car extends FactoryEntity {
     @Column(length = 64)
     private String image;
 
-
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    //Lazy fetching because on /cars we only display data from Car
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "trademark_id")//fk
     private TradeMark tradeMark;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.REMOVE)
-        private List<Contribution> contributions = new ArrayList<>();
+    private List<Contribution> contributions = new ArrayList<>();
 
     public List<Contribution> getContributions() {
         return contributions;
@@ -83,9 +83,6 @@ public class Car extends FactoryEntity {
         this.color = color;
     }
 
-//    public List<Engineer> getEngineers() {
-//        return engineers;
-//    }
 
     public TradeMark getTradeMark() {
         return this.tradeMark;
@@ -99,17 +96,6 @@ public class Car extends FactoryEntity {
         return color;
     }
 
-//    public void addEngineer(Engineer engineer) {
-//        engineers.add(engineer);
-//    }
-//
-//    public void removeEngineer(Engineer engineer) {
-//        engineers.remove(engineer);
-//    }
-//
-//    public void setEngineers(List<Engineer> engineers) {
-//        this.engineers = engineers;
-//    }
 
     public String getImage() {
         return image;
@@ -125,22 +111,6 @@ public class Car extends FactoryEntity {
         return "/car-images/" + image;
     }
 
-//    public String toString() {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-//        String formattedDate = releaseDate.format(formatter);
-//        StringBuilder engineerNames = new StringBuilder();
-////        for (Engineer engineer : contributors) {
-////            engineerNames.append(engineer.getName()).append(", ");
-////        }
-//        engineerNames.delete(engineerNames.length() - 2, engineerNames.length());
-//        return String.format("Trademark: %s%n" +
-//                "Model: %s%n" +
-//                "Engine: %.1fL%n" +
-//                "Release date: %s%n" +
-//                "Color: %s%n" +
-//                "Price: %s$%n" +
-//                "Engineers: %s%n" +
-//                "------------------------------", tradeMark.getTitle(), model, engineSize, formattedDate, this.color.toString(), price, engineerNames);
-//    }
+
 
 }

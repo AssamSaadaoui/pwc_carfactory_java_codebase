@@ -9,7 +9,6 @@ import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.UserRepository;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
-import be.kdg.java2.carfactory_application.util.ServiceChecksUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,6 +109,11 @@ public class CarServiceImplementation implements CarService {
     public void removeContributorFromCar(Car contribution, Engineer contributor) {
 //        contribution.removeEngineer(contributor);
         carRepository.save(contribution);// Update will cascade
+    }
+
+    @Override
+    public Car findCarWithTradeMarkAndContributionsAndAuthorById(int carId) {
+        return carRepository.findCarWithTradeMarkAndContributionsAndAuthor(carId);
     }
 
 }

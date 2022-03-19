@@ -43,13 +43,13 @@ public class AuthenticationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.findUser(userDetails.getUsername());
         if (user.getFlag() == Flag.DISABLED) {
-            model.addAttribute("error", "Account is disabled, please contact administration.");
+            model.addAttribute("error", "Account is currently locked.");
             model.addAttribute("loginInfo", new LoginViewModel());
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return "/auth/login";
         }
         System.out.println("User login succeeded...");
-        return "redirect:/?success";
+        return "redirect:/?success&user=" + userDetails.getUsername() + "&new=false";
     }
 
     @GetMapping("/login")
@@ -89,6 +89,6 @@ public class AuthenticationController {
             model.addAttribute("message", exe.toString());
             return "/auth/register";
         }
-        return "redirect:/?success=true&user=" + userViewModel.getUsername();
+        return "redirect:/?success=true&user=" + userViewModel.getUsername() + "&new=true";
     }
 }

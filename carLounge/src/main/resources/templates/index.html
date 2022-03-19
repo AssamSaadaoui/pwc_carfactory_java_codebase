@@ -9,8 +9,9 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <div style="margin-top: 1rem" th:if="${param.get('success')!= null}"
+         th:with="isNew=${#httpServletRequest.getParameter('new')}, username=${#httpServletRequest.getParameter('user')}"
          class="alert alert-success alert-dismissible fade show" role="alert"
-         th:text="'Welcome to our website '+${param.get('user')}">
+         th:text="'Welcome '+ ${isNew=='false'?'back ':' '}+'in our website '+ ${#strings.capitalize(username)}+'!'">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div id="jumbo" class="bg-light p-5 rounded-lg m-3">

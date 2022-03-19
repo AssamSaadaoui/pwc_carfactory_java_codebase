@@ -8,7 +8,17 @@ import java.util.List;
 
 //@Profile("SDR")
 public interface CarRepositorySDR extends JpaRepository<Car, Integer> {
+    //    With author as well for details page to validate authorization
 
+    @Query("select c from Car c left join fetch c.author " +
+            "left join fetch c.tradeMark " +
+            "left join fetch c.contributions contribution " +
+            "left join fetch contribution.engineer where c.id=:carId")
+    Car findCarWithTradeMarkAndContributionsAndAuthor(int carId);
+
+    @Override
+    @Query("select c from Car c left join fetch c.author")
+    List<Car> findAll();
 
     List<Car> findByModelContainsIgnoreCase(String model);
 

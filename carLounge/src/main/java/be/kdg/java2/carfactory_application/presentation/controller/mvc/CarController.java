@@ -50,7 +50,6 @@ public class CarController {
     public String showAllCars(Model model) {
         model.addAttribute("cars", carService.getAllCars());
         logger.info("displaying all cars...");
-
         return "/cars/cars";
     }
 
@@ -79,7 +78,7 @@ public class CarController {
 
     @GetMapping("/{id}")
     public String carDetails(@PathVariable int id, Model model) {
-        Car carById = carService.findById(id);
+        Car carById = carService.findCarWithTradeMarkAndContributionsAndAuthorById(id);
         model.addAttribute("car", carById);
         logger.info("displaying " + carById.getModel() + "'s details...");
         return "/cars/cardetails";

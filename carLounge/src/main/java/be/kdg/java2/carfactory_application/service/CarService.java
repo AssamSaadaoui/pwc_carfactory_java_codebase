@@ -32,6 +32,8 @@ public interface CarService {
 
     void removeContributorFromCar(Car contribution, Engineer contributor);
 
+    Car findCarWithTradeMarkAndContributionsAndAuthorById(int carId);
+
 
 //    List<Car> getCarsOnModelOrTradeMark(String model, String tradeMark);
 }

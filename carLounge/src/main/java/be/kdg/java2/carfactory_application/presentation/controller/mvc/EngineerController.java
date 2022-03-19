@@ -79,7 +79,7 @@ public class EngineerController {
 
     @GetMapping("/{id}")
     public String engineerDetails(@PathVariable int id, Model model) {
-        Engineer engineerById = engineerService.findById(id);
+        Engineer engineerById = engineerService.findWithContributionsAndAuthorById(id);
         model.addAttribute("engineer", engineerById);
         logger.debug("displaying " + engineerById.getName() + "'s details...");
         return "/engineers/engineerdetails";
@@ -89,7 +89,7 @@ public class EngineerController {
     //Update
     @GetMapping("/edit/{id}")
     public String editEngineerDetails(@PathVariable int id, Model model) {
-        Engineer engineerById = engineerService.findById(id);
+        Engineer engineerById = engineerService.findWithContributionsAndAuthorById(id);
         List<Car> allCars = carService.getAllCars();
         model.addAttribute("engineer", engineerById);
         model.addAttribute("allCars", allCars);
