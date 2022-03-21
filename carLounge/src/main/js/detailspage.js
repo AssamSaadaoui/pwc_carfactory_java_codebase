@@ -26,10 +26,15 @@ addListenersToDeleteButtons(deleteButtons);
 //Details page
 if (submitAdditionButton) {
     submitAdditionButton.addEventListener("click", async () => addEngineerToCar())
+}
+if (editButton) {
     editButton.addEventListener("click", makeCarUpdatable)
+}
+if (saveButton) {
     saveButton.disabled = true // disabled by default
     saveButton.addEventListener("click", saveCarUpdate)
 }
+
 
 // DELETE section
 //Delete an engineer from a car
@@ -39,7 +44,7 @@ const deleteEngineerFromCar = async function (ele) {
     const titlesTd = document.getElementById("tdTitle")
     try {
         const response = await fetch(`/api/cars/${carId}/engineers/${engineerId}`, {
-           headers,
+            headers,
             method: 'DELETE'
         })
         if (!response.ok) {
@@ -154,7 +159,8 @@ function makeCarUpdatable(event) {
     const clickedButton = event.target;
     deleteButtons.forEach(btn => btn.disabled = true)
     clickedButton.disabled = true
-    disableAnchorTag(addButton)
+    if (addButton)
+        disableAnchorTag(addButton)
     saveButton.disabled = false
     const rows = Array.from(table.rows);
     for (let i = 0; i < rows.length - 1; i++) {
@@ -195,7 +201,8 @@ async function saveCarUpdate(event) {
                 tData.style.transition = "0.1s linear"
             })
             event.target.disabled = true
-            enableAnchorTag(addButton)
+            if (addButton)
+                enableAnchorTag(addButton)
             editButton.disabled = false
             deleteButtons.forEach(btn => btn.disabled = false)
         } else if (response.status === 409) {

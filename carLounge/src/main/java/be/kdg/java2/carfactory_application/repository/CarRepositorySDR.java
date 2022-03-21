@@ -20,7 +20,10 @@ public interface CarRepositorySDR extends JpaRepository<Car, Integer> {
     @Query("select c from Car c left join fetch c.author")
     List<Car> findAll();
 
-    List<Car> findByModelContainsIgnoreCase(String model);
+    Car findByModelContainsIgnoreCase(String model);
+
+    List<Car> findAllByModelContainsIgnoreCase(String model);
+
 
     @Query("select c from Car c order by c.price ASC")
     List<Car> findByOrderByPriceAsc();

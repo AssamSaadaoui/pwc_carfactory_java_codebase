@@ -46,7 +46,7 @@ public class CarsRestController {
     @GetMapping
     public ResponseEntity<List<CarDTO>> searchCars(@RequestParam String lookup) {
         logger.debug("Looking up " + lookup);
-        var cars = carService.findByModel(lookup);
+        var cars = carService.findAllByModel(lookup);
         if (cars.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,7 +57,7 @@ public class CarController {
     @GetMapping("/search")
     public String searchCars(Model model, @RequestParam("lookup") String lookup) {
         logger.debug("Looking up " + lookup);
-        List<Car> cars = carService.findByModel(lookup);
+        var cars = new ArrayList<>(List.of(carService.findByModel(lookup)));
         model.addAttribute("cars", cars);
         return "/cars/cars";
     }
@@ -87,7 +88,7 @@ public class CarController {
     //Update
     @GetMapping("/edit/{id}")
     public String editCarDetails(@PathVariable int id, Model model) {
-        Car carById = carService.findById(id);
+        Car carById = carService.findCarWithTradeMarkAndContributionsAndAuthorById(id);
         model.addAttribute("colors", Color.values());
         model.addAttribute("car", carById);
         model.addAttribute("tradeMark", carById.getTradeMark());

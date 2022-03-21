@@ -25,7 +25,8 @@
                         <img id="car"
                              th:src="${car?.getImagePath()} ? ${car.getImagePath()} : '/imgs/carModel.png'"
                              class="card-img-top" th:alt-title="${car.model}">
-                        <div th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')
+                        <div th:if="${ (#authorization.authentication.name == car.author.username)
+                                                 || #authorization.expression('hasRole(''ROLE_MANAGER'')')
                                                  || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                             <button class="btn btn-outline-success bg-dark editBtn" id="editBtn">Edit</button>
                             <button class="btn btn-outline-success bg-dark saveBtn" id="saveBtn">Save</button>

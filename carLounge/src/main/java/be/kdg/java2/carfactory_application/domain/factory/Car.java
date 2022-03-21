@@ -27,15 +27,16 @@ public class Car extends FactoryEntity {
     @OneToMany(mappedBy = "car", cascade = CascadeType.REMOVE)
     private List<Contribution> contributions = new ArrayList<>();
 
+    public Car() {
+
+    }
+
     public List<Contribution> getContributions() {
         return contributions;
     }
 
     public void setContributions(List<Contribution> contributors) {
         this.contributions = contributors;
-    }
-
-    public Car() {
     }
 
     public Car(String model, double engineSize, int price, LocalDate releaseDate, Color color) {

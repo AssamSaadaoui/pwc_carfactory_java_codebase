@@ -25,6 +25,7 @@ ext {
     gsonVersion = '2.8.8'
     modelMapperVersion = '3.0.0'
     thymeleafSecurityVersion = '3.0.4.RELEASE'
+    jupiterTestVersion='5.8.1'
 }
 
 dependencies {
@@ -44,7 +45,8 @@ dependencies {
     implementation "commons-fileupload:commons-fileupload:${fileuploadVersion}"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${springBootVersion}"
     implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
 //    runtimeOnly 'org.hsqldb:hsqldb'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -55,4 +57,5 @@ compileJava.dependsOn npm_run_build
 test {
     useJUnitPlatform()
 }
+
 

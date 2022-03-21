@@ -71,8 +71,11 @@ public class CarServiceImplementation implements CarService {
         return carRepository.findAll();
     }
 
-    public List<Car> findByModel(String model) {
+    public Car findByModel(String model) {
         return carRepository.findByModelContainsIgnoreCase(model);
+    }
+    public List<Car> findAllByModel(String model) {
+        return carRepository.findAllByModelContainsIgnoreCase(model);
     }
 
     //    @Override

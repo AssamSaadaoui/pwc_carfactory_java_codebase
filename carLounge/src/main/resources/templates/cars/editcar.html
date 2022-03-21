@@ -91,9 +91,6 @@
 <script th:object="${car}" th:inline="javascript">
     const releaseDate = [[${car.releaseDate}]];
     const dateElement = document.getElementById('date');
-    // const month = releaseDate.monthValue;
-    // dateElement.value = `${releaseDate.year}-${month < 10 ? '0' : ''}${month}-${releaseDate.dayOfMonth}`
-    // console.log(releaseDate);
     dateElement.value = releaseDate;
 </script>
 </body>

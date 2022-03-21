@@ -20,7 +20,9 @@ public interface CarService {
 
     Car findById(int id);
 
-    List<Car> findByModel(String model);
+    Car findByModel(String model);
+
+    List<Car> findAllByModel(String model);
 
     List<Car> orderByPriceAsc();
 
