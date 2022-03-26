@@ -5,9 +5,6 @@ import be.kdg.java2.carfactory_application.domain.factory.Car;
 import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
-import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
-import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;
-import be.kdg.java2.carfactory_application.repository.UserRepository;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +18,10 @@ import java.util.List;
 public class CarServiceImplementation implements CarService {
 
     private final CarRepositorySDR carRepository;
-    private final EngineerRepositorySDR engineerRepository;
-    private final TradeMarkRepositorySDR tradeMarkRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public CarServiceImplementation(CarRepositorySDR carRepository,
-                                    EngineerRepositorySDR engineerRepository,
-                                    TradeMarkRepositorySDR tradeMarkRepository,
-                                    UserRepository userRepository) {
+    public CarServiceImplementation(CarRepositorySDR carRepository) {
         this.carRepository = carRepository;
-        this.engineerRepository = engineerRepository;
-        this.tradeMarkRepository = tradeMarkRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -74,14 +62,11 @@ public class CarServiceImplementation implements CarService {
     public Car findByModel(String model) {
         return carRepository.findByModelContainsIgnoreCase(model);
     }
+
     public List<Car> findAllByModel(String model) {
         return carRepository.findAllByModelContainsIgnoreCase(model);
     }
 
-    //    @Override
-//    public void update(Car contribution) {
-//        carRepository.save(contribution);
-//    }
     @Override
     public void update(Car car) {
         boolean isMatch = carRepository.findAll().stream().anyMatch(car1 ->
@@ -110,13 +95,22 @@ public class CarServiceImplementation implements CarService {
 
     @Override
     public void removeContributorFromCar(Car contribution, Engineer contributor) {
-//        contribution.removeEngineer(contributor);
         carRepository.save(contribution);// Update will cascade
     }
 
     @Override
     public Car findCarWithTradeMarkAndContributionsAndAuthorById(int carId) {
         return carRepository.findCarWithTradeMarkAndContributionsAndAuthor(carId);
+    }
+
+    @Override
+    public Car findCarWithTradeMarkAndContributionsById(int carId) {
+        return carRepository.findCarWithTradeMarkAndContributions(carId);
+    }
+
+    @Override
+    public Car findCarWithTradeMarkById(int carId) {
+        return carRepository.findCarWithTradeMark(carId);
     }
 
 }

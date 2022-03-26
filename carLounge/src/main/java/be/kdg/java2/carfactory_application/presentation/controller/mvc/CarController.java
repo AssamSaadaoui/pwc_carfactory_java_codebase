@@ -7,6 +7,7 @@ import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.viewmodel.CarViewModel;
 import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
+import be.kdg.java2.carfactory_application.security.isAuthenticatedAsAdminOrManagerOrUserIsUserId;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
 import be.kdg.java2.carfactory_application.service.UserService;
@@ -88,7 +89,7 @@ public class CarController {
     //Update
     @GetMapping("/edit/{id}")
     public String editCarDetails(@PathVariable int id, Model model) {
-        Car carById = carService.findCarWithTradeMarkAndContributionsAndAuthorById(id);
+        Car carById = carService.findCarWithTradeMarkAndContributionsById(id);
         model.addAttribute("colors", Color.values());
         model.addAttribute("car", carById);
         model.addAttribute("tradeMark", carById.getTradeMark());
@@ -105,7 +106,7 @@ public class CarController {
             model.addAttribute("colors", Color.values());
             return "/cars/editcar";
         }
-        Car changedCar = carService.findById(id);
+        Car changedCar = carService.findCarWithTradeMarkById(id);
         changedCar.setModel(carViewModel.getModel());
         changedCar.setColor(carViewModel.getColor());
         changedCar.setPrice(carViewModel.getPrice());
@@ -179,7 +180,8 @@ public class CarController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteCar(@PathVariable int id) {
+    @isAuthenticatedAsAdminOrManagerOrUserIsUserId
+    public String deleteCar(@PathVariable int id, @RequestParam("currentUserName") String currentUserName) {
         carService.deleteCar(carService.findById(id));
         logger.debug("deleting car with id: " + id);
         return "redirect:/cars?success=true";

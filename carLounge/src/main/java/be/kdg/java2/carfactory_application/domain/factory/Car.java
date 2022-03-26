@@ -112,6 +112,15 @@ public class Car extends FactoryEntity {
         return "/car-images/" + image;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Car{" +
+                "model='" + model + '\'' +
+                ", engineSize=" + engineSize +
+                ", price=" + price +
+                ", releaseDate=" + releaseDate +
+                ", color=" + color +
+                ", image='" + image + '\'' +
+                "} " + super.toString();
+    }
 }

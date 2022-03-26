@@ -6,13 +6,13 @@ import be.kdg.java2.carfactory_application.domain.user.Gender;
 import be.kdg.java2.carfactory_application.domain.user.Role;
 import be.kdg.java2.carfactory_application.domain.user.User;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
 
-
-//@Profile("SDR")
+@Profile("!test")
 @Repository
 public class DatabaseInitializer implements CommandLineRunner {
 

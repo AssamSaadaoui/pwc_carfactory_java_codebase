@@ -16,6 +16,15 @@ public interface CarRepositorySDR extends JpaRepository<Car, Integer> {
             "left join fetch contribution.engineer where c.id=:carId")
     Car findCarWithTradeMarkAndContributionsAndAuthor(int carId);
 
+
+    @Query("select c from Car c left join fetch c.tradeMark " +
+            "left join fetch c.contributions contribution " +
+            "left join fetch contribution.engineer where c.id=:carId")
+    Car findCarWithTradeMarkAndContributions(int carId);
+
+    @Query("select c from Car c left join fetch c.tradeMark where c.id=:carId")
+    Car findCarWithTradeMark(int carId);
+
     @Override
     @Query("select c from Car c left join fetch c.author")
     List<Car> findAll();
@@ -25,10 +34,10 @@ public interface CarRepositorySDR extends JpaRepository<Car, Integer> {
     List<Car> findAllByModelContainsIgnoreCase(String model);
 
 
-    @Query("select c from Car c order by c.price ASC")
+    @Query("select c from Car c left join fetch c.author order by c.price ASC")
     List<Car> findByOrderByPriceAsc();
 
-    @Query("select c from Car c order by c.price DESC")
+    @Query("select c from Car c left join fetch c.author order by c.price DESC")
     List<Car> findByOrderByPriceDesc();
 
 

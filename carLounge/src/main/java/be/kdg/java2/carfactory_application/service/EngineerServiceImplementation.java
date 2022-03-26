@@ -5,7 +5,6 @@ import be.kdg.java2.carfactory_application.domain.factory.Car;
 import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
-import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.TradeMarkRepositorySDR;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
@@ -24,13 +23,12 @@ public class EngineerServiceImplementation implements EngineerService {
     private final EngineerRepositorySDR engineerRepository;
     private final CarRepositorySDR carRepository;
     private final TradeMarkRepositorySDR tradeMarkRepository;
-    private final ContributionRepository contributionRepository;
+
     @Autowired
-    public EngineerServiceImplementation(EngineerRepositorySDR engineerRepository, CarRepositorySDR carRepository, TradeMarkRepositorySDR tradeMarkRepository, ContributionRepository contributionRepository) {
+    public EngineerServiceImplementation(EngineerRepositorySDR engineerRepository, CarRepositorySDR carRepository, TradeMarkRepositorySDR tradeMarkRepository) {
         this.engineerRepository = engineerRepository;
         this.carRepository = carRepository;
         this.tradeMarkRepository = tradeMarkRepository;
-        this.contributionRepository = contributionRepository;
     }
 
     /**

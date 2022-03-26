@@ -36,6 +36,9 @@ public interface CarService {
 
     Car findCarWithTradeMarkAndContributionsAndAuthorById(int carId);
 
+    Car findCarWithTradeMarkAndContributionsById(int carId);
+
+    Car findCarWithTradeMarkById(int carId);
 
 //    List<Car> getCarsOnModelOrTradeMark(String model, String tradeMark);
 }

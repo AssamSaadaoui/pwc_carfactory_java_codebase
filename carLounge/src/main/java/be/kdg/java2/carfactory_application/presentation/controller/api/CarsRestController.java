@@ -3,11 +3,13 @@ package be.kdg.java2.carfactory_application.presentation.controller.api;
 import be.kdg.java2.carfactory_application.domain.factory.Color;
 import be.kdg.java2.carfactory_application.domain.factory.Contribution;
 import be.kdg.java2.carfactory_application.domain.factory.Engineer;
+import be.kdg.java2.carfactory_application.domain.user.Role;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
+import be.kdg.java2.carfactory_application.security.isAuthenticatedAsAdminOrManagerOrUserIsUserId;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.ContributionService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
@@ -57,7 +59,8 @@ public class CarsRestController {
     }
 
     @GetMapping("/sort")
-    public ResponseEntity<List<CarDTO>> orderByPrice(@RequestParam("order") String order) {
+    public ResponseEntity<List<CarDTO>> orderByPrice(@RequestParam("order") String order,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
         logger.debug("Ordering by price: " + order);
         var carsByAscOrder = carService.orderByPriceAsc();
         var carsByDescOrder = carService.orderByPriceDesc();
@@ -73,6 +76,9 @@ public class CarsRestController {
                     dto.setEngineSize(car.getEngineSize());
                     dto.setPrice(car.getPrice());
                     dto.setImagePath(car.getImagePath());
+                    dto.setCurrentUser(userService.findUser(userDetails.getId()));
+                    dto.setCreatedOn(car.getCreatedOn());
+                    dto.setAuthor(car.getAuthor());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -102,9 +108,7 @@ public class CarsRestController {
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-//        carService.addContributorToCar(newEngineer, carId);
         try {
-//            engineerService.addContributionToEngineer(car, newEngineer);
             engineerService.addEngineer(newEngineer);
             contributionService.addContribution(new Contribution(car, newEngineer));
         } catch (EntityAlreadyExistsException e) {
@@ -118,7 +122,7 @@ public class CarsRestController {
 
     @PutMapping("/{carId}")
     public ResponseEntity<String> editCar(@RequestBody CarDTO carDTO, @PathVariable int carId) {
-        var car = carService.findById(carId);
+        var car = carService.findCarWithTradeMarkById(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

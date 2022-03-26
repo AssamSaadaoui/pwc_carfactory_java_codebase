@@ -1,7 +1,15 @@
 import {headers} from "./util";
 
 const selectEls = document.querySelectorAll(".selectRole")
-const displayEl = document.getElementById("roleDisplay")
+const displayEl = document.querySelectorAll(".roleDisplay")
+
+selectEls.forEach(el => el.addEventListener("change", async (e) => {
+    const userId = e.target.previousElementSibling.value
+    let editedUser = {
+        "role": e.target?.value
+    }
+    await changeRole(userId, editedUser, e);
+}))
 
 async function changeRole(userId, editedUser, e) {
     try {
@@ -12,7 +20,7 @@ async function changeRole(userId, editedUser, e) {
         })
         let data;
         if (response.status === 200) {
-            displayEl.innerText = e.target.value
+            e.target.parentElement.parentElement.nextElementSibling.firstElementChild.innerText = e.target.value
         } else if (response.status === 409) {
 
         }
@@ -22,11 +30,5 @@ async function changeRole(userId, editedUser, e) {
     }
 }
 
-selectEls.forEach(el => el.addEventListener("change", async (e) => {
-    const userId = e.target.previousElementSibling.value
-    let editedUser = {
-        "role": e.target?.value
-    }
-    await changeRole(userId, editedUser, e);
-}))
+
 

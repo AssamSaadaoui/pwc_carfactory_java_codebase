@@ -69,6 +69,8 @@
                                 <div class="col-sm-4">
                                     <form th:action="@{'/cars/delete/{id}'(id=${car.id})}" th:method="post"
                                           style="margin: unset">
+                                        <input type="hidden" name="currentUserName"
+                                               th:value="${#authorization.authentication.name}">
                                         <button th:utext="#{adelete}" style="padding: 0px 3px;"
                                                 class="btn btn-outline-success bg-dark deleteBtn">Delete
                                         </button>

@@ -1,10 +1,13 @@
 package be.kdg.java2.carfactory_application.presentation.controller.api.dto;
 
 import be.kdg.java2.carfactory_application.domain.factory.Color;
+import be.kdg.java2.carfactory_application.domain.user.Role;
+import be.kdg.java2.carfactory_application.domain.user.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,11 @@ public class CarDTO {
     @DecimalMax(value = "5.0", message = "Maximum engine size is 5.0 Litr")
     private double engineSize;
 
+    private LocalDate createdOn;
+    private User author;
+
+    private User currentUser;
+
     //    @Pattern(regexp = "^(0|[1-9][0-9]*)$")
     @Min(value = 1000, message = "Minimum price is 1000$")
     private int price;
@@ -36,12 +44,37 @@ public class CarDTO {
         return colorText;
     }
 
+    public LocalDate getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
     public void setColorText(String colorText) {
         this.colorText = colorText;
     }
 
     //    link to engineers that worked on the car
     private List<Integer> engineersIds = new ArrayList<>();
+
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
 
     private String imagePath;
 
@@ -133,4 +166,6 @@ public class CarDTO {
     public void setId(int id) {
         this.id = id;
     }
+
+
 }

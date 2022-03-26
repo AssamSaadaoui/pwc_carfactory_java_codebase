@@ -103,29 +103,54 @@ const animate = anime({
 function processOrderedCarsData(carsArray) {
     animate.play()
     toOrderCarList.innerHTML = ''
-    carsArray.forEach(car => {
+    carsArray.forEach(carDTO => {
+        let section = ((carDTO.author.username === carDTO.currentUser.username)
+            || carDTO.currentUser.role === 'MANAGER'
+            || carDTO.currentUser.role === 'ADMING') ? `<section style="display: inline-flex">
+                                <div class="col-sm-4">
+                                    <a style="padding: 0 3px" th:utext="#{aedit}"
+                                       href="${'/cars/edit/' + carDTO.id}"
+                                       class="btn btn-outline-success bg-dark">Edit
+                                    </a>
+
+                                </div>
+                                <div class="col-sm-4">
+                                    <form action="/cars/delete/${carDTO.id}" method="post"
+                                          style="margin: unset">
+                                        <button style="padding: 0px 3px;"
+                                                class="btn btn-outline-success bg-dark deleteBtn">Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </section>` : ''
         toOrderCarList.innerHTML += `
         <div class="col-md-4 item">
           <div class="card cardanim animated goUp" style="width: 18rem;">
-                    <img id="car" src="${car.imagePath}"
-                         class="card-img-top" alt-title="${car.model}" alt="">
+                    <img id="car" src="${carDTO.imagePath}"
+                         class="card-img-top" alt-title="${carDTO.model}" alt="">
                     <div class="card-body">
-                        <h5 class="card-title">${car.model}</h5>
+                        <h5 class="card-title">${carDTO.model}</h5>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">${language === 'fr' ? 'Mod\u00E8le' : 'Model'}: ${car.model}</li>
-                        <li class="list-group-item">${language === 'fr' ? 'Moteur' : 'Engine'}: ${car.engineSize} litr</li>
-                        <li class="list-group-item">${language === 'fr' ? 'Prix' : 'Price'}: ${car.price}$</li>
+                        <li class="list-group-item">${language === 'fr' ? 'Mod\u00E8le' : 'Model'}: ${carDTO.model}</li>
+                        <li class="list-group-item">${language === 'fr' ? 'Moteur' : 'Engine'}: ${carDTO.engineSize} litr</li>
+                        <li class="list-group-item">${language === 'fr' ? 'Prix' : 'Price'}: ${carDTO.price}$</li>
                     </ul>
-                    <div class="card-body">
-                        <a href="/cars/${car.id}" class="card-link">${language === 'fr' ? 'D\u00E9tails' : 'Details'}</a>
-                        <a href="/cars/edit/${car.id}">${language === 'fr' ? 'Modifier' : 'Edit'}</a>
-                        <a href="/cars/delete/${car.id}">${language === 'fr' ? 'Supprimer' : 'Delete'}</a>
+                     <div class="card-body">
+                        <div class="row" style="flex-wrap: nowrap ">
+                            <div class="col-sm-4">
+                                <a style="padding: 0 3px"
+                                   href="${'/cars/' + carDTO.id}"
+                                   class="btn btn-outline-success bg-dark">
+                                    Details
+                                </a>
+                            </div>
+                            ${section}
+                        </div>
+                        <p>Created by: ${carDTO.author.username} on ${carDTO.createdOn}</p>
                     </div>
           </div>
         </div>
         `
     })
 }
-
-

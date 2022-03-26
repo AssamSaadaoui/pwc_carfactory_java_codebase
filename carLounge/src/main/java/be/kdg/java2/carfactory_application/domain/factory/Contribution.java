@@ -12,10 +12,6 @@ public class Contribution {
     @Column
     private int id;
 
-    @Enumerated(EnumType.STRING)
-    private CarPart carPart;
-
-
     public Contribution(Car car, Engineer engineer) {
         this.car = car;
         this.engineer = engineer;
@@ -57,11 +53,10 @@ public class Contribution {
         this.car = car;
     }
 
-    public CarPart getCarPart() {
-        return carPart;
-    }
-
-    public void setCarPart(CarPart carPart) {
-        this.carPart = carPart;
+    @Override
+    public String toString() {
+        return "Contribution{" +
+                "id=" + id +
+                '}';
     }
 }

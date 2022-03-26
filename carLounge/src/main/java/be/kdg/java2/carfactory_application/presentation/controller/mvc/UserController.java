@@ -2,6 +2,7 @@ package be.kdg.java2.carfactory_application.presentation.controller.mvc;
 
 import be.kdg.java2.carfactory_application.domain.user.Flag;
 import be.kdg.java2.carfactory_application.domain.user.User;
+import be.kdg.java2.carfactory_application.security.AdminOnly;
 import be.kdg.java2.carfactory_application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class UserController {
         return "/user/users";
     }
 
+    @AdminOnly
     @PostMapping("/disable/{id}")
     public String lockUser(@PathVariable long id) {
         var user = userService.findUser(id);
@@ -36,6 +38,7 @@ public class UserController {
         return "redirect:/users?success=true&flag=locked";
     }
 
+    @AdminOnly
     @PostMapping("/enable/{id}")
     public String unlockUser(@PathVariable long id) {
         var user = userService.findUser(id);

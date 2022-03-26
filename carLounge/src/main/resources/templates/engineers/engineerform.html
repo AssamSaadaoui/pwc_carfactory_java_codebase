@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Cars</title>
+    <title>Engineers</title>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -41,15 +41,15 @@
                     <p th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}">model Error</p>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label" th:utext="#{cars}">Cars</label>
-                <div class="col-sm-4">
-                    <div th:each="car : ${cars}">
-                        <input name="contributionIds" type="checkbox" th:value="${car.getId()}"/>
-                        <span th:text="${car.model}">car</span><br/>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-4 control-label" th:utext="#{cars}">Cars</label>-->
+<!--                <div class="col-sm-4">-->
+<!--                    <div th:each="car : *{contributionIds}">-->
+<!--                        <input name="contributionIds" type="checkbox" th:value="${car.getId()}"/>-->
+<!--                        <span th:text="${car.model}">car</span><br/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
             <br>
             <section class="addCar" th:object="${carDTO}">
                 <div th:if="${#fields.hasAnyErrors()&&isSubForm}" class="alert alert-danger">

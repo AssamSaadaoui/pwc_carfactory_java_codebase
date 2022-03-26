@@ -3,11 +3,13 @@ package be.kdg.java2.carfactory_application.presentation.controller.api;
 import be.kdg.java2.carfactory_application.domain.user.Role;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.UserDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
+import be.kdg.java2.carfactory_application.security.AdminOnly;
 import be.kdg.java2.carfactory_application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +24,7 @@ public class UserRestController {
         this.userService = userService;
     }
 
-
+    @AdminOnly
     @PutMapping("/{userId}")
     public ResponseEntity<String> setRole(@RequestBody UserDTO userDTO, @PathVariable long userId) {
         var user = userService.findUser(userId);

@@ -43,13 +43,15 @@
                         <div class="row">
                             <div class="col-sm-4" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <div class="col-sm-4">
-                                    <form th:if="${user.flag.getName()=='enabled'}" th:action="@{'/users/disable/{id}'(id=${user.id})}" th:method="post"
+                                    <form th:if="${user.flag.getName()=='enabled'}"
+                                          th:action="@{'/users/disable/{id}'(id=${user.id})}" th:method="post"
                                           style="margin: unset">
                                         <button style="padding: 0px 3px; color: firebrick"
                                                 class="btn btn-outline-success bg-dark deleteBtn">Lock
                                         </button>
                                     </form>
-                                    <form th:if="${user.flag.getName()=='disabled'}" th:action="@{'/users/enable/{id}'(id=${user.id})}" th:method="post"
+                                    <form th:if="${user.flag.getName()=='disabled'}"
+                                          th:action="@{'/users/enable/{id}'(id=${user.id})}" th:method="post"
                                           style="margin: unset">
                                         <button style="padding: 0px 3px; color: greenyellow"
                                                 class="btn btn-outline-success bg-dark">Unlock
@@ -71,9 +73,9 @@
                                     </select>
                                 </label>
                             </div>
-                            <p class="mt-2">Role as: <span id="roleDisplay"
-                                                           style="color: greenyellow;background: gray;border: 0.5px solid black; border-radius: 1px;padding: 2px;"
-                                                           th:text="${user.getRole()}"></span></p>
+                            <p class="mt-2">Role as: <span
+                                    style="color: greenyellow;background: gray;border: 0.5px solid black; border-radius: 1px;padding: 2px;"
+                                    th:text="${user.getRole()}"></span></p>
                             <span th:if="${(user.flag.getName()=='disabled')}"
                                   style="color:firebrick; background: black;border: 2px solid black; border-radius: 1px;padding: 2px;"
                                   th:text="${user.getFlag()}"></span>

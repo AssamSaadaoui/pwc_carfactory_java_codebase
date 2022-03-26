@@ -29,7 +29,7 @@ public interface EngineerRepositorySDR extends JpaRepository<Engineer, Integer> 
             "left join fetch e.author " +
             "left join fetch e.contributions contribution " +
             "left join fetch contribution.car workedOnCar " +
-            "left join workedOnCar.tradeMark where e.id=:enId")
+            "left join fetch workedOnCar.tradeMark where e.id=:enId")
     Optional<Engineer> findWithContributionsAndAuthor(int enId);
 }
 
