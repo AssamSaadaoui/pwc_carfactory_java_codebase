@@ -121,7 +121,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         //Inserts
         userRepository.saveAll(List.of(issam, zola, sami));
         tradeMarkRepository.saveAll(Arrays.asList(mercedes, bmw, audi, volkswagen, toyota, ford));
-        engineerRepositorySDR.saveAll(List.of(frank, christopher, christopher, christian, rishi, wonJu, bern, muller, korn));
+        engineerRepositorySDR.saveAll(List.of(frank, christopher, christian, rishi, wonJu, bern, muller, korn));
         contributionRepository.saveAll(contributions);
 
     }

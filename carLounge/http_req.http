@@ -21,9 +21,10 @@ Content-Type: application/json
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
 Content-Type: application/json
+X-XSRF-TOKEN: JSESSIONID=D8973F3546FA9ECCA653CDA67799C83D
 
 {
-  "model": "Honda",
+  "model": "Hondaz",
   "engineSize": 1.5,
   "title": "potato",
   "releaseDate": "1998-03-05",

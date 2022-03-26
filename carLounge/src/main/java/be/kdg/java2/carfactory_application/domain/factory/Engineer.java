@@ -67,7 +67,6 @@ public class Engineer extends FactoryEntity {
         return "Engineer{" +
                 "name='" + name + '\'' +
                 ", tenure=" + tenure +
-                ", nationality='" + nationality + '\'' +
-                ", contributions=" + contributions;
+                ", nationality='" + nationality;
     }
 }

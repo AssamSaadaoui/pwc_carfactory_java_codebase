@@ -19,7 +19,7 @@ public interface EngineerService {
 
     Engineer findById(int id);
 
-    Engineer findWithContributionsAndAuthorById(int id);
+    Engineer findEngineerWithContributionsAndAuthorById(int id);
 
     List<Engineer> findByNameContains(String lookup);
 

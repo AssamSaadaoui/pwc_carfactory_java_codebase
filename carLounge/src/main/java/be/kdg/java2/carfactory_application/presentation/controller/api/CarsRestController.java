@@ -9,7 +9,6 @@ import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDT
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
-import be.kdg.java2.carfactory_application.security.isAuthenticatedAsAdminOrManagerOrUserIsUserId;
 import be.kdg.java2.carfactory_application.service.CarService;
 import be.kdg.java2.carfactory_application.service.ContributionService;
 import be.kdg.java2.carfactory_application.service.EngineerService;

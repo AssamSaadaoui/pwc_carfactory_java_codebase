@@ -9,6 +9,7 @@ import be.kdg.java2.carfactory_application.domain.user.User;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,9 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.*;
+
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -60,9 +64,16 @@ class CarRestControllerTests {
                         get("/api/cars?lookup=Class")
                                 .accept(MediaType.APPLICATION_JSON)
                 )
+                //Test response code and the content type
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE,
-                        MediaType.APPLICATION_JSON.toString()));
+                        MediaType.APPLICATION_JSON.toString()))
+                //Test fields
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].model", is("A-Class")))
+                .andExpect(jsonPath("$[0].price", is(32500)))
+                .andExpect(jsonPath("$[1].model", is("B-Class")))
+                .andExpect(jsonPath("$[1].price", is(143000)));
     }
 
 
@@ -74,5 +85,38 @@ class CarRestControllerTests {
                                 .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNoContent());
+    }
+
+    //   todo  To run ordering tests you need to disable setting the currentUser in CarsRestController (orderByPrice())
+    @Test
+    public void fetchingCarsInAscendingOrderByPrice() throws Exception {
+        mockMvc.perform(
+                        get("/api/cars/sort?order=${orderValue}", "asc")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Test response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_JSON.toString()))
+                //Test fields
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[1].price", is(32500)))
+                .andExpect(jsonPath("$[0].price", is(143000)));
+    }
+
+    @Test
+    public void fetchingCarsInDescendingOrderByPrice() throws Exception {
+        mockMvc.perform(
+                        get("/api/cars/sort?order=${orderValue}", "desc")
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                //Test response code and the content type
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_JSON.toString()))
+                //Test fields
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].price", is(143000)))
+                .andExpect(jsonPath("$[1].price", is(32500)));
     }
 }

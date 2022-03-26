@@ -79,7 +79,7 @@ public class EngineerController {
 
     @GetMapping("/{id}")
     public String engineerDetails(@PathVariable int id, Model model) {
-        Engineer engineerById = engineerService.findWithContributionsAndAuthorById(id);
+        Engineer engineerById = engineerService.findEngineerWithContributionsAndAuthorById(id);
         model.addAttribute("engineer", engineerById);
         logger.debug("displaying " + engineerById.getName() + "'s details...");
         return "/engineers/engineerdetails";
@@ -89,7 +89,7 @@ public class EngineerController {
     //Update
     @GetMapping("/edit/{id}")
     public String editEngineerDetails(@PathVariable int id, Model model) {
-        Engineer engineerById = engineerService.findWithContributionsAndAuthorById(id);
+        Engineer engineerById = engineerService.findEngineerWithContributionsAndAuthorById(id);
         List<Car> allCars = carService.getAllCars();
         model.addAttribute("engineer", engineerById);
         model.addAttribute("allCars", allCars);
@@ -161,6 +161,8 @@ public class EngineerController {
             return "/engineers/engineerform";
         }
         Engineer engineer = new Engineer(engineerViewModel.getName(), engineerViewModel.getTenure(), engineerViewModel.getNationality());
+        engineer.setAuthor(user);
+        engineerService.addEngineer(engineer);
         //Add contributions from checkbox list
         engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
@@ -168,7 +170,6 @@ public class EngineerController {
 //                ControllerHelper.addContribution(engineer, carService.findById(contributionId));
             }
         });
-
         //Add car to engineer if all attributes from form exist (because of image upload that i had to check)
         //Also, if Car form would be discarded if wrong data was passed in at the same time with a contribution (car) being picked from checkbox
         if (!carResult.hasErrors()) {
@@ -182,11 +183,9 @@ public class EngineerController {
 //            When new car is added with image
             carService.addCar(car, multipartFile);
 //            Then contribution is persisted (link between new car and existent engineer
-            contributionRepository.save(new Contribution(car,engineer));
+            contributionRepository.save(new Contribution(car, engineer));
 //            engineerService.addEngineerWithNewCar(engineer, car, multipartFile);
         }
-        engineer.setAuthor(user);
-        engineerService.addEngineer(engineer);
         return "redirect:/engineers/" + engineer.getId() + "?success=true";
     }
 

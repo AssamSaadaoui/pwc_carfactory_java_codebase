@@ -30,6 +30,20 @@
 >
 >4- To automate the `npm run build` command (execution of scripts after every update to the script or css files), in build.gradle file make sure to have compileJava.dependsOn npm_run_build. Then run the application using gradle.
 
+> ### Spring profiles: ("test")
+>***DatabaseInitializer*** class annotated with **@Profile("!test")**
+>
+>***Test classes*** annotated with **@ActiveProfiles("test")**
+>
+> ***Explanation:*** -> I have simply annotated the ***DatabaseInitializer*** class with **@Profile("!test")**, meaning, if the **active** profile isn't **"test"** then the initializer class should run
+>
+> ### How to run tests from command line
+> 1- First compile the test class
+> `javac -d target -cp target:junit-platform-console-standalone-1.7.2.jar src/test/java/rest-/of-/path-/TestClass.java`
+>
+> 2- Run the compiled tests (complied class will be put in root (supposedly))
+> ` java -jar junit-platform-console-standalone-1.7.2.jar --class-path target --select-class [packagepath(?)] ex: be.kdg.java2.carfactory_application.TestClass`
+
 ## Project concept recap
 
 > **Trademark**, **Car**, Mechanical **Engineer**
@@ -44,15 +58,18 @@
 
 ### Icon used:
 
-**Magnifying glass** used with on the search button at the right corner of navbar 
+**Magnifying glass** used with on the search button at the right corner of navbar
+
 ``` 
 Location url: `/cars` or `engineers`
 
 Source file: `resources/templates/fragments/header.html`
 ```
+
 ### JavaScript packages used:
 
-**1) validator** used for adding an engineer to a car. 
+**1) validator** used for adding an engineer to a car.
+
 ```
 Location url `/cars/1` or any id 
 
@@ -60,7 +77,9 @@ HTML source file `resources/templates/cars/cardetails.html`
 
 JavaScript source file `js/engineer.js` called from `js/detailspage.js` line `109`
 ```
-**2) animejs** used for when ordering cars by price. 
+
+**2) animejs** used for when ordering cars by price.
+
 ```
 Location url `/cars`
 
@@ -68,7 +87,9 @@ HTML source file `resources/templates/cars/cars`
 
 JavaScript source file `js/search.js` line `98`
 ```
+
 ### Assignment REST specific implementations:
+
 ```
 GET requests : 
           1) searching for a car or engineer from seach bar
@@ -81,6 +102,7 @@ JavaScript source file `js/search.js`
 Location url `/cars`
 JavaScript source file `js/search.js`
 ```
+
 ```
 DELETE, POST and PUT requests
 
@@ -88,7 +110,9 @@ Location url `/cars`
 HTML source file `resources/templates/cars/cardetails.html`
 JavaScript source file `js/detailspage.js`
 ```
+
 ## Summary of the implemented HTTP requests
+
 ### GET section
 
 ---
@@ -262,26 +286,36 @@ Content-Type: application/xml;charset=UTF-8
 ### DELETE section
 
 #### *Deleting contribution with id {4} from engineer with id {5}:* [ OK - *code: 200* ]
+
 ***Request***
+
 ```
 DELETE http://localhost:8081/api/engineers/5/cars/4
 Accept: application/json
 ```
 
 #### *Deleting contributor with id {3} from car with id {3}:* [ OK - *code: 200* ]
+
 ***Request***
+
 ```
 DELETE http://localhost:8081/api/cars/3/engineers/3
 Accept: application/json
 ```
 
-#### *Deleting a non-existent contribution with id {30} from engineer with id {5}* [ Internal Server Error - *code: 500* ]
+#### *Deleting a non-existent contribution with id {30} from engineer with id {5}* [ Internal Server Error - *code:
+
+500* ]
+
 ***Request***
+
 ```
 DELETE http://localhost:8081/api/engineers/5/cars/30
 Accept: application/json
 ```
+
 ***Response***
+
 ```
 DELETE http://localhost:8081/api/engineers/5/cars/30
 
@@ -298,9 +332,11 @@ Connection: close
   "path": "/api/engineers/5/cars/30"
 }
 ```
+
 ### POST section
 
 #### _Adding an engineer to a car (a contributor)_  [ OK - *code: 200* ]
+
 ***Request***
 
 ```
@@ -375,7 +411,9 @@ Issam already exists.
 ### PUT section
 
 #### _Updating car with id {1}_ [ OK - *code: 200* ]
+
 ***Request***
+
 ```
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
@@ -390,7 +428,9 @@ Content-Type: application/json
   "colorText": "Black"
 }
 ```
+
 ***Response***
+
 ```
 PUT http://localhost:8081/api/cars/1
 
@@ -404,7 +444,9 @@ Connection: keep-alive
 ```
 
 #### _Updating car while inserting wrong input, integer instead of int_ [ Bad Request - *code: 400* ]
+
 ***Request***
+
 ```
 PUT http://localhost:8081/api/cars/1
 Accept: application/json
@@ -419,7 +461,9 @@ Content-Type: application/json
   "colorText": "Black"
 }
 ```
+
 ***Response***
+
 ```
 HTTP/1.1 400 
 Content-Type: application/json
@@ -436,17 +480,19 @@ Connection: close
 ```
 
 ## - Spring security - part documentation
-####List of users added to the application
-    .   username | password |   role  | Flag  
-        ---------|----------|---------|---------
-    1.  'sami'   | 'lars'   | ADMIN   | ENABLED
-        ---------|----------|---------|---------
-    2.  'issam'  | 'lars'   | ADMIN   | ENABLED
-        ---------|----------|---------|---------
-    3.  'zola'   | 'lars'   | User    | DISABLED
 
+#### List of users added to the application
 
-####An overview of roles and flags
+    .   username | password |  role   |   Flag   |
+        ---------|----------|---------|----------
+    1.  'sami'   | 'lars'   | ADMIN   | ENABLED  |
+        ---------|----------|---------|----------
+    2.  'issam'  | 'lars'   | ADMIN   | ENABLED  |
+        ---------|----------|---------|----------
+    3.  'zola'   | 'lars'   | User    | DISABLED |
+
+#### An overview of roles and flags
+
 ```
 Role ADMIN 
         - can create,delete and edit all entites
@@ -460,11 +506,14 @@ Role USER can
         - can create entities (trademark,car,engineer)
         - can edit, delete only the entities that they created        
 ```
+
 ```
 Flag ENABLED :  user can log into his account
 Flag DISABLED:  user's account is locked and cannot be used until an admin unlocks it     
 ```
-####What can a user (of which roles) can and cannot see
+
+#### What can a user (of which role) see and not see
+
 ```
 An ADMIN and MANAGER can view all sections of the applications (`/users` is a different case)
     - in `/engineers` and `/cars`, they can see edit, delete and details buttons for all entities

@@ -1,15 +1,13 @@
 package be.kdg.java2.carfactory_application.presentation.controller.api.dto;
 
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EngineerDTO {
     private int id;
+
 
     @NotBlank(message = "Name is mandatory")
     @Size(min = 3, max = 100, message = "Name should have length between 3 and 100")

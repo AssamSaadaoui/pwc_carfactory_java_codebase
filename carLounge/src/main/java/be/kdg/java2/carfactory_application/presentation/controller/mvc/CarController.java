@@ -154,13 +154,13 @@ public class CarController {
             model.addAttribute("isSubForm", true);
             return "/cars/carform";
         }
-
+        //Initializing the new car
         var tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
         var car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
-
+        car.setTradeMark(tradeMark);
+        tradeMark.addCar(car);
         car.setAuthor(user);
         carService.addCar(car, multipartFile);
-
         //Add engineers from checkbox (contributors)
         carViewModel.getEngineersIds().forEach(engineerId -> {
             contributionRepository.save(new Contribution(car, engineerService.findById(engineerId)));
@@ -169,12 +169,11 @@ public class CarController {
         //Engineer form would be discarded if wrong data was passed in at the same time with a contributor (engineer) being picked from checkbox
         if (!enResult.hasErrors()) {
             Engineer engineer = new Engineer(engineerViewModel.getName(), engineerViewModel.getTenure(), engineerViewModel.getNationality());
-            contributionRepository.save(new Contribution(car, engineer));
             engineer.setAuthor(user);
+            engineerService.addEngineer(engineer);
+            contributionRepository.save(new Contribution(car, engineer));
             logger.debug("Adding new car from form to the engineer");
         }
-        car.setTradeMark(tradeMark);
-        tradeMark.addCar(car);
         logger.debug("processing the new car item creation...");
         return "redirect:/cars/" + car.getId() + "?success=true";
     }

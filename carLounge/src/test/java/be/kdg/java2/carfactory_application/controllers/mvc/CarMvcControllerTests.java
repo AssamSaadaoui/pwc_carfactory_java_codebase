@@ -9,12 +9,14 @@ import be.kdg.java2.carfactory_application.domain.user.User;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.UserRepository;
+import com.sun.jdi.InternalException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,8 +24,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -54,8 +58,11 @@ class CarMvcControllerTests {
 
     @Test
     void showCarDetailsShouldReturnTheRightViewModel() throws Exception {
+        //arrange
+        var car1 = carRepository.findByModelContainsIgnoreCase("A-Class");
+        //mock
         mockMvc.perform(
-                        get("/cars/{id}", "1")
+                        get("/cars/{id}", String.valueOf(car1.getId()))
                 )
                 .andExpect(status().isOk())
                 .andExpect(view().name("/cars/cardetails"))
@@ -64,11 +71,18 @@ class CarMvcControllerTests {
     }
 
     @Test
-    void showCarDetailsShouldNotReturnACorrectViewModel() throws Exception {
+    void showCarDetailsShouldNotGiveAWrongAttributeValue() throws Exception {
+        //arrange
+        var car1 = carRepository.findByModelContainsIgnoreCase("B-Class");
+        //mock
         mockMvc.perform(
-                        get("/cars/{id}", "99")
+                        get("/cars/{id}", String.valueOf(car1.getId()))
                 )
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("/cars/cardetails"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("/cars/cardetails"))
+                .andExpect(model().attribute("car",
+                        hasProperty("price", not(equalTo(32500)))));
     }
+
+
 }

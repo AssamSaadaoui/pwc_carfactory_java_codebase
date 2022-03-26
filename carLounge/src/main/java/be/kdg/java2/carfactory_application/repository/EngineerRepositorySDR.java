@@ -25,11 +25,10 @@ public interface EngineerRepositorySDR extends JpaRepository<Engineer, Integer> 
     @Query("select e from Engineer e left join fetch e.author")
     List<Engineer> findAll();
 
-    @Query("select e from Engineer e " +
-            "left join fetch e.author " +
+    @Query("select e from Engineer e left join fetch e.author " +
             "left join fetch e.contributions contribution " +
             "left join fetch contribution.car workedOnCar " +
             "left join fetch workedOnCar.tradeMark where e.id=:enId")
-    Optional<Engineer> findWithContributionsAndAuthor(int enId);
+    Engineer findEngineerWithContributionsAndAuthorById(int enId);
 }
 

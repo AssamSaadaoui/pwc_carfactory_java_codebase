@@ -16,7 +16,7 @@
         </div>
     </div>
     <div>
-        <form th:object="${engineerDTO}" class="form-horizontal" method="post" enctype="multipart/form-data">
+        <form th:action="@{/engineers/new}" th:object="${engineerDTO}" class="form-horizontal" method="post" enctype="multipart/form-data">
             <div th:if="${#fields.hasAnyErrors()&&isMainForm}" class="alert alert-danger">
                 <p>There was an error within the form! </p>
             </div>

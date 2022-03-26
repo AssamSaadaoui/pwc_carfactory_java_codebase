@@ -50,7 +50,7 @@ public class CarRepositoryTests {
 
     @Test
     @Transactional
-//    Can't think of an edge case
+//    Edge case is somewhat useless (?) If i don't add a car to a trademark, it surely won't be persisted
     public void persistingATradeMarkShouldPersistAssociatedCars() {
       // Act
         tradeMarkRepository.save(mercedes);

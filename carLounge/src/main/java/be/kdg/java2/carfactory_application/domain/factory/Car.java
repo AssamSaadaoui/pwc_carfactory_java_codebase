@@ -121,6 +121,6 @@ public class Car extends FactoryEntity {
                 ", releaseDate=" + releaseDate +
                 ", color=" + color +
                 ", image='" + image + '\'' +
-                "} " + super.toString();
+                "}";
     }
 }

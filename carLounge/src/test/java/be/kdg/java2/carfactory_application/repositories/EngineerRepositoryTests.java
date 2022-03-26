@@ -53,7 +53,6 @@ public class EngineerRepositoryTests {
     }
 
     @Test
-    @Transactional
     public void findEngineersShouldNotFetchContributionsWithThem() {
         // Act
         var engineersList = engineerRepositorySDR.findByNameContainsIgnoreCase("winter korn");
@@ -67,7 +66,6 @@ public class EngineerRepositoryTests {
     }
 
     @Test
-    @Transactional
     public void findEngineersShouldFetchAuthorWithThem() {
         // Act
         var engineersList = engineerRepositorySDR.findByNameContainsIgnoreCase("winter korn");

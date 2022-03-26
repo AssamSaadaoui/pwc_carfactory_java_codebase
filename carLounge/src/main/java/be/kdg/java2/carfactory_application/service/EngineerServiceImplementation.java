@@ -74,8 +74,8 @@ public class EngineerServiceImplementation implements EngineerService {
     }
 
     @Override
-    public Engineer findWithContributionsAndAuthorById(int id) {
-        return engineerRepository.findWithContributionsAndAuthor(id).orElse(null);
+    public Engineer findEngineerWithContributionsAndAuthorById(int id) {
+        return engineerRepository.findEngineerWithContributionsAndAuthorById(id);
     }
 
     @Override

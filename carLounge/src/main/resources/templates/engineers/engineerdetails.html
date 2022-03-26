@@ -44,7 +44,7 @@
                             </tr>
                             <tr>
                                 <td id="tdTitle">Contributions/Work</td>
-                                <td>
+                                <td th:unless="${#lists.isEmpty(engineer.contributions)}">
                                     <div th:each="contribution : *{contributions}"
                                          th:with="car=${contribution.getCar()}">
                                         <li style="list-style: none;">
@@ -54,7 +54,7 @@
                                                        th:href="${ '/cars/' + car.getId()}"
                                                        th:text="'- '+${car.tradeMark.getTitle()}+' '+${car.model}"></a>
                                                 </div>
-                                                <div class="col-md-3" th:if="${(#authentication.name== car.author.username) ||
+                                                <div class="col-md-3" th:if="${(#authentication.name== engineer.author.username) ||
                                                 #authorization.expression('hasRole(''ROLE_MANAGER'')')
                                                  || #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                                     <a style="padding: 0px 3px;"
