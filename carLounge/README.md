@@ -54,17 +54,15 @@
 
 ---
 
-
 ## - Spring security - part documentation
 
 #### List of users added to the application
->
->    username |password|  Role   |  Flag    |
->    ---------|--------|---------|----------
->      issam  | lars   | MANAGER   | ENABLED  |
-> >    ---------|--------|---------|----------
->      zola   | lars   | User    | DISABLED |
-> >    ---------|--------|---------|----------
+
+|**username** | **password**| **Role** | **Flag**    |
+|:------  |:-------:|:---------:|:---------:|
+|sami     | lars    | *ADMIN*   | *ENABLED* |
+|issam    | lars    | *MANAGER* | *ENABLED* |
+|zola     | lars    | *USER*    | *DISABLED*|
 
 #### An overview of roles and flags
 
@@ -105,9 +103,6 @@ A normal authenticated USER can only view specefic sections
 A non authenticated User cannot see navlink to Users page
 Also, following routes will require authentication: `/engineers/new`, `/cars/new`
 ```
-
-
-
 
 ## Subtasks related notes:
 
