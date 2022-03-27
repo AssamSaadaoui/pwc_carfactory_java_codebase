@@ -62,8 +62,11 @@
 >    username |password|  Role   |  Flag    |
 >    ---------|--------|---------|----------
 >      sami   | lars   | ADMIN   | ENABLED  |
+> >    ---------|--------|---------|----------
 >      issam  | lars   | ADMIN   | ENABLED  |
+> >    ---------|--------|---------|----------
 >      zola   | lars   | User    | DISABLED |
+> >    ---------|--------|---------|----------
 
 #### An overview of roles and flags
 
