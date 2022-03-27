@@ -57,13 +57,13 @@
 ## - Spring security - part documentation
 
 #### List of users added to the application
-
-|username | password|   Role    |   Flag   |
-|:------  |:-------:|:---------:|:---------:|
-|sami     | lars    | *ADMIN*   | *ENABLED* |
-|issam    | lars    | *MANAGER* | *ENABLED* |
-|zola     | lars    | *USER*    | *DISABLED*|
-
+>
+>|username | password|   Role    |   Flag   |
+>|:------  |:-------:|:---------:|:---------:|
+>|sami     | lars    | *ADMIN*   | *ENABLED* |
+>|issam    | lars    | *MANAGER* | *ENABLED* |
+>|zola     | lars    | *USER*    | *DISABLED*|
+>
 #### An overview of roles and flags
 
 ```
