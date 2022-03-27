@@ -61,9 +61,7 @@
 >
 >    username |password|  Role   |  Flag    |
 >    ---------|--------|---------|----------
->      sami   | lars   | ADMIN   | ENABLED  |
-> >    ---------|--------|---------|----------
->      issam  | lars   | ADMIN   | ENABLED  |
+>      issam  | lars   | MANAGER   | ENABLED  |
 > >    ---------|--------|---------|----------
 >      zola   | lars   | User    | DISABLED |
 > >    ---------|--------|---------|----------
