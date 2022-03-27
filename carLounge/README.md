@@ -58,7 +58,7 @@
 
 #### List of users added to the application
 
-|**username** | **password**| **Role** | **Flag**    |
+|username | password|   Role    |   Flag   |
 |:------  |:-------:|:---------:|:---------:|
 |sami     | lars    | *ADMIN*   | *ENABLED* |
 |issam    | lars    | *MANAGER* | *ENABLED* |
