@@ -54,7 +54,61 @@
 
 ---
 
-## Assignments related notes:
+
+## - Spring security - part documentation
+
+#### List of users added to the application
+>
+>    username |password|  Role   |  Flag    |
+>    ---------|--------|---------|----------
+>      sami   | lars   | ADMIN   | ENABLED  |
+>      issam  | lars   | ADMIN   | ENABLED  |
+>      zola   | lars   | User    | DISABLED |
+
+#### An overview of roles and flags
+
+```
+Role ADMIN 
+        - can create,delete and edit all entites
+        - can flag or lock/unlock users
+        - can set/reset roles to users
+Role MANAGER 
+        - can create,delete and edit all entites
+        - cannot flag or lock/unlock users
+        - cannot set/reset roles to users
+Role USER can
+        - can create entities (trademark,car,engineer)
+        - can edit, delete only the entities that they created        
+```
+
+```
+Flag ENABLED :  user can log into his account
+Flag DISABLED:  user's account is locked and cannot be used until an admin unlocks it     
+```
+
+#### What can a user (of which role) see and not see
+
+```
+An ADMIN and MANAGER can view all sections of the applications (`/users` is a different case)
+    - in `/engineers` and `/cars`, they can see edit, delete and details buttons for all entities
+    - in `/engineers/{id}` and  `/cars/{id}`, they can see edit, save and (add contributor) for all entities
+    - they can go to create Car/Engineer form pages
+    - in `/users`, only admin can view select (for roles) element and lock/unlock button. (manager cannot)
+
+A normal authenticated USER can only view specefic sections
+    - in `/engineers` and `/cars` can see edit, delete and details buttons only for entities they created
+    - in `/engineers/{id}` and  `/cars/{id}`, they can see edit, save and (add contributor) only for entities they created
+    - they can access create Car/Engineer form pages
+    - in `/users` can only see details of the user. (no action related views)
+    
+A non authenticated User cannot see navlink to Users page
+Also, following routes will require authentication: `/engineers/new`, `/cars/new`
+```
+
+
+
+
+## Subtasks related notes:
 
 ### Icon used:
 
@@ -479,55 +533,5 @@ Connection: close
 }
 ```
 
-## - Spring security - part documentation
 
-#### List of users added to the application
-
-    .   username | password |  role   |   Flag   |
-        ---------|----------|---------|----------
-    1.  'sami'   | 'lars'   | ADMIN   | ENABLED  |
-        ---------|----------|---------|----------
-    2.  'issam'  | 'lars'   | ADMIN   | ENABLED  |
-        ---------|----------|---------|----------
-    3.  'zola'   | 'lars'   | User    | DISABLED |
-
-#### An overview of roles and flags
-
-```
-Role ADMIN 
-        - can create,delete and edit all entites
-        - can flag or lock/unlock users
-        - can set/reset roles to users
-Role MANAGER 
-        - can create,delete and edit all entites
-        - cannot flag or lock/unlock users
-        - cannot set/reset roles to users
-Role USER can
-        - can create entities (trademark,car,engineer)
-        - can edit, delete only the entities that they created        
-```
-
-```
-Flag ENABLED :  user can log into his account
-Flag DISABLED:  user's account is locked and cannot be used until an admin unlocks it     
-```
-
-#### What can a user (of which role) see and not see
-
-```
-An ADMIN and MANAGER can view all sections of the applications (`/users` is a different case)
-    - in `/engineers` and `/cars`, they can see edit, delete and details buttons for all entities
-    - in `/engineers/{id}` and  `/cars/{id}`, they can see edit, save and (add contributor) for all entities
-    - they can go to create Car/Engineer form pages
-    - in `/users`, only admin can view select (for roles) element and lock/unlock button. (manager cannot)
-
-A normal authenticated USER can only view specefic sections
-    - in `/engineers` and `/cars` can see edit, delete and details buttons only for entities they created
-    - in `/engineers/{id}` and  `/cars/{id}`, they can see edit, save and (add contributor) only for entities they created
-    - they can access create Car/Engineer form pages
-    - in `/users` can only see details of the user. (no action related views)
-    
-A non authenticated User cannot see navlink to Users page
-Also, following routes will require authentication: `/engineers/new`, `/cars/new`
-```
 
