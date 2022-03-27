@@ -38,17 +38,17 @@ public class AuthenticationController {
 
     @PostMapping("/login_success_handler")
     public String loginSuccessHandler(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                      HttpServletRequest request, HttpServletResponse response
-            , Model model) {
+                                      HttpServletRequest request, HttpServletResponse response,
+                                      Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         var user = userService.findUser(userDetails.getUsername());
+        // If user's account is disabled, a specific model attribute would be returned (to be added in tests later)
         if (user.getFlag() == Flag.DISABLED) {
             model.addAttribute("error", "Account is currently locked.");
             model.addAttribute("loginInfo", new LoginViewModel());
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return "/auth/login";
         }
-        System.out.println("User login succeeded...");
         return "redirect:/?success&user=" + userDetails.getUsername() + "&new=false";
     }
 
@@ -75,7 +75,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String registerUserAccount(@ModelAttribute("user") @Valid UserViewModel userViewModel,
-                                      BindingResult result, HttpServletRequest request, Errors errors, Model model) {
+                                      BindingResult result, HttpServletRequest request,
+                                      Errors errors, Model model) {
         if (result.hasErrors()) {
             errors.getAllErrors().forEach(objectError -> {
                 model.addAttribute("error", objectError.getDefaultMessage());

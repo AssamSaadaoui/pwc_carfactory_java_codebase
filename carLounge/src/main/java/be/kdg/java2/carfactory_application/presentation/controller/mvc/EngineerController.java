@@ -10,6 +10,7 @@ import be.kdg.java2.carfactory_application.presentation.helper.ControllerHelper;
 import be.kdg.java2.carfactory_application.repository.ContributionRepository;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
+import be.kdg.java2.carfactory_application.service.ContributionService;
 import be.kdg.java2.carfactory_application.service.EngineerService;
 import be.kdg.java2.carfactory_application.service.UserService;
 import org.slf4j.Logger;
@@ -36,19 +37,22 @@ public class EngineerController {
     private final CarService carService;
     private final EngineerService engineerService;
     private final UserService userService;
-    private final ContributionRepository contributionRepository;
+    private final ContributionService contributionService;
 
 
-    public EngineerController(CarService carService, EngineerService engineerService, UserService userService, ContributionRepository contributionRepository) {
+    public EngineerController(CarService carService,
+                              EngineerService engineerService,
+                              UserService userService,
+                              ContributionService contributionService) {
         this.carService = carService;
         this.engineerService = engineerService;
         this.userService = userService;
-        this.contributionRepository = contributionRepository;
+        this.contributionService = contributionService;
     }
 
     //Read
     @GetMapping
-    public String showAllEnginners(Model model) {
+    public String showAllEngineers(Model model) {
         model.addAttribute("engineers", engineerService.getAllEngineers());
         logger.info("displaying all engineers...");
         return "/engineers/engineers";
@@ -98,7 +102,9 @@ public class EngineerController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateEngineer(@PathVariable int id, @Valid @ModelAttribute("dto") EngineerViewModel engineerViewModel, BindingResult result,
+    public String updateEngineer(@PathVariable int id,
+                                 @Valid @ModelAttribute("dto") EngineerViewModel engineerViewModel,
+                                 BindingResult result,
                                  Model model) {
         if (result.hasErrors()) {
             logger.error(result.toString());
@@ -108,7 +114,7 @@ public class EngineerController {
         Engineer changedEngineer = engineerService.findById(id);
         engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
-                ControllerHelper.addContribution(changedEngineer, carService.findById(contributionId));
+                contributionService.addContribution(new Contribution(carService.findById(contributionId), changedEngineer));
             }
         });
         changedEngineer.setName(engineerViewModel.getName());
@@ -142,52 +148,33 @@ public class EngineerController {
                                      @AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         User user = userService.findUser(userDetails.getId());
         if (result.hasErrors()) {
-            logger.error(result.toString());
-            model.addAttribute("cars", carService.getAllCars());
-            model.addAttribute("colors", Color.values());
-            model.addAttribute("isMainForm", true);
-            //By default, the errors in the subform (car form) are muted (unless they occur)
-            model.addAttribute("isSubForm", false);
+            handleMainFormValidation(result, model);
             return "/engineers/engineerform";
         }
         //The user has to at least add a contribution via form or existent cars (contributions has not to be empty)
         if (carResult.hasErrors() && (engineerViewModel.getContributionIds().isEmpty())) { //if contributions are empty
-            logger.error(carResult.toString());
-            logger.debug("There wasn't any contribution add to the new engineer");
-            model.addAttribute("cars", carService.getAllCars());
-            model.addAttribute("colors", Color.values());
-            //Here errors in the subform occur, so we set it to true.
-            model.addAttribute("isSubForm", true);
+            handleMissingContributions(carResult, model);
             return "/engineers/engineerform";
         }
-        Engineer engineer = new Engineer(engineerViewModel.getName(), engineerViewModel.getTenure(), engineerViewModel.getNationality());
+        Engineer engineer = new Engineer(engineerViewModel.getName(),
+                engineerViewModel.getTenure(),
+                engineerViewModel.getNationality());
         engineer.setAuthor(user);
         engineerService.addEngineer(engineer);
         //Add contributions from checkbox list
         engineerViewModel.getContributionIds().forEach((contributionId) -> {
             if (contributionId != null) {
-                contributionRepository.save(new Contribution(carService.findById(contributionId), engineer));
-//                ControllerHelper.addContribution(engineer, carService.findById(contributionId));
+                contributionService.addContribution(new Contribution(carService.findById(contributionId), engineer));
             }
         });
         //Add car to engineer if all attributes from form exist (because of image upload that i had to check)
         //Also, if Car form would be discarded if wrong data was passed in at the same time with a contribution (car) being picked from checkbox
         if (!carResult.hasErrors()) {
-            //Car returned from the form (if engineer isn't persisted, it'd be cast away)
-            TradeMark tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
-            Car car = new Car(carViewModel.getModel(), carViewModel.getEngineSize(), carViewModel.getPrice(), carViewModel.getReleaseDate(), carViewModel.getColor());
-            car.setTradeMark(tradeMark);
-            tradeMark.addCar(car);
-            car.setAuthor(user);
-            logger.debug("processing the new engineer item creation...");
-//            When new car is added with image
-            carService.addCar(car, multipartFile);
-//            Then contribution is persisted (link between new car and existent engineer
-            contributionRepository.save(new Contribution(car, engineer));
-//            engineerService.addEngineerWithNewCar(engineer, car, multipartFile);
+            handleNewCarCreation(carViewModel, multipartFile, user, engineer);
         }
         return "redirect:/engineers/" + engineer.getId() + "?success=true";
     }
+
 
     //Delete
     @PostMapping("/delete/{id}")
@@ -215,5 +202,40 @@ public class EngineerController {
         modelAndView.addObject("exception", exception);
         modelAndView.setViewName("/errors/entityalreadyexists");
         return modelAndView;
+    }
+
+    //    Helper methods to increase readability
+    private void handleNewCarCreation(CarViewModel carViewModel, MultipartFile multipartFile, User user, Engineer engineer) throws IOException {
+        //Car returned from the form (if engineer isn't persisted, it'd be cast away)
+        TradeMark tradeMark = new TradeMark(carViewModel.getTitle(), carViewModel.getFounder(), carViewModel.getLaunchYear());
+        Car car = new Car(carViewModel.getModel(),
+                carViewModel.getEngineSize(), carViewModel.getPrice(),
+                carViewModel.getReleaseDate(), carViewModel.getColor());
+        car.setTradeMark(tradeMark);
+        tradeMark.addCar(car);
+        car.setAuthor(user);
+        logger.debug("processing the new engineer item creation...");
+        // When new car is added with image
+        carService.addCar(car, multipartFile);
+        // Then contribution is persisted (link between new car and existent engineer
+        contributionService.addContribution(new Contribution(car, engineer));
+    }
+
+    private void handleMissingContributions(BindingResult carResult, Model model) {
+        logger.error(carResult.toString());
+        logger.debug("There wasn't any contribution add to the new engineer");
+        model.addAttribute("cars", carService.getAllCars());
+        model.addAttribute("colors", Color.values());
+        //Here errors in the subform occur, so we set it to true.
+        model.addAttribute("isSubForm", true);
+    }
+
+    private void handleMainFormValidation(BindingResult result, Model model) {
+        logger.error(result.toString());
+        model.addAttribute("cars", carService.getAllCars());
+        model.addAttribute("colors", Color.values());
+        model.addAttribute("isMainForm", true);
+        //By default, the errors in the subform (car form) are muted (unless they occur)
+        model.addAttribute("isSubForm", false);
     }
 }

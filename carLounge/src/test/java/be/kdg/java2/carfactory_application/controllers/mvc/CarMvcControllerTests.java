@@ -7,27 +7,21 @@ import be.kdg.java2.carfactory_application.domain.user.Gender;
 import be.kdg.java2.carfactory_application.domain.user.Role;
 import be.kdg.java2.carfactory_application.domain.user.User;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
-import be.kdg.java2.carfactory_application.repository.EngineerRepositorySDR;
 import be.kdg.java2.carfactory_application.repository.UserRepository;
-import com.sun.jdi.InternalException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
+import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")

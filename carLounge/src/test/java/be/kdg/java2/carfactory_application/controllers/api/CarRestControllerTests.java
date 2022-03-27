@@ -87,7 +87,7 @@ class CarRestControllerTests {
                 .andExpect(status().isNoContent());
     }
 
-    //   todo  To run ordering tests you need to disable setting the currentUser in CarsRestController (orderByPrice())
+    //   todo  To run ordering tests you need to disable/comment setting the currentUser in CarsRestController (orderByPrice())
     @Test
     public void fetchingCarsInAscendingOrderByPrice() throws Exception {
         mockMvc.perform(
