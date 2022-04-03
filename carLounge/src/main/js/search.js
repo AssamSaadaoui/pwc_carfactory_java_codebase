@@ -1,6 +1,8 @@
 //Imports
 import {redirect, language, currentPath, headers} from "./util";
 import anime from "animejs";
+//Constants
+const DEBOUNCE_DELAY = 1000
 //Search cars elements
 const searchFieldEl = document.getElementById("lookup");
 const dataList = document.getElementById("carsList");
@@ -18,17 +20,29 @@ if (orderSelectEl) //check location (orderSelect element only exists in cars pag
     })
 //Search bar related
 if (searchFieldEl)
-    searchFieldEl.addEventListener("keyup", async () => search());
+    searchFieldEl.addEventListener("keyup", async () => {
+        const lookupValue = searchFieldEl.value;
+        if (lookupValue.length < 3) {
+            dataList.innerHTML = ''
+            return;
+        }
+        search(lookupValue)
+    });
 //
 
 // GET section
-//Search objects
-const search = async function () {
-    const lookupValue = searchFieldEl.value;
-    if (lookupValue.length < 3) {
-        dataList.innerHTML = ''
-        return;
+//Debounce
+const debounce = (callback, delay = DEBOUNCE_DELAY) => {
+    let timeout
+    return (lookup) => {
+        clearTimeout(timeout)
+        setTimeout(() => {
+            callback(lookup)
+        }, delay)
     }
+}
+
+const search = debounce(async (lookupValue) => {
     try {
         const response = await fetch(`/api/${currentPath}?lookup=${lookupValue}`,
             {
@@ -47,7 +61,7 @@ const search = async function () {
         // catches errors both in fetch and response.json
         alert(err);
     }
-}
+})
 
 function processSearchData(objectsArray) {
     dataList.innerHTML = '';
