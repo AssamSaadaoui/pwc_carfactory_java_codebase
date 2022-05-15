@@ -7,4 +7,6 @@ public interface ContributionRepository extends JpaRepository<Contribution, Inte
     void deleteContributionByEngineerId(int enId);
 
     void deleteContributionByCarId(int carId);
+
+    Contribution findContributionByEngineerIdAndCarId(int engId, int carId);
 }

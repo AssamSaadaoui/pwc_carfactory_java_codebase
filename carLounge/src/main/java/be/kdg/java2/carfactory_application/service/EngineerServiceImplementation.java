@@ -36,8 +36,13 @@ public class EngineerServiceImplementation implements EngineerService {
      **/
     @Override
     public void addEngineer(Engineer engineer) {
-        boolean isMatchEngineer = engineerRepository.findAll().stream().anyMatch(engineer1 -> engineer.getName().equalsIgnoreCase(engineer1.getName()));
-        if (isMatchEngineer) {
+//        boolean isMatchEngineer = engineerRepository
+//                .findAll()
+//                .stream()
+//                .anyMatch(engineer1 -> engineer.getName()
+//                        .equalsIgnoreCase(engineer1.getName()));
+        var eng = engineerRepository.findByNameIgnoreCase(engineer.getName()).orElse(null);
+        if (eng != null) {
             throw new EntityAlreadyExistsException(engineer.getName() + " already exists.");
         }
         engineerRepository.save(engineer);

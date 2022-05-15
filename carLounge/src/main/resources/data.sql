@@ -1,11 +1,15 @@
--- INSERT INTO CARS(CAR_ID, MODEL,
---                  ENGINE_SIZE, PRICE, RELEASE_DATE, COLOR)
--- VALUES (0, '7 Series', 4.4, 134000, '2021-10-01', 'GRAY'),
---        (1, '8 Series', 4.0, 14000, '2022-02-04', 'BLACK');
+INSERT INTO APP_USER(ID, AGE, FLAG, GENDER, NATIONALITY, PASSWORD, ROLE, USERNAME)
+VALUES (4, 20, 1, 1, 'Algerian', 'issam', 'MANAGER', 'issam');
+--
+-- INSERT INTO TRADEMARKS(TRADEMARK_ID, FOUNDER, LAUNCH_YEAR, TITLE)
+-- VALUES (5, 'Issamo', 1998, 'CoolerBing');
+--
+-- INSERT INTO FACTORY_ENTITY(DTYPE, ID, MODEL,
+--                            ENGINE_SIZE, PRICE, RELEASE_DATE, COLOR, AUTHOR_ID, TRADEMARK_ID)
+-- VALUES ('Car', 0, '7 Series', 4.4, 134000, '2021-10-01', 'GRAY', 4, 5);
 --
 --
--- INSERT INTO ENGINEERS(ENGINEER_ID, NAME,
---                       TENURE, NATIONALITY)
--- VALUES (0, 'Frank Lamberty', 18, 'German'),
---        (1, 'Christopher E. Bangle', 10, 'American');
-
+-- INSERT INTO FACTORY_ENTITY(DTYPE, ID, NAME,
+--                            TENURE, NATIONALITY, AUTHOR_ID)
+-- VALUES ('Engineer', 0, 'Frank Lamberty', 18, 'German', 4);
+--

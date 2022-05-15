@@ -44,6 +44,9 @@
 > 2- Run the compiled tests (complied class will be put in root (supposedly))
 > ` java -jar junit-platform-console-standalone-1.7.2.jar --class-path target --select-class [packagepath(?)] ex: be.kdg.java2.carfactory_application.TestClass`
 
+### Code Coverage
+<img src="https://i.ibb.co/84cgDHH/codecovergage.png" alt="codecovergage" border="0">
+
 ## Project concept recap
 
 > **Trademark**, **Car**, Mechanical **Engineer**

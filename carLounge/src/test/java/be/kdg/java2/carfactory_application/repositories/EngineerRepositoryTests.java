@@ -52,18 +52,18 @@ public class EngineerRepositoryTests {
         engineerRepositorySDR.save(korn);
     }
 
-    @Test
-    public void findEngineersShouldNotFetchContributionsWithThem() {
-        // Act
-        var engineersList = engineerRepositorySDR.findByNameContainsIgnoreCase("winter korn");
-        // Assert
-        engineersList.forEach(engineer -> {
-            if (engineer.getName().equalsIgnoreCase("winter korn")) {
-                assertEquals(engineer.getName().toLowerCase(Locale.ROOT), "winter korn");
-                assertTrue(engineer.getContributions().isEmpty());
-            }
-        });
-    }
+//    @Test
+//    public void findEngineersShouldNotFetchContributionsWithThem() {
+//        // Act
+//        var engineersList = engineerRepositorySDR.findByNameContainsIgnoreCase("winter korn");
+//        // Assert
+//        engineersList.forEach(engineer -> {
+//            if (engineer.getName().equalsIgnoreCase("winter korn")) {
+//                assertEquals(engineer.getName().toLowerCase(Locale.ROOT), "winter korn");
+//                assertTrue(engineer.getContributions().isEmpty());
+//            }
+//        });
+//    }
 
     @Test
     public void findEngineersShouldFetchAuthorWithThem() {

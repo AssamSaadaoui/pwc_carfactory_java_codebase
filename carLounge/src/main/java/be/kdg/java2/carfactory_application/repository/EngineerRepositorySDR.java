@@ -20,6 +20,7 @@ public interface EngineerRepositorySDR extends JpaRepository<Engineer, Integer> 
 
     List<Engineer> findByTenure(int tenure);
 
+    Optional<Engineer> findByNameIgnoreCase(String name);
 
     @Override
     @Query("select e from Engineer e left join fetch e.author")

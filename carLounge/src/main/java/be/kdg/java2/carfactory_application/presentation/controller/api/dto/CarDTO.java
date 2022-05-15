@@ -40,6 +40,8 @@ public class CarDTO {
     private Color color;
     private String colorText;
 
+
+
     public String getColorText() {
         return colorText;
     }

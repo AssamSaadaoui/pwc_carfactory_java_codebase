@@ -8,4 +8,8 @@ public interface ContributionService {
     void deleteContributionByCarId(int carId);
 
     void addContribution(Contribution c);
+
+    Contribution findContributionByEngIdandCarId(int i, int i1);
+
+    Contribution findById(int i);
 }

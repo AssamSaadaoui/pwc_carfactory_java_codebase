@@ -25,7 +25,8 @@ ext {
     gsonVersion = '2.8.8'
     modelMapperVersion = '3.0.0'
     thymeleafSecurityVersion = '3.0.4.RELEASE'
-    jupiterTestVersion='5.8.1'
+    jupiterTestVersion = '5.8.1'
+    springVersion = '5.3.13.RELEASE'
 }
 
 dependencies {
@@ -46,6 +47,7 @@ dependencies {
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${springBootVersion}"
     implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation "org.springframework.security:spring-security-test:${springVersion}"
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
 //    runtimeOnly 'org.hsqldb:hsqldb'

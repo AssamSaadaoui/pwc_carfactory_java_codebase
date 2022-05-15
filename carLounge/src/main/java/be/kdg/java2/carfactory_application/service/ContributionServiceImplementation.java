@@ -31,4 +31,14 @@ public class ContributionServiceImplementation implements ContributionService {
         contributionRepository.save(c);
     }
 
+    @Override
+    public Contribution findContributionByEngIdandCarId(int i, int i1) {
+        return contributionRepository.findContributionByEngineerIdAndCarId(i, i1);
+    }
+
+    @Override
+    public Contribution findById(int i) {
+        return contributionRepository.findById(i).orElse(null);
+    }
+
 }
