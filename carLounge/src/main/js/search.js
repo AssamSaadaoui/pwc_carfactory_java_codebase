@@ -1,6 +1,7 @@
 //Imports
 import {redirect, language, currentPath, headers} from "./util";
 import anime from "animejs";
+
 //Constants
 const DEBOUNCE_DELAY = 1000
 //Search cars elements
@@ -36,7 +37,7 @@ const debounce = (callback, delay = DEBOUNCE_DELAY) => {
     let timeout
     return (lookup) => {
         clearTimeout(timeout)
-        setTimeout(() => {
+        setTimeout(() => {  
             callback(lookup)
         }, delay)
     }
@@ -56,6 +57,7 @@ const search = debounce(async (lookupValue) => {
         } else {
             alert(`Received status code ${response.status}`);
         }
+        console.log(data)
         processSearchData(data)
     } catch (err) {
         // catches errors both in fetch and response.json

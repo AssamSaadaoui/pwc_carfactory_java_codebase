@@ -4,6 +4,7 @@ package be.kdg.java2.carfactory_application.service;
 import be.kdg.java2.carfactory_application.domain.factory.Car;
 import be.kdg.java2.carfactory_application.domain.factory.Engineer;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
+import be.kdg.java2.carfactory_application.presentation.controller.api.dto.SimpleCarDTO;
 import be.kdg.java2.carfactory_application.repository.CarRepositorySDR;
 import be.kdg.java2.carfactory_application.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,11 @@ public class CarServiceImplementation implements CarService {
     @Override
     public Car findCarWithTradeMarkById(int carId) {
         return carRepository.findCarWithTradeMark(carId);
+    }
+
+    @Override
+    public void saveCarWithPartialUpdate(Car car) {
+        carRepository.save(car);
     }
 
 }

@@ -7,6 +7,7 @@ import be.kdg.java2.carfactory_application.domain.user.Role;
 import be.kdg.java2.carfactory_application.exception.EntityAlreadyExistsException;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.CarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.api.dto.EngineerDTO;
+import be.kdg.java2.carfactory_application.presentation.controller.api.dto.SimpleCarDTO;
 import be.kdg.java2.carfactory_application.presentation.controller.mvc.CarController;
 import be.kdg.java2.carfactory_application.security.CustomUserDetails;
 import be.kdg.java2.carfactory_application.service.CarService;
@@ -55,6 +56,20 @@ public class CarsRestController {
                 .map(car -> modelMapper.map(car, CarDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(carsDTOS, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{carId}")
+    public ResponseEntity<String> partialUpdateName(
+            @RequestBody SimpleCarDTO partialUpdateCarDTO, @PathVariable("carId") int carId) {
+        var car = carService.findById(carId);
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        car.setModel(partialUpdateCarDTO.getModel());
+        car.setEngineSize(partialUpdateCarDTO.getEngineSize());
+        car.setPrice(partialUpdateCarDTO.getPrice());
+        carService.saveCarWithPartialUpdate(car);
+        return ResponseEntity.ok("Car updated");
     }
 
     @GetMapping("/sort")
@@ -108,8 +123,8 @@ public class CarsRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         try {
-            engineerService.addEngineer(newEngineer);
             contributionService.addContribution(new Contribution(car, newEngineer));
+            engineerService.addEngineer(newEngineer);
         } catch (EntityAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

@@ -2,6 +2,7 @@ package be.kdg.java2.carfactory_application.service;
 
 import be.kdg.java2.carfactory_application.domain.factory.Car;
 import be.kdg.java2.carfactory_application.domain.factory.Engineer;
+import be.kdg.java2.carfactory_application.presentation.controller.api.dto.SimpleCarDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -39,6 +40,8 @@ public interface CarService {
     Car findCarWithTradeMarkAndContributionsById(int carId);
 
     Car findCarWithTradeMarkById(int carId);
+
+    void saveCarWithPartialUpdate(Car car);
 
 //    List<Car> getCarsOnModelOrTradeMark(String model, String tradeMark);
 }

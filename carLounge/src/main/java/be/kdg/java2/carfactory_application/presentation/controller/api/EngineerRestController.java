@@ -27,7 +27,10 @@ public class EngineerRestController {
     private final CarService carService;
     private final ContributionService contributionService;
 
-    public EngineerRestController(EngineerService engineerService, CarService carService, ModelMapper modelMapper, ContributionService contributionService) {
+    public EngineerRestController(EngineerService engineerService,
+                                  CarService carService,
+                                  ModelMapper modelMapper,
+                                  ContributionService contributionService) {
         this.engineerService = engineerService;
         this.carService = carService;
         this.modelMapper = modelMapper;
@@ -41,7 +44,9 @@ public class EngineerRestController {
         if (engineers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        var engineerDTOS = engineers.stream().map(engineer -> modelMapper.map(engineer, EngineerDTO.class))
+        var engineerDTOS = engineers
+                .stream()
+                .map(engineer -> modelMapper.map(engineer, EngineerDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(engineerDTOS, HttpStatus.OK);
     }
